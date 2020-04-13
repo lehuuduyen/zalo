@@ -1,0 +1,300 @@
+.tnh-table{
+    border-collapse: collapse !important;
+    width: 100%;
+}
+
+.tnh-table tr th {
+    font-weight: 700 !important;
+}
+.tnh-table, .tnh-table tr th, .tnh-table tr td {
+    border: 1px solid #9e9e9ea3 !important;
+    padding: 5px !important;
+    vertical-align: middle !important;
+}
+
+.tnh-table-sub {
+    width: 100%;
+}
+
+.tnh-table-sub tr th {
+    border: 1px solid #9e9e9ea3 !important;
+    border-color: #9e9e9ea3 !important;
+}
+
+.fixedHeader-floating {
+    position: fixed !important;
+}
+table.dataTable {
+    margin-bottom: 0px !important;
+    margin-top: 0px !important;
+    border-collapse: collapse !important;
+}
+.dt-tnh tr td {
+    vertical-align: middle !important;
+    /*border: 1px solid black !important;*/
+}
+.table > tbody > tr > td, .table > tfoot > tr > td {
+    /*padding: 0;*/
+}
+.DTFC_LeftBodyLiner table {
+    background: white;
+}
+.DTFC_RightBodyLiner table {
+    background: white;
+}
+
+.DTFC_LeftBodyLiner .dataTables_wrapper {
+    display: none !important;
+}
+
+.DTFC_RightBodyLiner .dataTables_wrapper {
+    display: none !important;
+}
+
+.DTFC_LeftBodyLiner thead .sorting_desc:after {
+    content: '' !important;
+}
+
+.DTFC_LeftBodyLiner thead .sorting_asc:after {
+    content: '' !important;
+}
+
+.popover {
+    z-index: 99999;
+}
+
+.DTFC_LeftBodyLiner tr td {
+    /*padding: 11px !important;*/
+}
+
+table tr th {
+    vertical-align: middle !important;
+}
+
+table {
+    /*min-width: 100% !important;*/
+}
+
+.dataTables_scrollHeadInner {
+    /*width: 100% !important;*/
+}
+
+.tb-height .dataTables_scrollBody {
+    max-height: 400px !important;
+}
+
+.sub-tb tr td {
+    padding: 5px;
+}
+
+/* Chrome, Safari and Opera syntax */
+:-webkit-full-screen {
+  background-color: white;
+}
+
+/* Firefox syntax */
+:-moz-full-screen {
+  background-color: white;
+}
+
+/* IE/Edge syntax */
+:-ms-fullscreen {
+  background-color: white;
+}
+
+/* Standard syntax */
+:fullscreen {
+  background-color: white;
+}
+
+.fullscreen {
+    float: right;
+    font-size: : 15px;
+    cursor: pointer;
+}
+
+.color-dark-green {
+    color: #607d8b;
+}
+
+.tnh-content {
+    padding: 5px 15px !important;
+}
+
+.content {
+    padding: 5px 15px !important;
+}
+
+/*
+ CSS for the main interaction
+*/
+.tabset > input[type="radio"] {
+    position: absolute;
+    left: -200vw;
+}
+
+.tabset .tab-panel {
+    display: none;
+}
+
+.tabset > input:first-child:checked ~ .tab-panels > .tab-panel:first-child,
+.tabset > input:nth-child(3):checked ~ .tab-panels > .tab-panel:nth-child(2),
+.tabset > input:nth-child(5):checked ~ .tab-panels > .tab-panel:nth-child(3),
+.tabset > input:nth-child(7):checked ~ .tab-panels > .tab-panel:nth-child(4),
+.tabset > input:nth-child(9):checked ~ .tab-panels > .tab-panel:nth-child(5),
+.tabset > input:nth-child(11):checked ~ .tab-panels > .tab-panel:nth-child(6) {
+    display: block;
+}
+
+
+.tabset > label {
+    position: relative;
+    display: inline-block;
+    padding: 15px 15px 25px;
+    border: 1px solid transparent;
+    border-bottom: 0;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.tabset > label::after {
+    content: "";
+    position: absolute;
+    left: 15px;
+    bottom: 10px;
+    width: 22px;
+    height: 4px;
+    background: #8d8d8d;
+}
+
+.tabset > label:hover,
+.tabset > input:focus + label {
+    color: #06c;
+}
+
+.tabset > label:hover::after,
+.tabset > input:focus + label::after,
+.tabset > input:checked + label::after {
+    background: #06c;
+}
+
+.tabset > input:checked + label {
+    border-color: #ccc;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: -1px;
+}
+
+.tab-panel {
+    /*padding: 30px 0;*/
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+
+/*
+ Demo purposes only
+*/
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+
+.tabset {
+    /*max-width: 65em;*/
+    width: 100%;
+}
+
+.select2-choice {
+    height: 100% !important;
+}
+.select2-chosen {
+    word-wrap: break-word !important;
+    text-overflow: inherit !important;
+    white-space: normal !important;
+}
+
+.tnh-disabled {
+    pointer-events: none !important;
+    cursor: default !important;
+    opacity: 0.7 !important;
+    text-decoration: line-through !important;
+    color: #fc2d42 !important;
+}
+
+.dataTables_scrollHeadInner {
+    min-width: 100% !important;
+}
+
+.dt-table-loading.table {
+    opacity: 1 !important;
+}
+
+.modal{
+    overflow: auto !important;
+}
+
+table td .form-group {
+    margin-bottom: 0px !important;
+}
+
+.progressbar:not(.initli) {
+    margin: 0;
+    padding: 0;
+    counter-reset: step;
+}
+.progressbar li span{
+    font-size: 11px;
+}
+.progressbar li:not(.initli) {
+    list-style-type: none;
+    width: 100px;
+    float: left;
+    font-size: 12px;
+    position: relative;
+    text-align: center;
+    /*text-transform: uppercase;*/
+    color: #7d7d7d;
+    z-index: 0;
+}
+.progressbar li:not(.initli):before {
+    width: 10px;
+    height: 10px;
+    content: ' ';
+    counter-increment: step;
+    line-height: 51px;
+    border: 5px solid #7d7d7d;
+    display: block;
+    text-align: center;
+    margin: 0 auto 10px auto;
+    border-radius: 50%;
+    background-color: white;
+}
+.progressbar li:not(.initli):after {
+    width: 100%!important;
+    height: 2px!important;
+    content: ''!important;
+    position: absolute!important;
+    background-color: #7d7d7d!important;
+    top: 4px!important;
+    left: -50%!important;
+    z-index: -1!important;
+}
+.progressbar li:first-child:after {
+    content: none;
+    display: none;
+}
+.progressbar li.active:not(.initli) {
+    color: green;
+}
+.progressbar li.active:not(.initli):before {
+    border-color: #55b776;
+}
+.progressbar li.cancel:before {
+    border-color: red;
+}
+.progressbar li.active + li:after {
+    background-color: #55b776!important;
+}
