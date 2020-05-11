@@ -5,7 +5,9 @@
     #create_order_ob .control-label, #create_order_ob label {
         margin-bottom: 0;
     }
-
+    .mb-10{
+        margin-bottom: 10px;
+    }
     #create_order_ob .form-group {
         margin-bottom: 5px;
     }
@@ -405,16 +407,130 @@
             display: inline-block;
         }
     }
+    .kh-tab4 .control-label {
+        font-size: 15px !important;
+
+    }
+
+    .kh-tab4 .order-style .button-blue {
+        border: 1px solid #41719B;
+        background: #5794CC;
+        width: 35%;
+        padding: 5px;
+    }
+
+    .kh-tab4 p {
+        margin: 0 0 0px !important;
+    }
+
+    .kh-tab4 .order-style .button-blue:hover {
+        background: #d9dbdd;
+    }
+
+    .kh-tab4 table tbody tr:hover {
+        background: #FBC2C4 !important;
+    }
+
+    .kh-tab4 table {
+        margin: 0 auto;
+        width: 100%;
+        clear: both;
+        border-collapse: collapse;
+        table-layout: fixed;
+    / / add this word-wrap: break-word;
+    / / add this
+    }
+
+    .kh-tab4 .order-style .button-red {
+        border: 1px solid #41719B;
+        background: red;
+        padding: 6px;
+    }
+
+    .kh-tab4 .order-style .button-green {
+        border: 1px solid #41719B;
+        background: green;
+        padding: 6px;
+    }
+
+    .kh-tab4 .mb-5 {
+        margin-bottom: 15px
+    }
+
+    .kh-tab4 .mb-15 {
+        margin-bottom: 15px
+    }
+
+    .kh-tab4 .mr-2 {
+        margin-right: 2px
+    }
+
+    .kh-tab4 .label.label-xs {
+        font-size: 17px;
+        padding: 1px 4px;
+    }
+
+    .kh-tab4 .label-orange {
+        background: white;
+        color: #e52228;
+        border: 1px solid green;
+    }
+
+    .kh-tab4 .select2 {
+        width: 100% !important;
+    }
 
 
+    .kh-tab4 table thead th:last-child {
+        width: 30% !important;
+    }
+    .kh-tab4 table thead th:nth-last-child(-n+2) {
+        width: 40%  !important;
+    }
+
+    .kh-tab4 table tbody .sorting_1 {
+        width: 200px !important;
+    }
+
+
+
+    .kh-tab4 table tbody .sorting_1 {
+        width: 200px !important;
+    }
+    .kh-tab4 .dataTables_length label {
+        font-size: 15px;
+    }
+
+    .kh-tab4 .dataTables_length select {
+        width: 50px;
+        height: 30px;
+    }
+
+    .kh-tab4 .select2-selection__rendered {
+        line-height: 31px !important;
+    }
+
+    .kh-tab4 .select2-container .select2-selection--single {
+        height: 35px !important;
+    }
+
+    .kh-tab4 .select2-selection__arrow {
+        height: 34px !important;
+    }
+    input[type=checkbox]{
+        text-align: center;
+        transform: scale(1.5);
+    }
 </style>
 
-
-<div class="row">
+<div class="row kh-tab4">
 
     <div class="col-md-12 col-xs-12">
         <a style="margin-bottom:10px;font-size: 13px;padding: 15px;" href="javascript:;"
            class="open-modal-addnew-create-order btn btn-info pull-left display-block"><?php echo _l('Tạo Đơn Hàng'); ?></a>
+        <button style="margin-bottom:10px;font-size: 13px;padding: 15px;margin-left: 10px" href="javascript:;" class="open-modal-addnew-create-order-excel btn btn-success pull-left display-block">
+            <?php echo _l('Tải Excel'); ?>
+        </button>
     </div>
 
     <div class="layout-mobile">
@@ -469,156 +585,197 @@
             </div>
         <?php } else {?>
 
-            <div class="row">
-                <div class="col-md-2 col-xs-6">
-                    <div class="form-group">
-                        <label for="province">Tỉnh/Thành</label>
-                        <select data-live-search="true" class="form-control selectpicker" id="province_filter"
-                                name="province_filter">
-                            <option value="null">Chọn Tỉnh/Thành</option>
-                            <?php foreach ($province as $key => $value): ?>
-                                <option value='<?php echo json_encode($value) ?>'><?php echo $value->name ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-
-
+        <div class="row col-md-12">
+            <div class="panel_s">
+                <div class="">
                     <div class="col-md-12">
-                        <div id="loader-repo4" class="lds-ellipsis" style="display:none;">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
+                        <h3>CHỈ MỤC TÌM KIẾM</h3>
+                    </div>
+                    <div class="clearfix"></div>
+                    <hr class="hr-panel-heading"/>
+
+                    <div class="clearfix"></div>
+
+                    <div class="row form-horizontal">
+
+                        <input type="hidden" id="search_fast" name="search_fast"
+                               value="<?php echo (isset($_GET['search_fast'])) ? $_GET['search_fast'] : ""; ?>">
+                        <div class="col-md-5">
+                            <div class="col-md-12 no-padding mb-5">
+                                <div class="col-sm-3 control-label">Ngày Tạo</div>
+                                <div class="col-sm-9 " style="display: flex">
+
+                                    <input class="form-control datetimepicker-date"
+                                           value=""
+                                           id="order-from-date-tab4"
+                                           type="input"> &nbsp;
+                                    <input class="form-control datetimepicker-date"
+                                           value=""
+                                           id="order-to-date-tab4" type="input">
+                                </div>
+
+
+                            </div>
+                            <div class="col-md-12 no-padding mb-5">
+                                <div class="col-sm-3 control-label ">Mã Đơn / SĐT</div>
+                                <div class="col-sm-9 " style="display: flex">
+                                    <input class="form-control" onkeyup="emptyDate()" id="code_request" type="text">
+                                    &nbsp;
+                                </div>
+                            </div>
+
+
+
                         </div>
-                    </div>
-                </div>
-
-                <div class="col-md-2 col-xs-6">
-                    <div class="form-group">
-                        <label for="type_customer">Quận Huyện/Thành Phố:</label>
-                        <select class="form-control" id="district_filter" name="district_filter">
-
-                        </select>
-                    </div>
-                </div>
-
-                <div class="col-md-2 col-xs-6">
-                    <?php echo render_date_input('date_start_customer_order', 'Ngày bắt đầu', $date_start); ?>
-                </div>
-                <div class="col-md-2 col-xs-6">
-                    <?php echo render_date_input('date_end_customer_order', 'Ngày kết thúc', $date_end); ?>
-                </div>
-
-
-                <div class="col-md-4 col-xs-12">
-                    <button class="btn btn-info mtop25" type="button" onclick="<?= (!$isAppMobile) ? 'load_table_customer_tab4()':'load_mobile_customer_tab4()'?>">Lọc danh sách</button>
-                    <a class="btn btn-success mtop25" type="button" id="btn-export-excel">Xuất ra excel</a>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-
-        <?php }?>
-
-    </div>
-    <?php if ($isAppMobile): ?>
-
-
-        <div class="">
-
-            <div class="init-data-mobile">
-
-
-                <ul class="scroll-list-tab4">
-                    <li>
-                        <p class="stt-left">
-                            1
-                        </p>
-                        <div class="left-width">
-
-                            <div class="row-1 border-row">
-                                <p class="left-row">
-                                    <span style="color:red;font-weight:bold">07/09</span>
-                                    <span style="color:#000;font-weight:bold">HDGS209724NT.1280296</span>
-                                </p>
-
+                        <div class="col-md-7 mb-15">
+                            <div class="col-md-12 no-padding mb-5">
+                                <div class="col-sm-2 control-label">Mã Đơn KH</div>
+                                <div class="col-sm-9 " style="display: flex">
+                                    <input class="form-control" onkeyup="emptyDate()" id="code_order" type="text">
+                                    &nbsp;
+                                </div>
                             </div>
 
+                            <div class="col-md-12 no-padding mb-5">
+                                <div class="col-sm-2 control-label">Tỉnh / Huyện</div>
+                                <div class="col-sm-9 " style="display: flex">
+                                    <select onchange="getDistrictTab4(this)" id="cityTab4" name="city">
 
-                            <div class="row-3 border-row" style="color:red">
-                                Nội dung cái khối lượng ở đây
-                            </div>
-
-                            <div class="row-3 border-row">
-                                Nội dung cái Node ở đây
+                                    </select>
+                                    &nbsp;
+                                    <select id="kh-district-tab4" name="district">
+                                    </select>
+                                </div>
                             </div>
 
                         </div>
+                    </div>
+                    <div class=" col-md-12 mb-10">
 
-                        <div class="clear-fix"></div>
-                    </li>
-                </ul>
+                        <button class="btn btn-sm btn-primary button-red mr-2" onclick="clickSearchTab4()"
+                                style="width: 15%;">Tìm Kiếm
+                        </button>
+                        <button class="btn btn-sm btn-primary button-red mr-2" onclick="clickPrintA5()"
+                                style="width: 10%;float: right">In A5
+                        </button>
+                        <button class="btn btn-sm btn-primary button-red mr-2" onclick="clickSearchTab4()"
+                                style="width: 10%;float: right">In K5
+                        </button>
+                        <button class="btn btn-sm btn-primary button-red mr-2" onclick="clickSearchTab4()"
+                                style="width: 10%;float: right">In S9
+                        </button>
 
-                <div class="footer-app"></div>
-            </div>
+                    </div>
+                </div>
 
-        </div>
+                <div class="">
 
-
-    <?php else: ?>
-
-
-        <div class="col-md-12">
-
-
-            <div class="tab-cover">
-                <div class="tab1_pick tab-table">
-                    <table id="table_customer_order" class="table table table-striped table-debts_customer_detail">
-                        <thead>
+                    <div class="col-md-12" id="table-order-wrapper">
+                        <table id="example" class="table table-bordered table-striped"
+                               style="border-collapse: collapse;width:100%;font-family: " Times New Roman
+                        ", Times, serif !important;font-size: 12px !important;">
+                        <thead >
                         <tr>
-                            <th>id</th>
-                            <th>Ngày Tạo</th>
-                            <th>product</th>
-                            <th>Mã yêu cầu</th>
-                            <th>Khách Hàng</th>
-                            <th>Mã đơn hàng</th>
-                            <th>Dịch Vụ Super Ship</th>
-                            <th>Thu hộ</th>
-                            <th>Họ và Tên Người Nhận</th>
-                            <th>SDT</th>
-                            <th>SDT Phụ</th>
-                            <th>Địa Chỉ Khách hàng</th>
-                            <th>Phường Xã</th>
-                            <th>Quận Huyện/Thành Phố</th>
-                            <th>Tỉnh</th>
-                            <th>Tổng Tiền</th>
-                            <th>Cân Nặng</th>
-                            <th>Thể Tích</th>
-                            <th>Mã Đơn Hàng</th>
-                            <th>Ghi Chú</th>
-                            <th>Dịch Vụ</th>
-                            <th>Cấu Hình</th>
-                            <th>Người Trả Phí</th>
-                            <th>Đổi/Lấy Hàng Về</th>
-                            <th>Giá Trị Đơn Hàng</th>
-                            <th>Người tạo</th>
-                            <th>Người tạo</th>
-                            <th>status</th>
-                            <th>Cài Đặt</th>
-
+                            <th style="width: 5% !important;text-align: center"><input type="checkbox" onchange="toggleCheckBox(this,'check_id[]')"></th>
+                            <th style="width: 5% !important;">STT</th>
+                            <th style="width: 10% !important;">ĐƠN HÀNG</th>
+                            <th style="width: 10% !important;">GÓI HÀNG</th>
+                            <th style="width: 40% !important;">NGƯỜI NHẬN</th>
+                            <th style="width: 30% !important;">NỘI DUNG</th>
                         </tr>
                         </thead>
-                        <tbody></tbody>
 
-                    </table>
-
+                        </table>
+                    </div>
                 </div>
 
-
             </div>
-
-
         </div>
-    <?php endif; ?>
+
+        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true"
+             id="modal-update">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="padding: 7px !important;display: flex">
+                <span>
+                    <h5 class="modal-title">Ghi chú nội bộ</h5>
+                </span>
+                        <span style="margin-left: auto;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </span>
+
+                    </div>
+                    <div class="modal-body">
+                        <label>Ghi Chú Nội bộ</label>
+                        <p><textarea id="ghi-chu-noi-bo-old" rows="5" cols="80"></textarea></p>
+                    </div>
+                    <div class="modal-body">
+                        <label>Cập Nhật Mới Ghi Chú Nội bộ</label>
+                        <input type="hidden" id="shop_id">
+                        <p><textarea id="ghi-chu-noi-bo-new" rows="20" cols="80"></textarea></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="updateNode()">Cập nhật</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <?php }?>
+
+</div>
+<?php if ($isAppMobile): ?>
+
+
+    <div class="">
+
+        <div class="init-data-mobile">
+
+
+            <ul class="scroll-list-tab4">
+                <li>
+                    <p class="stt-left">
+                        1
+                    </p>
+                    <div class="left-width">
+
+                        <div class="row-1 border-row">
+                            <p class="left-row">
+                                <span style="color:red;font-weight:bold">07/09</span>
+                                <span style="color:#000;font-weight:bold">HDGS209724NT.1280296</span>
+                            </p>
+
+                        </div>
+
+
+                        <div class="row-3 border-row" style="color:red">
+                            Nội dung cái khối lượng ở đây
+                        </div>
+
+                        <div class="row-3 border-row">
+                            Nội dung cái Node ở đây
+                        </div>
+
+                    </div>
+
+                    <div class="clear-fix"></div>
+                </li>
+            </ul>
+
+            <div class="footer-app"></div>
+        </div>
+
+    </div>
+
+
+<?php else: ?>
+
+
+<?php endif; ?>
 
 </div>
 

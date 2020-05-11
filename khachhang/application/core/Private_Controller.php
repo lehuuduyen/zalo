@@ -11,6 +11,7 @@ class Private_Controller extends MY_Controller {
     function __construct()
     {
         parent::__construct();
+
         // must be logged in
         if ( ! $this->user)
         {

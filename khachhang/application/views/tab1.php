@@ -28,7 +28,7 @@
             <th>ID</th>
             <th style="width:0%;">Ngày Tính Nợ</th>
             <th style="width:0%;">Ngày Tạo</th>
-            <th style="width:8%;">LOẠI</th>
+            <th style="width:8%;">Mã Yêu Cầu</th>
             <th style="width:15%;">MÃ</th>
             <th style="width:15%;">Trạng Thái</th>
             <th style="width:10%;">Biến động công nợ</th>

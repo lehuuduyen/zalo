@@ -191,7 +191,11 @@ class M_dataTable_order extends CI_Model
             $icon_delete = '<a href="javascript:;" data-id= "' . $rows[0] . '" class="btn btn-danger delete-reminder-custom-order btn-icon">
         <i class="fa fa-remove"></i>
         </a>';
-            $rows[] = $icon_delete . '</div>';
+            $icon_edit = '<a href="javascript:;" data-id= "' . $rows[0] . '" class="btn btn-success edit-reminder-custom-order btn-icon">
+        <i class="fa fa-edit"></i>
+        </a>';
+
+            $rows[] = $icon_edit.' '.$icon_delete . '</div>';
 
             $rows[9] = $rows[9] . ', ' . $rows[10] . ', ' . $rows[11] . ', ' . $rows[12];
 

@@ -1,4 +1,5 @@
 <script>
+
     function InitDataMobileTab2() {
 
         $('.loading-page').show();
@@ -22,6 +23,12 @@
                 var html = '';
                 var ind = 0;
                 for (var i = 0; i < datalist.length; i++) {
+                    required_code='';
+                    if(datalist[i][20] !=""&& datalist[i][20] != null && datalist[i][20] != 'UNDEFINED'){
+                        required_code = ` <div class="righ-row">
+                                          ${datalist[i][20]}
+                                        </div>`
+                    }
                     ind++;
                     html += '<li onclick="fnDetail(\'' + datalist[i][4] + '\',' + datalist[i][0] + ',\'' + datalist[i][16] + '\',1)">';
                     html += '   <p class="stt-left">';
@@ -38,10 +45,17 @@
                     html += '               </span>';
                     html += '           </p>';
                     html += '       </div>';
+                    html += required_code;
+
                     html += ContentKL(datalist[i][17]);
                     html += '<div class="row-3 border-row">';
                     html += datalist[i][9];
                     html += '</div>';
+                    html += '<div class="row-3 border-row">';
+                    html += datalist[i][19];
+                    html += '</div>';
+                    html += `<div class="row-3 border-row"> <i class='fa fa-eye' ></i>  <a href="#">Hành trình</a> </div>`;
+
                     html += '</div><div class="clear-fix"></div></li>';
                 }
 

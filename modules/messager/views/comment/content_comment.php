@@ -1,1 +1,0 @@
-<div class="fb-comment-embed" data-href="https://www.facebook.com/zuck/posts/404960666902794" data-width="500"></div>

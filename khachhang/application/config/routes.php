@@ -57,3 +57,15 @@ $route['login']                = 'user/login';
 $route['logout']               = 'user/logout';
 $route['admin']                = 'admin/dashboard';
 $route['khachhang']                = '/app';
+
+
+$route['order'] = 'Order/index';
+$route['api/order/district'] = 'Order/getDistrict';
+$route['api/order'] = 'Order/getList';
+$route['api/create_order/print'] = 'Order/print_create_order';
+$route['api/order/update'] = 'Order/update';
+$route['api/order_tab4'] = 'Order/getListTab4';
+$route['api/order/export_excel'] = 'Order/exportExcel';
+$route['api/order/export_excel_kh'] = 'Order/exportExcelKH';
+$route['api/get_region_by_city'] = 'Order/getRegionByCity';
+$route['api/order/update'] = 'Order/edit';

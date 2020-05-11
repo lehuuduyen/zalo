@@ -2,6 +2,11 @@
     .scroll-list-tab2 {
 
     }
+    input ,
+    input::-webkit-input-placeholder {
+        font-size: 12px !important;
+    }
+
 </style>
 
 <div class="layout-mobile">
@@ -13,6 +18,17 @@
             <?php echo render_date_input('date_end_customer_order_tab2', 'Ngày kết thúc', $date_end); ?>
         </div>
 
+
+
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-xs-6">
+            <div class="form-group" app-field-wrapper="date_start_customer_order_tab2">
+                <label for="date_start_customer_order_tab2" class="control-label">Nhập Mã Tìm Kiếm</label>
+                <input type="text" class="form-control font" placeholder="Nhập SĐT Người Nhận, Mã Yêu Cầu,Mã Đơn Hàng hoặc Mã Đơn Shop" id="code_order_tab2">
+
+            </div>
+        </div>
     </div>
     <div class="row">
 
@@ -51,7 +67,7 @@
 
         <div class="col-md-4 col-xs-12" style="margin-bottom: 2%">
             <button class="btn btn-info mtop25" type="button" onclick="fnFilter_list(<?= (!empty($isAppMobile)) ? $isAppMobile : 0 ?>)">Lọc danh sách</button>
-            <button class="btn btn-success mtop25" type="button" onclick="exportExcelMobile()">Xuất ra excel</button>
+<!--            <button class="btn btn-success mtop25" type="button" onclick="exportExcelMobile()">Xuất ra excel</button>-->
         </div>
         <div class="clearfix"></div>
     </div>

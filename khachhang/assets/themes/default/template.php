@@ -112,6 +112,7 @@
 </div>
 
 <?php
+
 $user = json_decode(json_encode(json_decode($this->input->cookie('logged_in'))), true);
 ?>
 
@@ -124,7 +125,11 @@ $user = json_decode(json_encode(json_decode($this->input->cookie('logged_in'))),
 
 <input type="hidden" name="token_customer" value="<?php echo $user['token_customer'] ?>" id="token_customer">
 
-
+<input type="hidden" id="data-list-status" value='<?=$list_status?>'>
+<input type="hidden" id="data-date-from" value='<?=$date_from?>'>
+<input type="hidden" id="data-date-to" value='<?=$date_to?>'>
+<input type="hidden" id="data-city" value='<?=$city?>'>
+<input type="hidden" id="data-regions" value='<?=$regions?>'>
 <?php $is_mobile = $this->isAppMobile; ?>
 
 

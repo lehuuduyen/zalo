@@ -421,13 +421,7 @@ function pickUpInitMobile() {
 
         // $('#repo_customer_cover');
         for (var i = 0; i < data.length; i++) {
-
-          if (data == data[i].formatted_address.replace(", Tỉnh Hải Dương" , "")) {
-            html += `<option selected value="${data[i].formatted_address.replace(", Tỉnh Hải Dương" , "")}">${data[i].formatted_address.replace(", Tỉnh Hải Dương" , "")}</option>`;
-          }else {
-            html += `<option value="${data[i].formatted_address.replace(", Tỉnh Hải Dương" , "")}">${data[i].formatted_address.replace(", Tỉnh Hải Dương" , "")}</option>`;
-          }
-
+            html += `<option value="${data[i].formatted_address}">${data[i].formatted_address}</option>`;
         }
         html += '</select>';
         $('#repo_customer_cover2').empty();
@@ -597,7 +591,7 @@ function pickUpInitMobile() {
 
 				// $('#repo_customer_cover');
 				for (var i = 0; i < data.length; i++) {
-					html += `<option value="${data[i].formatted_address.replace(", Tỉnh Hải Dương" , "")}">${data[i].formatted_address.replace(", Tỉnh Hải Dương" , "")}</option>`;
+					html += `<option value="${data[i].formatted_address}">${data[i].formatted_address}</option>`;
 				}
 				html += '</select>';
 				$('#repo_customer_cover').empty();

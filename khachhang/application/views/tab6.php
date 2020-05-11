@@ -12,7 +12,7 @@
             <div class="form-group" app-field-wrapper="date_end_customer">
                 <label for="date_end_customer" class="control-label">Tìm kiếm</label>
                 <div class="input-group date">
-                    <input type="text" id="search" name="search" class="form-control" value=""
+                    <input type="text" id="search" device="<?= (!empty($isAppMobile)) ? $isAppMobile : 0 ?>" onkeyup="searchTab6(event)" name="search" class="form-control" value=""
                            placeholder="Nhập số điện thoại hoặc mã đơn hàng" autocomplete="off">
                     <div class="input-group-addon" onclick="fnSearch(<?= (!empty($isAppMobile)) ? $isAppMobile : 0 ?>)">
                         <i class="fa fa-search"></i>

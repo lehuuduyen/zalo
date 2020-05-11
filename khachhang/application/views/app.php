@@ -220,7 +220,7 @@
 </div><!-- /.modal -->
 
 
-<div class="modal fade" id="create_order" tabindex="-1" role="dialog" style="padding-left:0">
+<div class="modal fade" id="create_order" tabindex="-1" role="dialog" style="position: fixed;padding-left:0">
     <div class="modal-dialog" role="document">
         <?php echo form_open('/', array('id' => 'create_order_ob', 'autocomplete' => 'off')); ?>
         <div class="modal-content">
@@ -237,7 +237,7 @@
                             <div class="form-group" style="position:relative">
                                 <label for="customer_phone_zalo">Chọn Khách Hàng</label>
 
-                                <input autocomplete="off" placeholder="Chọn Khách Hàng" class="form-control"
+                                <input autocomplete="off" onkeyup="enterTab4(event)" placeholder="Chọn Khách Hàng" class="form-control"
                                        id="search_customer_create" type="text" name="search_customer_create"
                                        value="<?php echo $customer_shop_code; ?>">
                                 <i class="fa fa-search search-icon" aria-hidden="true"></i>
@@ -270,7 +270,7 @@
                         <div class="col-md-3 col-xs-12">
                             <div class="form-group">
                                 <label for="product">Sản Phẩm</label>
-                                <input type="text" class="form-control" placeholder="Sản Phẩm" id="product"
+                                <input type="text" onkeyup="enterTab4(event)" class="form-control" placeholder="Sản Phẩm" id="product"
                                        name="product"></textarea>
                             </div>
                         </div>
@@ -278,13 +278,13 @@
                         <div class="col-md-3 col-xs-12">
                             <div class="form-group">
                                 <label for="phone">Điện Thoại</label>
-                                <input type="text" class="form-control" placeholder="Điện Thoại" id="ap" name="ap"/>
+                                <input type="text" onkeyup="enterTab4(event)" class="form-control" placeholder="Điện Thoại" id="ap" name="ap"/>
                                 <a class="add-more-phone" href="#"><i class="fa fa-plus" aria-hidden="true"></i></a>
                             </div>
                             <!-- Phone -->
                             <div class="form-group phone-more" style="display:none">
                                 <label for="phone_more">Điện Thoại Phụ </label>
-                                <input type="text" class="form-control" placeholder="Điện Thoại Phụ" id="phone_more"
+                                <input type="text" onkeyup="enterTab4(event)" class="form-control" placeholder="Điện Thoại Phụ" id="phone_more"
                                        name="phone_more"/>
                             </div>
                             <!-- Phone More-->
@@ -293,7 +293,7 @@
                         <div class="col-md-3 col-xs-12">
                             <div class="form-group ">
                                 <label for="f">Họ Và Tên </label>
-                                <input type="text" class="form-control" placeholder="Họ Và Tên" id="f" name="f"/>
+                                <input type="text" onkeyup="enterTab4(event)" class="form-control" placeholder="Họ Và Tên" id="f" name="f"/>
                             </div>
                             <!-- Họ Và Tên-->
                         </div>
@@ -301,7 +301,7 @@
                         <div class="col-md-3 col-xs-12">
                             <div class="form-group ">
                                 <label for="a">Địa Chỉ </label>
-                                <input type="text" class="form-control" placeholder="Địa Chỉ" id="a" name="a"
+                                <input type="text" onkeyup="enterTab4(event)" class="form-control" placeholder="Địa Chỉ" id="a" name="a"
                                        autocomplete="off"/>
                             </div>
                             <!-- Địa Chỉ-->
@@ -346,7 +346,7 @@
                             </div>
                         </div>
                         <div class="region-box col-md-3 col-xs-12">
-                            <input type="hidden" name="region_id" id="region_id">
+                            <input type="hidden" name="region_id" onkeyup="enterTab4(event)" id="region_id">
                             <div class="load-html">
 
                             </div>
@@ -370,16 +370,16 @@
                         <div class="col-md-2">
                             <div class="form-group ">
                                 <label for="mass">Khối Lượng [gr] </label>
-                                <input style="color:red;font-weight:bold;" onkeyup="formatNumBerKeyUp(this)" type="text"
-                                       class="form-control" placeholder="Khối Lượng (Đơn vị tính gram (gr))" id="mass" name="mass"
-                                       value="<?php echo number_format(100) ?>"/>
+                                <input style="color:red;font-weight:bold;" onkeyup="formatNumBerKeyUp(this);enterTab4(event)" type="text"
+                                       class="form-control" placeholder="Khối Lượng (gram)" id="mass" name="mass"
+                                       value=""/>
                             </div>
                         </div>
 
                         <div class="col-md-2" style="display: none">
                             <div class="form-group ">
                                 <label for="volume">Thể Tích [Cm³] </label>
-                                <input style="color:red;font-weight:bold;" onkeyup="formatNumBerKeyUp(this)" type="text"
+                                <input style="color:red;font-weight:bold;" onkeyup="formatNumBerKeyUp(this);enterTab4(event)" type="text"
                                        class="form-control" placeholder="Thể Tích" id="volume" name="volume"
                                        value="<?php echo number_format(27000) ?>"/>
                                 <span style="color:#03a9f4;">Đơn vị tính gram (Cm³).</span>
@@ -389,15 +389,15 @@
                         <div class="col-md-2">
                             <div class="form-group ">
                                 <label for="value_order">Trị Giá [₫]</label>
-                                <input onkeyup="formatNumBerKeyUp(this)" type="text" class="form-control"
-                                       placeholder="Trị Giá" id="value_order" name="value_order"/>
+                                <input onkeyup="formatNumBerKeyUp(this);enterTab4(event)" type="text" class="form-control"
+                                       placeholder="Trị Giá (Không bắt buộc nhập)" id="value_order" name="value_order"/>
                             </div>
                         </div>
 
                         <div class="col-md-2" style="display:none">
                             <div class="form-group">
                                 <label for="check_disable_super">
-                                    <input checked id="check_disable_super" type="checkbox">
+                                    <input checked id="check_disable_super" onkeyup="enterTab4(event)" type="checkbox">
                                     Theo Chính Sách
                                 </label>
                             </div>
@@ -416,7 +416,7 @@
                         <div class="col-md-2">
                             <div class="form-group ">
                                 <label for="cod">Tiền Hàng [₫]</label>
-                                <input onkeyup="formatNumBerKeyUp(this)" type="text" class="form-control"
+                                <input onkeyup="formatNumBerKeyUp(this);enterTab4(event)" type="text" class="form-control"
                                        placeholder="Tiền Hàng" id="cod" name="cod"/>
                             </div>
                         </div>
@@ -425,7 +425,7 @@
                             <div class="form-group ">
                                 <label for="total_money">Thu Hộ</label>
 
-                                <input onkeyup="formatNumBerKeyUp(this)" type="text" class="form-control"
+                                <input onkeyup="formatNumBerKeyUp(this);enterTab4(event)" type="text" class="form-control"
                                        placeholder="Tổng Tiền" id="total_money" name="total_money"/>
                             </div>
                         </div>
@@ -449,13 +449,13 @@
                             <div class="form-group">
                                 <label for="note">Ghi Chú Khi Giao :</label>
                                 <textarea placeholder="Ghi Chú Khi Giao" style="resize:none; height:100px;"
-                                          class="form-control" rows="5" id="note_create" name="note_create"></textarea>
+                                          class="form-control" rows="5" onkeyup="enterTab4(event)" id="note_create" name="note_create"></textarea>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="supership_value">Tiền Dịch Vụ Supership [₫]</label>
-                                <input onkeyup="formatNumBerKeyUp(this)" type="text" class="form-control" style="width: 90%;"
+                                <input onkeyup="formatNumBerKeyUp(this);enterTab4(event)" type="text" class="form-control" style="width: 90%;"
                                        placeholder="Tiền Dịch Vụ Supership" id="supership_value" name="supership_value"
                                        disabled/>
                                 <span style="color:transparent;">test</span>
@@ -526,7 +526,7 @@
                             <div class="col-md-3 col-xs-12">
                                 <div class="form-group ">
                                     <label for="code_order">Mã Đơn Của Shop</label>
-                                    <input type="text" class="form-control" placeholder="Mã Đơn Của Shop" id="soc"
+                                    <input type="text" onkeyup="enterTab4(event)" class="form-control" placeholder="Mã Đơn Của Shop" id="soc"
                                            name="soc"/>
 
                                 </div>
@@ -544,12 +544,98 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo _l('Đóng'); ?></button>
-                <a href="javascript:;" class="btn btn-primary submit_create_order"><?php echo _l('Xác Nhận'); ?></a>
+                <a href="javascript:;" id="btn_create" class="btn btn-primary submit_create_order"><?php echo _l('Xác Nhận'); ?></a>
             </div>
         </div><!-- /.modal-content -->
         <?php echo form_close(); ?>
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+
+<div class="modal fade" id="create_order-excel" tabindex="-1" role="dialog" style="padding-left:0">
+    <div class="modal-dialog" role="document">
+        <?php echo form_open('/', array('id' => 'create_order_ob_excel', 'autocomplete' => 'off', 'enctype' => 'multipart/form-data')); ?>
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title"><?php echo "Tải Đơn Hàng"; ?></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+
+                    <div class="row-custom">
+                        <div class="col-md-12">
+                            <div class="alert alert-primary" id="alertSuccess" role="alert" style="background-color: #cce5ff;border-color: #b8daff;display: none;border-radius: 0px;height: 80px;">
+                                A simple primary alert—check it out!
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row-custom">
+                        <div class="col-md-12">
+                            <div class="alert alert-danger" id="alertError" role="alert" style="background-color: #eaabb1;border-color: #eaabb1;display: none;border-radius: 0px;height: 46px;">
+                                A simple primary alert—check it out!
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row-custom">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <a class="btn btn-danger" style="width: 100%" href='<?= base_url('assets/order/Mau_Tao_Don_Hang.xlsx')?>'>Tải file mẫu</a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row-custom">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div id="repo_customer_cover_create_order_excel"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row-custom">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="repo_customer" style="margin-top: 2%">Tệp Excel <span style="color: red">[*]</span></label>
+                                <input type="file" id="uploadfile" style="width: 100%;padding: 1%;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row-custom">
+                        <div class="col-md-12" style="margin-top: 4%;">
+                            <div class="alert alert-danger" role="alert" style="background-color: #eaabb1;border-color: #eaabb1;display: none;border-radius: 0px;height: 46px;">
+                                A simple primary alert—check it out!
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row-custom">
+                        <div class="col-md-12" style="margin-top: 4%;">
+                            <div class="alert alert-danger" role="alert" style="background-color: #eaabb1;border-color: #eaabb1;display: none;border-radius: 0px;height: 46px;">
+                                A simple primary alert—check it out!
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo _l('Đóng'); ?></button>
+                <a href="javascript:void (0);" id="btn_upload" class="btn btn-primary submit_create_order_excel"
+                   data-id="0"><?php echo _l('Tải'); ?></a>
+            </div>
+        </div><!-- /.modal-content -->
+        <?php echo form_close(); ?>
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
 
 <style>
     .circle-check {

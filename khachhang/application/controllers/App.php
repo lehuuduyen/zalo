@@ -11,7 +11,7 @@ class App extends Private_Controller
         parent::__construct();
 		date_default_timezone_set('Asia/Ho_Chi_Minh');
     }
-
+   
     public function get_province()
     {
 
@@ -185,6 +185,22 @@ class App extends Private_Controller
 
         $data['content'] = $this->load->view('app', $content_data, TRUE);
 
+
+
+        $this->load->model('Order_model');
+        $order_model = new Order_model();
+        $data['list_status'] = json_encode($order_model->getStatus());
+        //get date
+        $now = date('Y-m-d');
+        $date = new DateTime($now);
+        $days = 7;
+        date_sub($date, date_interval_create_from_date_string($days . ' days'));
+        $date_from = date_format($date, 'Y-m-d');
+        $date_to = date('Y-m-d');
+        $data['date_from'] =$date_from;
+        $data['date_to'] = $date_to;
+        $data['city'] = json_encode($order_model->getCity());
+        $data['regions'] = json_encode($order_model->getRegion());
         $this->load->view($this->template, $data);
     }
 
@@ -378,18 +394,20 @@ class App extends Private_Controller
 
 
             $row[8] = number_format((float)$row[8]);
-
+            if($row[15] != ""){
+                $row[15]=' - Đt: '.$row[15];
+            }
 
             if ($row[3] == "Đơn Hàng") {
                 $row[3] = "ĐH đã tính công nợ";
                 $row[9] = 'Thu hộ:' . $row6 . ', Phí:' . $row[7] .
-                    ' ( KL:' . $row[10] . ', ' . $row[11] . ' - ' . $row[12] . ' - ' . $row[13] . ' )';
+                    ' ( KL:' . $row[10] . ', ' . $row[11] .$row[15]. ' - ' . $row[12] . ' - ' . $row[13] . ' )';
             }
 
             if ($row[3] == "ĐH chưa đối soát") {
 
                 $row[9] = 'Thu hộ:' . $row6 . ', Phí:' . $row[7] .
-                    ' ( KL:' . $row[10] . ', ' . $row[11] . ' - ' . $row[12] . ' - ' . $row[13] . ' )';
+                    ' ( KL:' . $row[10] . ', ' . $row[11] .$row[15]. ' - ' . $row[12] . ' - ' . $row[13] . ' )';
 
                 $row[3] = "ĐH chưa tính công nợ";
             }
@@ -418,11 +436,8 @@ class App extends Private_Controller
                 $row[] = $_data;
             }
 
-            $icon_get_data = "<a style='padding: 3px;' class='btn btn-default btn-icon get_data_debits' href='javascript:;' data-debits='" . $aRow['name'] . "' data-id='" . $aRow['id'] . "'" . ">" . "
-        <i class='fa fa-eye' ></i>
-      </a>";
+            $icon_get_data = "";
 
-            $row[] = $icon_get_data . '</div>';
             if ($row[1]) {
                 $row[1] = date("d/m/Y", strtotime($row[1]));
             }
@@ -453,6 +468,7 @@ class App extends Private_Controller
                     ' $Phí:' . $row[7];
             }
 
+            $row[] = $icon_get_data . '</div>';
 
             $data_aaDATA[] = $row;
         }
@@ -511,6 +527,8 @@ class App extends Private_Controller
                     ' $Phí:' . $row[7];
             }
 
+                              $row[]=$aRow['note'];
+                              $row[]=$aRow['required_code'];
 
             $data_aaDATA[] = $row;
         }
@@ -705,7 +723,6 @@ class App extends Private_Controller
 
         $customerLoad = $this->db->get_where('tblcustomers', array('id' => $id_customer))->result();
 
-        $data_aaDATA;
 
 
         foreach ($customerLoad as $key => $value) {
@@ -800,7 +817,7 @@ class App extends Private_Controller
             }
 
 
-            $sql_order_date_null = "SELECT id , date_debits as date_create , date_create as created , status_debts , code_supership AS code_display , status , collect AS ps_in , hd_fee_stam AS ps_de , note , mass , receiver , city , district FROM tblorders_shop WHERE shop = ? AND date_debits IS NULL AND status != 'Huỷ' ORDER BY date_create DESC";
+            $sql_order_date_null = "SELECT id , date_debits as date_create , date_create as created , status_debts , code_supership AS code_display , status , collect AS ps_in , hd_fee_stam AS ps_de , note , mass , receiver , city , district,required_code,phone FROM tblorders_shop WHERE shop = ? AND date_debits IS NULL AND status != 'Huỷ' ORDER BY date_create DESC";
 
 
             $paramSQL = array($value->customer_shop_code);
@@ -906,7 +923,6 @@ class App extends Private_Controller
 
 
         $dataReturn = array_merge($data_aaDATA[0]['top_data'], $data_aaDATA[0]['data'], $dataSoFar);
-
         //cập nhật sps còn nợ
         //
         for ($i = sizeof($dataReturn) - 1; $i > 0; $i--) {
@@ -936,12 +952,29 @@ class App extends Private_Controller
             'receiver',
             'city',
             'district',
-            'collect'
+            'collect',
+            'phone',
+            'required_code'
         );
+        $this->load->model('Order_model');
+        $order_model = new Order_model();
 
         if ($this->isAppMobile == true) {
+            $date_return=$this->object_to_array_customer_detail_mobile($dataReturn, $aColumns);
+
+            foreach ($date_return as $key => $formatValue){
+                if($formatValue[16]=='Đơn Hàng'){
+                    $dataFormatNew = $order_model->getOrderShop($formatValue[0]);
+                    if(count($dataFormatNew)>0){
+                        $explode = explode("-",$formatValue[9]);
+                        $date_return[$key][9] = $explode[0].' - '.$dataFormatNew[0]['phone'].' - '.$explode[1].' - '.$explode[2];
+                        $date_return[$key][20]=$dataFormatNew[0]['required_code'];
+                    }
+                }
+
+            }
             $dataTableInit = [
-                "aaData" => $this->object_to_array_customer_detail_mobile($dataReturn, $aColumns),
+                "aaData" =>$date_return,
                 "draw" => $_POST['draw'],
                 "iTotalDisplayRecords" => sizeof($dataReturn),
                 "iTotalRecords" => sizeof($dataReturn)
@@ -957,6 +990,17 @@ class App extends Private_Controller
                 if (!is_null($item[1])) {
                     array_push($date_return, $item);
                 }
+            }
+
+            foreach ($date_return as $key => $formatValue){
+                $dataFormatNew = $order_model->getOrderShop($formatValue[0]);
+                if(count($dataFormatNew)>0){
+                    $explode = explode("-",$formatValue[9]);
+                    $date_return[$key][3]=$dataFormatNew[0]['required_code'];
+                    if($formatValue[10]!='' && $formatValue[10]!='null' && $formatValue[10]!=null){
+                        $date_return[$key][9] = $explode[0].' - '.$dataFormatNew[0]['phone'].' - '.$explode[1].' - '.$explode[2];
+                     }
+                    }
             }
             $dataTableInit = [
                 "aaData" => $date_return,
@@ -1208,7 +1252,7 @@ class App extends Private_Controller
             $limit = 20;
         $province = htmlspecialchars($this->input->post('status'));
 
-        $this->db->select('id , date_debits as date_create , date_create as created , status_debts , code_supership AS code_display ,status , collect AS ps_in , hd_fee_stam AS ps_de , note , mass , receiver , city , district , phone, DVVC');
+        $this->db->select('id , date_debits as date_create , date_create as created , status_debts , code_supership AS code_display ,status , collect AS ps_in , hd_fee_stam AS ps_de , note , mass , receiver , city , district , phone, DVVC,required_code');
         $this->db->from('tblorders_shop');
         $this->db->where('shop', $customer_shop_code);
         $this->db->where('date_debits IS NULL ', NULL);
@@ -1218,7 +1262,8 @@ class App extends Private_Controller
         if ($province != 'null') {
             $this->db->where('status', $province);
         }
-
+        $this->db->where('status !=', 'Hủy');
+        $this->db->where('status !=', 'Huỷ');
         if ($limit != 'all')
             $this->db->limit($limit);
         $this->db->order_by('created', 'DESC');
@@ -1272,7 +1317,8 @@ class App extends Private_Controller
             'district',
             'collect',
             'phone',
-            'DVVC'
+            'DVVC',
+            'required_code'
         );
 
         $dataTableInit = [
@@ -1290,28 +1336,35 @@ class App extends Private_Controller
     public function filter_list()
     {
         $province = htmlspecialchars($this->input->get('province'));
+        $codeOrder = htmlspecialchars($this->input->get('code_order'));
+
         $date_start_customer_order = htmlspecialchars($this->input->get('date_start_customer_order'));
         $date_end_customer_order = htmlspecialchars($this->input->get('date_end_customer_order'));
         $limit_geted = htmlspecialchars($this->input->get('limit_geted'));
         if ($limit_geted < 20 && $limit_geted != 'all')
             $limit_geted = 20;
         $logged_in = json_decode(json_encode(json_decode($this->input->cookie('logged_in'))), true);
+        $customer =$logged_in['customer_shop_code'];
+        $dateFrom =date('Y-m-d', strtotime(str_replace('-', '-', $date_end_customer_order)));
+        $dateEnd =date('Y-m-d', strtotime(str_replace('-', '-', $date_start_customer_order)));
+        $sql = "
+        SELECT shop.*  FROM `tblorders_shop` as shop
+        WHERE shop.`shop` LIKE '%$customer%'";
+//WHERE id IN (33, 34, 45)
+        ($codeOrder !="")?$sql.="AND shop.phone LIKE '%$codeOrder%'":"";
+        ($codeOrder !="")?$sql.="OR shop.required_code LIKE '%$codeOrder%'":"";
+        ($codeOrder !="")?$sql.="OR shop.code_orders LIKE '%$codeOrder%'":"";
+        ($codeOrder !="")?$sql.="OR shop.code_supership LIKE '%$codeOrder%'":"";
+        ($province !="null")?$sql.="AND shop.`status` LIKE '%$province%'":"";
+        $sql.="AND shop.`status` <> 'Hủy'";
+        $sql.="AND shop.`status` <> 'Huỷ'";
 
-        $this->db->from('tblorders_shop');
-        $this->db->where('shop', $logged_in['customer_shop_code']);
-        $this->db->where('date_create <=', date('Y-m-d', strtotime(str_replace('-', '-', $date_end_customer_order))));
-        $this->db->where('date_create >=', date('Y-m-d', strtotime(str_replace('-', '-', $date_start_customer_order))));
-
-        if ($province != 'null') {
-            $this->db->where('status', $province);
+        $sql.=" ORDER BY shop.date_create DESC";
+        if ($limit_geted != 'all'){
+            $sql.=" LIMIT $limit_geted";
         }
+        $list = $this->db->query($sql)->result();
 
-        if ($limit_geted != 'all')
-            $this->db->limit($limit_geted);
-
-        $this->db->order_by('id', 'DESC');
-
-        $list = $this->db->get()->result();
         echo json_encode(array('aaData' => $list, 'status' => true, 'error' => ''));
     }
 
@@ -1550,7 +1603,7 @@ class App extends Private_Controller
     {
         $token = $_POST['token'];
         unset($_POST['token']);
-        $code = 'YC' . '.' . code(3).'.'.code(3).'.'.code(3);
+        $code = 'YC' . '.' . code(9);
         $_POST['user_created'] = get_staff_user_id();
         $_POST['required_code'] = $code;
         $_POST['created'] = date('Y-m-d H:i:s');
@@ -2307,4 +2360,353 @@ class App extends Private_Controller
             exit();
         }
     }
+
+
+	// Edit order
+    public function get_order()
+    {
+        $id = intval($this->input->get('id'));
+
+        $this->db->select('tbl_create_order.*, tblcustomers.token_customer, tblcustomers.customer_shop_code');
+        $this->db->where('tbl_create_order.id', $id);
+        $this->db->join('tblcustomers', 'tbl_create_order.customer_id = tblcustomers.id');
+
+        $info_order = $this->db->get('tbl_create_order')->row();
+        $info_order = json_encode($info_order);
+        $info_order = json_decode($info_order, true);
+
+        $provinces = $this->do_request_to_mysupership('https://api.mysupership.vn/v1/partner/areas/province', 'GET');
+        $cities = $provinces['results'];
+        foreach ($cities as $province) {
+            if (strcmp($province['name'], trim($info_order['province'])) == 0) {
+                $info_order['id_province'] = $province['code'];
+            }
+        }
+        if (!empty($info_order['id_province'])) {
+            $districts = $this->do_request_to_mysupership('https://api.mysupership.vn/v1/partner/areas/district?province=' . $info_order['id_province'], 'GET');
+            $info_order['list_districts'] = $districts['results'];
+
+            if(!empty($districts)){
+                $districts = $districts['results'];
+                $user['district'] = trim($info_order['district']);
+
+                foreach ($districts as $v){
+                    if(strcmp($v['name'], $info_order['district']) == 0){
+                        $info_order['id_district'] = $v['code'];
+                    }
+                }
+            }
+        }
+
+        if(!empty($info_order['id_district'])){
+            $result_areas = $this->do_request_to_mysupership("https://api.mysupership.vn/v1/partner/areas/commune?district=".$info_order['id_district'], "GET");
+            if(!empty($result_areas)){
+                $info_order['list_areas'] = $result_areas['results'];
+            }
+        }
+
+        echo json_encode(array('order' => $info_order));
+    }
+
+    public function edit_order()
+    {
+        unset($_POST['token']);
+        $id = $_POST['id'];
+        unset($_POST['id']);
+        $_POST['user_created'] = get_staff_user_id();
+        
+		$this->db->select('tbl_create_order.*, tblcustomers.customer_phone');
+        $this->db->where('tbl_create_order.id', $id);
+        $this->db->join('tblcustomers', 'tbl_create_order.customer_id = tblcustomers.id');
+        $info = $this->db->get('tbl_create_order')->row();
+        if(empty($_POST['pickup_phone'])){
+            $_POST['pickup_phone'] = $info->customer_phone;
+        }
+		
+        // $_POST['created'] = date('Y-m-d H:i:s');
+        foreach ($_POST as $key => $value)
+            $_POST[$key] = trim($value);
+        $this->db->where('id', $id);
+        $update = $this->db->update('tbl_create_order', $_POST);
+        if ($update) {
+            echo json_encode(array('success' => 'ok', 'code' => $info->required_code));
+            die();
+        } else {
+            echo 'Luư dữ liệu không thành công';
+            die();
+        }
+    }
+
+
+public function do_request_to_mysupership($url, $method)
+    {
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_CUSTOMREQUEST => $method,
+            CURLOPT_HTTPHEADER => array(
+                "Accept: */*",
+            ),
+        ));
+        $response = curl_exec($curl);
+        curl_close($curl);
+        if (!empty($response)) {
+            return json_decode($response, true);
+        } else {
+            return false;
+        }
+    }
+
+
+    
+    public function upload()
+    {
+        require_once(APPPATH . "third_party" . DIRECTORY_SEPARATOR . 'PHPExcel/PHPExcel.php');
+        $this->load->helper('security');
+
+        $result = array('status' => false, 'message' => '');
+
+        if (isset($_FILES['uploadfile'])) {
+            $warehouse = htmlspecialchars($this->input->post('warehouse'));
+            $id_customer = htmlspecialchars($this->input->post('id_customer'));
+
+            $fullfile = $_FILES['uploadfile']['tmp_name'];
+            $extension = strtoupper(pathinfo($_FILES['uploadfile']['name'], PATHINFO_EXTENSION));
+            if ($extension != 'XLSX' && $extension != 'XLS') {
+                $result['message'] = lang('Không đúng định dạng excel');
+                echo json_encode($result);
+                die();
+            }
+
+            $inputFileType = PHPExcel_IOFactory::identify($fullfile);
+            $objReader = PHPExcel_IOFactory::createReader($inputFileType);
+            $objReader->setReadDataOnly(true);
+            $objPHPExcel = $objReader->load("$fullfile");
+
+            $total_sheets = $objPHPExcel->getSheetCount();
+            $allSheetName = $objPHPExcel->getSheetNames();
+            $objWorksheet = $objPHPExcel->setActiveSheetIndex(0);
+            $highestRow = $objWorksheet->getHighestRow();
+            $highestColumn = $objWorksheet->getHighestColumn();
+            $highestColumnIndex = PHPExcel_Cell::columnIndexFromString('BM');
+            $array_colum = array();
+
+            for ($row = 1; $row <= $highestRow; ++$row) {
+                for ($col = 0; $col < $highestColumnIndex; ++$col) {
+                    $value = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
+                    $array_colum[$row - 1][$col] = $value;
+                }
+            }
+
+            // get list province
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => "https://api.mysupership.vn/v1/partner/areas/province",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "GET",
+                CURLOPT_HTTPHEADER => array(
+                    "Accept: */*",
+                ),
+            ));
+
+            $response = curl_exec($curl);
+            curl_close($curl);
+            $province = json_decode($response)->results;
+
+            $ware = explode(',', $warehouse);
+
+            // get info customer
+            $this->db->where('id', $id_customer);
+            $info_customer = $this->db->get('tblcustomers')->row();
+
+            // Check policy
+            $this->db->select('*');
+            $this->db->where('customer_id', $id_customer);
+            $policy_result = $this->db->get('tblcustomer_policy')->row();
+            if (empty($policy_result)) {
+                $result['message'] = 'Khách Hàng Này Chưa Có Chính Sách';
+                echo json_encode($result);
+                die();
+            }
+
+            $data = $data_push = $errors = array();
+
+            if (!empty($array_colum)) {
+                for ($i = 2; $i <= $highestRow; $i++) {
+                    if ($array_colum[$i][0] != "" && $array_colum[$i][2] != "" && $array_colum[$i][3] != "" && $array_colum[$i][4] != "" && $array_colum[$i][5] != "" && $array_colum[$i][6] != "" && $array_colum[$i][7] != "" && $array_colum[$i][8] != "" && $array_colum[$i][9] != "") {
+                        $data_push['customer_id'] = $id_customer;
+                        $data_push['pickup_address'] = $warehouse;
+                        $data_push['pickup_province'] = trim($ware[count($ware) - 1]);
+                        $data_push['pickup_district'] = trim($ware[count($ware) - 2]);
+                        $data_push['pickup_commune'] = '';
+                        $data_push['pickup_phone'] = $info_customer->customer_phone;
+                        $data_push['name'] = $array_colum[$i][2];
+                        $data_push['phone'] = $array_colum[$i][3];
+                        $data_push['address'] = $array_colum[$i][4];
+                        $data_push['product'] = $array_colum[$i][5];
+                        $data_push['weight'] = $array_colum[$i][6];
+                        $data_push['cod'] = $array_colum[$i][7];
+                        $data_push['value'] = $array_colum[$i][8];
+                        $data_push['note'] = $array_colum[$i][9];
+                        $data_push['created'] = date('Y-m-d H:i:s');
+                        $data_push['required_code'] = 'YC' . '.' . code(3) . code(3) . code(3);
+                        $data_push['volume'] = 27000;
+                        $data_push['service'] = 1;
+                        $data_push['config'] = 1;
+                        $data_push['payer'] = 1;
+                        $data_push['product_type'] = 1;
+                        $data_push['barter'] = 0;
+                        $data_push['user_created'] = 0;
+                        $data_push['status_cancel'] = 0;
+                        $data_push['amount'] = $array_colum[$i][7];
+                        $data_push['soc'] = $array_colum[$i][1];
+
+                        $address = mb_strtolower($data_push['address']);
+                        $arrAdd = explode(',', $address);
+                        if (count($arrAdd) >= 3) {
+                            // Set province
+                            foreach ($province as $city) {
+                                $str_city = mb_strtolower(str_replace(array('Tỉnh', 'Thành phố'), '', $city->name));
+                                if (stripos($arrAdd[count($arrAdd) - 1], $str_city) !== false) {
+                                    $city_name = $city->name;
+                                    $code_province = $city->code;
+                                    $address = str_replace($str_city, '', $address);
+                                    break;
+                                }
+                            }
+                            // Check province
+                            if(!empty($city_name) && !empty($code_province)){
+                                $data_push['province'] = $city_name;
+
+                                // Set district
+                                $districts = $this->get_data('https://api.mysupership.vn/v1/partner/areas/district?province=' . $code_province);
+                                foreach ($districts as $district) {
+                                    $name_district = mb_strtolower(str_replace(array('Huyện', 'Quận', 'Thành phố', 'Thị Xã'), '', $district->name));
+                                    if (stripos($arrAdd[count($arrAdd) - 2], $name_district) !== false) {
+                                        $district_name = $district->name;
+                                        $code_district = $district->code;
+                                        $address = str_replace($name_district, '', $address);
+                                        break;
+                                    } else {
+                                        $district_name = "";
+                                        $code_district = "";
+                                    }
+                                }
+
+                                // Check district
+                                if (!empty($code_district) && !empty($district_name)) {
+                                    $data_push['district'] = $district_name;
+
+                                    // Set communes
+                                    $communes = $this->get_data('https://api.mysupership.vn/v1/partner/areas/commune?district=' . $code_district);
+                                    foreach ($communes as $commune) {
+                                        $name_commune = mb_strtolower(trim(str_replace(array('Phường', 'Xã', 'Thị trấn'), '', $commune->name)));
+                                        if (stripos($arrAdd[count($arrAdd) - 3], $name_commune) !== false) {
+                                            $commune_name = $commune->name;
+                                            $address = str_replace($name_commune, '', $address);
+                                            break;
+                                        } else {
+
+                                        }
+                                    }
+
+                                    // Check communes
+                                    if (!empty($commune_name)) {
+                                        $data_push['commune'] = $commune_name;
+
+                                        // supership_value and region_id
+                                        $this->db->select('*');
+                                        $this->db->where('city', $city_name);
+                                        $this->db->where('district', $district_name);
+                                        $search_result = $this->db->get('tblregion_excel')->row();
+
+                                        $data_push['region_id'] = $search_result->region_id;
+
+                                        if ($search_result) {
+                                            $this->db->select('*');
+                                            $this->db->where('id_policy', $policy_result->id);
+                                            $this->db->where('id_region', $search_result->region_id);
+                                            $data_region = $this->db->get('tbldata_region')->row();
+
+                                            $data_push['supership_value'] = $data_region->price_region;
+                                        }
+
+                                        array_push($data, $data_push);
+                                    }else{
+                                        array_push($errors, $array_colum[$i][0]);
+                                    }
+
+                                } else {
+                                    array_push($errors, $array_colum[$i][0]);
+                                }
+                            }else
+                                array_push($errors, $array_colum[$i][0]);
+                        } else {
+                            array_push($errors, $array_colum[$i][0]);
+                        }
+
+                    } elseif ($array_colum[$i][1] == "" && $array_colum[$i][2] == "" && $array_colum[$i][3] == "" && $array_colum[$i][4] == "" && $array_colum[$i][5] == "" && $array_colum[$i][7] == "" && $array_colum[$i][8] == "" && $array_colum[$i][9] == "") {
+                        unset($array_colum[$i]);
+                    } else
+                        array_push($errors, $array_colum[$i][0]);
+                }
+            }
+
+            if(!empty($data)){
+                if (!$this->db->insert_batch('tbl_create_order', $data)) {
+                    $result['message'] = 'Tạo đơn thất bại';
+                    echo json_encode($result);
+                    die();
+                }
+
+                $message = '<p>+ Số đơn tạo thành công: ' . count($data) . '.</p> <p>+ Số đơn tạo thất bại: ' . count($errors) . '<br>';
+                if (!empty($errors)) {
+                    $message .= ' (STT: ' . implode(',', $errors) . ').</p>';
+                }
+            }else{
+                $message = 'Tải lên thất bại. Chưa có đơn nào được tạo. Vui lòng kiểm tra lại file và nội dung bên trong.';
+            }
+
+            $result['status'] = true;
+            $result['message'] = $message;
+            echo json_encode($result);
+
+        } else {
+            $result['message'] = 'File upload không được để trống.';
+            echo json_encode($result);
+        }
+    }
+
+
+	
+    public function get_data($url)
+    {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => array(
+                "Accept: */*",
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        return json_decode($response)->results;
+
+    }
+
 }

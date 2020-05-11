@@ -250,7 +250,12 @@
                 var html = ``;
 
                 for (var i = 0; i < (datalist.length - 1); i++) {
-
+                    required_code ='';
+                    if(datalist[i][20] !=""&& datalist[i][20] != null && datalist[i][20] != 'UNDEFINED'){
+                        required_code = ` <p class="righ-row">
+                                          ${datalist[i][20]}
+                                        </p>`
+                    }
                     if (datalist[i][1]) {
                         html += `<li>
                 <div class="left-width">
@@ -266,6 +271,7 @@
                     <p class="righ-row ${CheckColor(datalist[i])}">
                       ${InitPS(datalist[i])}
                     </p>
+                    ${required_code}
                   </div>
 
                   ${CheckStatus(datalist[i][5], datalist[i][2], datalist[i][16])}
@@ -284,6 +290,7 @@
                 <div class="right-width">
                   ${datalist[i][8]}
                 </div>
+
                 <div class="clear-fix"></div>
               </li>`;
                     }
@@ -333,8 +340,26 @@
             InitDataMobile();
         }
     }
-
-
+    // $("#search").on('keyup', function (e) {
+    //     if (e.keyCode === 13) {
+    //         fnSearch($(this).attr('device'))
+    //     }
+    // });
+    function searchTab6(event) {
+            if (event.keyCode === 13) {
+                fnSearch($(this).attr('device'))
+            }
+    }
+    function enterTab7(event) {
+        if (event.keyCode === 13) {
+            clickSearch()
+        }
+    }
+    function enterTab4(event) {
+        if (event.keyCode === 13) {
+            $('#create_order_ob').submit();
+        }
+    }
     function fnSearch(device = 0) {
         var keyword = $("#search").val();
 
@@ -433,7 +458,7 @@
                     html += '                           </div>';
                     html += '                           <div class="row-3 border-row" style="color:red">';
 
-                    if(info_order.hd_fee == null)
+                    if (info_order.hd_fee == null)
                         html += '                            KL:' + info_order.mass + ' $Thu hộ:' + formatNumber(info_order.collect, '.') + ' $Phí:' + formatNumber(info_order.hd_fee_stam, '.');
                     else
                         html += '                            KL:' + info_order.mass + ' $Thu hộ:' + formatNumber(info_order.collect, '.') + ' $Phí:' + formatNumber(info_order.hd_fee, '.');
@@ -490,6 +515,7 @@
         var province = $("#status-tab2").val();
         var date_start_customer_order = $("#date_start_customer_order_tab2").val();
         var date_end_customer_order = $("#date_end_customer_order_tab2").val();
+        var code_order_tab2 = $("#code_order_tab2").val();
         var limit_geted = $("#limitpageTab2").find(":selected").val();
 
         $.ajax({
@@ -498,7 +524,8 @@
                 province: province,
                 date_start_customer_order: date_start_customer_order,
                 date_end_customer_order: date_end_customer_order,
-                limit_geted: limit_geted
+                limit_geted: limit_geted,
+                code_order:code_order_tab2
             },
             beforeSend: function () {
 
@@ -511,6 +538,12 @@
                     var html = '';
                     var i = 0;
                     $.each(datalist, function (index, value) {
+                        required_code='';
+                        if( value['required_code'] !=""&&  value['required_code'] != null &&  value['required_code'] != 'UNDEFINED'){
+                            required_code = ` <div class="righ-row">
+                                          ${ value['required_code']}
+                                        </div>`
+                        }
                         i++;
                         html += '<li onclick="fnDetail(\'' + value.code_supership + '\',' + value.id + ',\'' + value.DVVC + '\',' + device + ')">';
                         html += '   <p class="stt-left">' + i + '</p>';
@@ -521,6 +554,8 @@
                         html += '               <span style="color:#000;font-weight:bold">' + value.code_supership + ' - <span style="font-weight:400;font-size:10px;">' + value.status + '</span></span>';
                         html += '           </p>';
                         html += '        </div>';
+                        html += required_code;
+
                         html += '        <div class="row-3 border-row" style="color:red">';
 
                         if (value.hd_fee != null) {
@@ -533,6 +568,10 @@
                         html += value.receiver + ' - ' + value.phone + ' - ' + value.city + ' - ' + value.district;
                         html += '       </div>';
                         html += '   </div>';
+                        html += '       <div class="row-3 border-row">';
+                        html += value.note;
+                        html += '       </div>';
+                        html += `<div class="row-3 border-row"> <i class='fa fa-eye' ></i> <a href="#">Hành trình</a> </div>`;
                         html += '   <div class="clear-fix"></div>';
                         html += '</li>';
 
@@ -553,7 +592,7 @@
         var date_end_customer_order = $("#date_end_order").val();
         var status = $("#status-tab2-pc").find(":selected").val();
         page = 1;
-        if(pages > 1)
+        if (pages > 1)
             var page = $("#number-page").val();
 
         $.ajax({
@@ -626,12 +665,12 @@
                         });
                         if (result.total > 100) {
                             $("#boxpage").show();
-                            if(pages > 0){
+                            if (pages > 0) {
                                 pages++;
-                                var totalpage = Math.ceil(result.total/100);
-                                if(pages > totalpage)
+                                var totalpage = Math.ceil(result.total / 100);
+                                if (pages > totalpage)
                                     $("#boxpage").hide();
-                                $("#boxpage td").attr('onclick', 'initOrderManager('+ pages +')');
+                                $("#boxpage td").attr('onclick', 'initOrderManager(' + pages + ')');
                                 $("#number-page").val(pages);
                             }
                         }
@@ -646,7 +685,6 @@
         var date_start_customer_order = $("#date_start_order").val();
         var date_end_customer_order = $("#date_end_order").val();
         var status = $("#status-tab2-pc").find(":selected").val();
-
         window.location.href = '<?= base_url('app/export_exel?datestart=')?>' + date_start_customer_order + '&datend=' + date_end_customer_order + '&status=' + status;
     }
 
@@ -658,4 +696,445 @@
 
         window.location.href = '<?= base_url('app/export_exel?datestart=')?>' + date_start_customer_order + '&datend=' + date_end_customer_order + '&status=' + status + '&limit=' + limit;
     }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+<script src="https://momentjs.com/downloads/moment-with-locales.min.js"></script>
+
+<script>
+    jQuery(function ($) {
+        $.datepicker.regional["vi-VN"] =
+            {
+                closeText: "Đóng",
+                prevText: "Trước",
+                nextText: "Sau",
+                currentText: "Hôm nay",
+                monthNames: ["Tháng một", "Tháng hai", "Tháng ba", "Tháng tư", "Tháng năm", "Tháng sáu", "Tháng bảy", "Tháng tám", "Tháng chín", "Tháng mười", "Tháng mười một", "Tháng mười hai"],
+                monthNamesShort: ["Một", "Hai", "Ba", "Bốn", "Năm", "Sáu", "Bảy", "Tám", "Chín", "Mười", "Mười một", "Mười hai"],
+                dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"],
+                dayNamesShort: ["CN", "Hai", "Ba", "Tư", "Năm", "Sáu", "Bảy"],
+                dayNamesMin: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+                weekHeader: "Tuần",
+                dateFormat: "dd/mm/yy",
+                firstDay: 1,
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: ""
+            };
+
+        $.datepicker.setDefaults($.datepicker.regional["vi-VN"]);
+    });
+</script>
+
+<script>
+
+    $(document).ready(function () {
+        var list_status = JSON.parse($("#data-list-status").val());
+        var date_from = $("#data-date-from").val();
+
+        var date_to = $("#data-date-to").val();
+        $("#order-from-date").val(date_from)
+        $("#order-to-date").val(date_to)
+
+
+        var city = JSON.parse($("#data-city").val());
+        var regions = JSON.parse($("#data-regions").val());
+
+        let html_list_status = "<option><option>"
+        html_list_status += list_status.map(function (value, index) {
+            return `<option value="${value}">${value}</option>`
+        }).join('');
+        $("#kh-status").html(html_list_status)
+
+        let html_city = "<option><option>"
+        html_city += city.map(function (value, index) {
+            return `<option value="${value.city}">${value.city}</option>`
+        }).join('');
+        $("#city").html(html_city)
+
+        let html_regions ="<option><option>"
+        html_regions += regions.map(function (value,index) {
+            return `<option value="${value.name_region}">${value.name_region}</option>`
+        }).join('');
+        $("#region").html(html_regions)
+
+
+
+
+        $("#city").select2({
+            placeholder: "Vui Lòng Chọn Tỉnh",
+            allowClear: true
+        });
+        $("#kh-district").select2({
+            placeholder: "Vui Lòng Chọn Huyện",
+            allowClear: true
+        });
+        $("#region").select2({
+            placeholder: "Vui Lòng Chọn Vùng Miền",
+            allowClear: true
+        });
+        $("#kh-status").select2({
+            placeholder: "Vui Lòng Chọn Tình Trạng",
+            allowClear: true
+        });
+        $("#is_hd_branch").select2({
+            placeholder: "Vui Lòng Chọn Chi Nhánh",
+            allowClear: true
+        });
+
+        let link = getLink();
+        loadDatatables(link)
+    });
+
+    function emptyDate() {
+        $(".datetimepicker-date").each(function () {
+            realDate = new Date("");
+            $(this).datepicker('setDate', '');
+        });
+    }
+
+    function getLinkView(key, code_supership, code_ghtk) {
+        let link = '';
+        if (key == "SPS") {
+            link = 'https://mysupership.com/search?category=orders&query=' + code_supership;
+        } else if (key == "GHTK") {
+            link = 'https://khachhang.giaohangtietkiem.vn/khachhang?code=' + code_ghtk;
+        }
+
+        return link;
+    }
+
+    function getLinkPrint(key, create_order_id, code_supership) {
+        let link = '';
+        if (key == "SPS") {
+            link = `https://mysupership.com/orders/print?code=${code_supership}&size=S9`;
+        } else if (key == "GHTK") {
+            link = `http://spshd.com/system/admin/create_order_ghtk/print_data_order/${create_order_id}?print=true`;
+        }
+        return link;
+    }
+
+    let loadDatatables = (link) => {
+        var table = $('#kh-order').DataTable({
+            "ajax": link,
+            "columnDefs": [
+                {
+                    "width": "5%",
+                    "targets": 0,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        return row.date_create;
+                    }
+                },
+                {
+                    "width": "20%",
+                    "targets": 1,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        let backgroundStatus = getColorStatus(row.status)
+
+                        let mkh = "";
+                        if (row.code_orders != null && row.code_orders != "") {
+                            mkh = `<p>Mã Đơn KH : <span style="color:green">${row.code_orders}</span></p>`
+                        }
+                        let requestCode = "";
+                        if (row.required_code != null && row.required_code != "") {
+                            requestCode = `<p>Mã Yêu Cầu : <span style="color:#6a7dfe">${row.required_code}</span></p></p>`
+                        }
+
+                        return `
+                                <div style="width: 100%" class="mb-5"><label class="label label-orange label-xs tooltips" style="color:white;background-color:${backgroundStatus}" >&emsp;&emsp;${row.status}  &emsp;&emsp;</label></div>
+                                <p style="color:red"> ${row.code_supership} </p>
+                                ${requestCode}
+
+                                ${mkh}
+                                <p>Ngày tạo : ${moment(row.date_create).format('DD-MM-YYYY HH:mm:SS')}</p>`;
+                    }
+                },
+                {
+                    "width": "20%",
+                    "targets": 2,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        let phi = `<p>Phí DV: <span style="color:red">${formatCurrency(row.hd_fee)}</span></p>`;
+                        if (row.hd_fee == null) {
+                            phi = `<p>Phí DV: <span style="color:red">${formatCurrency(row.hd_fee_stam)}</span></p>`
+                        }
+                        if (row.is_hd_branch == 0) {
+                            phi = `<p>Phí DV: <span style="color:red">${formatCurrency(row.pay_transport)}</span></p>`
+                        }
+                        let date = ``;
+
+                        if (row.date_debits != null && row.date_debits != "" && row.date_debits != "0000-00-00 00:00:00") {
+                            date = `<p style="color:#6a7dfe">NTN:${moment(row.date_debits).format('DD-MM-YYYY')}</p>`
+                        }
+                        return `
+                                <p>SP: ${row.product}</p>
+                                <p>Khối lượng: <span style="color:red">${row.mass}</span></p>
+                                <p>Thu Hộ: <span style="color:red">${formatCurrency(row.collect)}</span></p>
+                                ${phi}
+                                ${date}`;
+                    }
+                },
+                {
+                    "width": "20%",
+                    "targets": 3,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        let address = `${(row.address) ? row.address + ", " : ""} ${(row.ward) ? row.ward + ", " : ""} ${(row.district) ? row.district + ", " : ""}  ${(row.city) ? row.city : ""} `;
+
+
+                        return `
+                                <div style="width: 100%" class="mb-5"><label class="label label-orange label-xs tooltips" data-original-title="Được tạo bằng API">&emsp;&emsp;${row.city}&emsp;&emsp;</label>&emsp;</div>
+                                <p>${row.receiver}</p>
+                                <p style="color:red">${row.phone}</p>
+                                <p>${address}</p>`;
+                    }
+                },
+                {
+                    "width": "25%",
+                    "targets": 4,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        return `<div style="width: 100%;table-layout: fixed;"><div class="mb-15" style="display:flex">
+                                <button onclick="fnDetail('${row.code_supership}','${row.id}','${row.DVVC}',0)" style="color: white" class="btn btn-sm btn-primary button-blue mr-2" target="_blank" ><i style="padding-right: 5px;" class="fa fa-eye"></i>Hành Trình</button>
+<!--                                <button class="btn btn-sm btn-primary button-blue mr-2 btn${row.id}" onclick="modalUpdate(this)" data-id="${row.id}" data-note="${row.note_delay}"><i style="padding-right: 5px;" class="fa fa-comment"></i>Ghi chú</button>-->
+                                <a style="color: white" class="btn btn-sm btn-primary button-blue" target="_blank" ><i style="padding-right: 5px;" class="fa fa-comment"></i>Gửi Yêu Cầu</a>
+                                </div>
+                                <p style="color:#557f38"><strong>Ghi Chú Giao Hàng:</strong></p>
+                                <p>${(row.note) ? row.note : ""}</p>
+                                </div>`;
+                    }
+                }
+
+            ],
+            "drawCallback": function (settings) {
+                $("#kh-order thead").remove();
+            },
+            "order": [[0, 'DESC']],
+            searching: false,
+            info: false,
+            // lengthChange: false, // Will Disabled Record number per page
+            processing: true,
+            language: {
+                emptyTable: " ",
+                loadingRecords: '&nbsp;',
+                processing: 'Loading...',
+                lengthMenu: 'Hiển Thị <select>' +
+                    '<option value="10">10</option>' +
+                    '<option value="20">20</option>' +
+                    '<option value="50">50</option>' +
+                    '<option value="-1">Tất cả</option>' +
+                    '</select> Dòng'
+            }
+
+        });
+        table.on('order.dt search.dt', function () {
+            table.column(0, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
+                cell.innerHTML = `<div style="text-align: center">${i + 1}</div>`;
+            });
+
+        }).draw();
+        $('.kh-tab7 table').removeClass('dataTable')
+    };
+
+    function getColorStatus(status) {
+        let color = "";
+        switch (status) {
+            case "Chờ Duyệt":
+                color = "#0b8a00";
+                break;
+            case "Chờ Lấy Hàng":
+                color = "#0b8a00";
+                break;
+            case "Đang Lấy Hàng":
+                color = "#0b8a00";
+                break;
+            case "Đã Lấy Hàng":
+                color = "#4f0080";
+                break;
+            case "Hoãn Lấy Hàng":
+                color = "#cca200";
+                break;
+            case "Không Lấy Được":
+                color = "#424242";
+                break;
+            case "Đang Nhập Kho":
+                color = "#B40404";
+                break;
+            case "Đã Nhập Kho":
+                color = "#04B4AE";
+                break;
+            case "Đang Chuyển Kho Giao":
+                color = "#0040FF";
+                break;
+            case "Đã Chuyển Kho Giao":
+                color = "#0B614B";
+                break;
+            case "Đang Giao Hàng":
+                color = "#B40404";
+                break;
+            case "Đã Giao Hàng Toàn Bộ":
+                color = "#610B0B";
+                break;
+            case "Đã Giao Hàng Một Phần":
+                color = "#0080FF";
+                break;
+            case "Hoãn Giao Hàng":
+                color = "#cca200";
+                break;
+            case "Không Giao Được":
+                color = "#424242";
+                break;
+            case "Đã Đối Soát Giao Hàng":
+                color = "#060070";
+                break;
+            case "Đã Đối Soát Trả Hàng":
+                color = "#060070";
+                break;
+            case "Đang Chuyển Kho Trả":
+                color = "#00646F";
+                break;
+            case "Đã Chuyển Kho Trả":
+                color = "#777100";
+                break;
+            case "Đang Trả Hàng":
+                color = "#B40404";
+                break;
+            case "Đã Trả Hàng":
+                color = "#322F65";
+                break;
+            case "Hoãn Trả Hàng":
+                color = "#cca200";
+                break;
+            case "Hủy":
+                color = "#5F5F5F";
+                break;
+                case "Huỷ":
+                color = "#5F5F5F";
+                break;
+            case "Đang Vận Chuyển":
+                color = "#B40404";
+                break;
+            case "Xác Nhận Hoàn":
+                color = "#98782E";
+                break;
+            case "Đã Trả Hàng Một Phần":
+                color = "#322F65";
+                break;
+        }
+        return color
+    }
+
+    function getDistrict(_this) {
+        let city = $(_this).val();
+
+        $.ajax({
+            url: "/khachhang/api/order/district?city=" + city, success: function (result) {
+                let data = JSON.parse(result);
+                if (data.data.length > 0) {
+                    let html = "<option></option>";
+                    html += data.data.map(function (value) {
+                        return `<option value="${value.district}">${value.district}</option>`
+                    }).join('');
+                    $("#kh-district").html(html)
+                }
+            }
+        });
+    }
+
+    function exportExcel() {
+        let link = getLink(true);
+        window.location.href = link
+    }
+
+    function clickSearch() {
+        let link = getLink();
+        $('#kh-order').dataTable().fnDestroy();
+        loadDatatables(link)
+    }
+
+    function convertDate(userDate) {
+        str = userDate.split("/");
+        return str[1] + "/" + str[0] + "/" + str[2]
+    }
+
+    function getLink(checkExcel = false) {
+        let date_form = $("#order-from-date").val();
+        let date_to = $("#order-to-date").val();
+        let customer = $("#customer_shop_code").val();
+        let status = $("#kh-status").val();
+        let code_order = $("#code_order_tab7").val();
+        let code_request = $("#code_request_tab7").val();
+        let city = $("#city").val();
+        let district = $("#kh-district").val();
+        let region = $("#region").val();
+        let is_hd_branch = $("#is_hd_branch").val();
+        let dvvc = $("#dvvc").val();
+        let data = {
+            date_form: (date_form) ? moment(new Date(convertDate(date_form))).format('YYYY/MM/DD') : "",
+            date_to: (date_to) ? moment(new Date(convertDate(date_to))).format('YYYY/MM/DD') : "",
+            customer: customer,
+            status: status,
+            code_order: code_order,
+            code_request: code_request,
+            city: city,
+            district: district,
+            region: region,
+            is_hd_branch: is_hd_branch,
+            dvvc: dvvc
+        };
+        let linkApi = '/khachhang/api/order?jsonData=' + JSON.stringify(data);
+        if (checkExcel) {
+            linkApi = '/khachhang/api/order/export_excel_kh?jsonData=' + JSON.stringify(data)
+        }
+        return linkApi;
+    }
+
+
+
+    function formatCurrency(amount) {
+        if (!amount) {
+            amount = 0;
+        }
+        let _currency = '';
+        var formatter = new Intl.NumberFormat('vi-VN');
+        amount = amount.toString().match(/\d+/);
+        if (amount) {
+            _currency = formatter.format(amount);
+        }
+        return _currency;
+    }
+
+    function modalUpdate(_this) {
+        $("#modal-update").modal();
+        document.getElementById("shop_id").value = $(_this).data('id');
+        document.getElementById("ghi-chu-noi-bo-old").value = ($(_this).attr('data-note') != "null") ? $(_this).attr('data-note') : "";
+        document.getElementById("ghi-chu-noi-bo-new").value = ""
+    }
+
+    function updateNode() {
+        let noteOld = document.getElementById("ghi-chu-noi-bo-old").value;
+        let noteNew = document.getElementById("ghi-chu-noi-bo-new").value;
+        if (noteOld != "") {
+            noteOld += '\n';
+        }
+        if (noteNew != "") {
+            noteNew += moment(new Date()).format('HH:mm DD/MM') + " " + noteNew;
+        }
+        let text = noteOld + noteNew;
+        note = JSON.stringify(text);
+        let id = document.getElementById("shop_id").value;
+
+        $.ajax({
+            url: `/api/order/update?note=${note}&id=${id}`, success: function (result) {
+                if (result == true) {
+                    $("#modal-update").modal('hide');
+                    toastr.success('Ghi Chú Nội Bộ!', 'Cập Nhật Thành Công');
+                    $(`.span${id}`).html(text);
+                    $(`.btn${id}`).attr('data-note', text)
+                }
+            }
+        });
+    }
+
 </script>

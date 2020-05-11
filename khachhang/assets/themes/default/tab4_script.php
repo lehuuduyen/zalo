@@ -1,4 +1,437 @@
+<script>
+    let baseUrl =window.location.origin;
+    $(document).ready(function () {
+        var dateForm =$("#data-date-from").val()
+        var dateTo =$("#data-date-to").val()
+        $("#order-from-date-tab4").val(dateForm)
+        $("#order-to-date-tab4").val(dateTo)
+
+
+
+        $('.datetimepicker-date').datepicker({
+            format: 'd-m-Y',
+            timePicker: false,
+        });
+
+        $(".datetimepicker-date").each(function () {
+            if ($(this).val() != "") {
+                realDate = new Date($(this).val());
+                $(this).datepicker("option", "dateFormat", "dd/mm/yy"); // format to show
+                $(this).datepicker('setDate', realDate);
+            }
+
+        });
+
+
+        var city = JSON.parse($("#data-city").val());
+        let html_city = "<option><option>"
+        html_city += city.map(function (value, index) {
+            return `<option value="${value.city}">${value.city}</option>`
+        }).join('');
+        $("#cityTab4").html(html_city)
+
+
+        $("#cityTab4").select2({
+            placeholder: "Vui Lòng Chọn Tỉnh",
+            allowClear: true
+        });
+        $("#kh-district-tab4").select2({
+            placeholder: "Vui Lòng Chọn Huyện",
+            allowClear: true
+        });
+        $("#region").select2({
+            placeholder: "Vui Lòng Chọn Vùng Miền",
+            allowClear: true
+        });
+        $("#status").select2({
+            placeholder: "Vui Lòng Chọn Tình Trạng",
+            allowClear: true
+        });
+        $("#is_hd_branch").select2({
+            placeholder: "Vui Lòng Chọn Chi Nhánh",
+            allowClear: true
+        });
+        $("#dvvc").select2({
+            placeholder: "Vui Lòng Chọn Đơn Vị Vận Chuyển",
+            allowClear: true
+        })
+        let link = getLinkTab4();
+        loadDatatablesNew(link)
+    });
+
+    function emptyDate() {
+        $(".datetimepicker-date").each(function () {
+            realDate = new Date("");
+            $(this).datepicker('setDate', '');
+        });
+    }
+    function clickPrintA5(){
+        var names = [];
+        $('#example td input:checked').each(function() {
+            names.push(this.value);
+        });
+        let listId = names.join(',');
+        window.open(`/khachhang/api/create_order/print?list_id=${listId}`)
+    }
+    function getLinkView(key, code_supership, code_ghtk) {
+        let link = '';
+        if (key == "SPS") {
+            link = 'https://mysupership.com/search?category=orders&query=' + code_supership;
+        } else if (key == "GHTK") {
+            link = 'https://khachhang.giaohangtietkiem.vn/khachhang?code=' + code_ghtk;
+        }
+
+        return link;
+    }
+
+    function getLinkPrint(key, create_order_id, code_supership) {
+        let link = '';
+        if (key == "SPS") {
+            link = `https://mysupership.com/orders/print?code=${code_supership}&size=S9`;
+        } else if (key == "GHTK") {
+            link = `http://spshd.com/system/admin/create_order_ghtk/print_data_order/${create_order_id}?print=true`;
+        }
+        return link;
+    }
+    function toggleCheckBox(master,group){
+        var array = document.getElementsByName(group);
+        for(var i =0 ; i < array.length ; i++){
+            array[i].checked = master.checked
+        }
+    }
+
+    let loadDatatablesNew = (link) => {
+
+        var table = $('#example').DataTable({
+            "ajax": link,
+            "columnDefs": [
+                {
+                    "width": "5%",
+                    "targets": 0,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        return '<div style="width: 100%;text-align: center;"><input name="check_id[]" value="'+row.id+'" type="checkbox"><div>';
+                    }
+                },
+                {
+                    "width": "5%",
+                    "targets": 1,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        return row.date_create;
+                    }
+                },
+                {
+                    "width": "20%",
+                    "targets": 2,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        let backgroundStatus =getColorStatus(row.status)
+                        let dvvc = "";
+                        if (row.DVVC != "") {
+                            dvvc = `<p>ĐVVC: ${row.DVVC}</p>`
+                        }
+                        let mkh = "";
+                        if (row.soc != null && row.soc != "") {
+                            mkh = `<p>Mã Đơn KH : <span style="color:green">${row.soc}</span></p>`
+                        }
+
+
+                        return `
+                                <div style="width: 100%" class="mb-5"><label class="label label-orange label-xs tooltips" style="color:red;" >&emsp;&emsp;${row.required_code} &emsp;&emsp;</label></div>
+                                ${mkh}
+                                <p>Ngày tạo : ${moment(row.created).format('DD-MM-YYYY HH:mm:SS')}</p>`;
+                    }
+                },
+                {
+                    "width": "20%",
+                    "targets": 3,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        let phi = `<p>Phí DV: <span style="color:red">${formatCurrency(row.hd_fee)}</span></p>`;
+                        if (row.hd_fee == null) {
+                            phi = `<p>Phí DV: <span style="color:red">${formatCurrency(row.hd_fee_stam)}</span></p>`
+                        }
+                        if (row.is_hd_branch == 0) {
+                            phi = `<p>Phí DV: <span style="color:red">${formatCurrency(row.pay_transport)}</span></p>`
+                        }
+                        let mass = '';
+                        if(row.weight != "" && row.weight != null){
+                            mass = row.weight
+                        }
+
+                        return `
+                                <p>SP: ${row.product}</p>
+                                <p>Khối lượng: <span style="color:red">${mass}</span></p>
+                                <p>Thu Hộ: <span style="color:red">${formatCurrency(row.amount)}</span></p>
+                                <p>Phí DV: <span style="color:red">${formatCurrency(row.supership_value)}</span> </p>
+                                `;
+                    }
+                },
+                {
+                    "width": "20%",
+                    "targets": 4,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        let address = `${(row.address) ? row.address + ", " : ""} ${(row.commune) ? row.commune + ", " : ""} ${(row.district) ? row.district + ", " : ""}  ${(row.province) ? row.province : ""} `;
+
+
+                        return `
+                                <div style="width: 100%" class="mb-5"><label class="label label-orange label-xs tooltips" data-original-title="Được tạo bằng API">&emsp;&emsp;${(row.province)?row.province:""}&emsp;&emsp;</label>&emsp;</div>
+                                <p>${row.name}</p>
+                                <p style="color:red">${row.phone}</p>
+                                <p>${address}</p>`;
+                    }
+                },
+                {
+                    "width": "25%",
+                    "targets": 5,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        let linkXem = getLinkView(row.DVVC, row.code_supership, row.code_ghtk);
+                        let linkPrint = `/khachhang/api/create_order/print?list_id=${row.id}`
+                        return `<div style="width: 100%;table-layout: fixed;"><div class="mb-15" style="display:flex">
+                                <a style="color: white" style="padding-right: 5px;" class="btn btn-sm btn-primary mr-2  " target="_blank" href="${linkPrint}"><i style="padding-right: 5px;" class="fa fa-print"></i>IN</a>
+                                <a href="javascript:;" style="padding-right: 5px;" class=" edit-reminder-custom-order  btn btn-sm btn-primary button-blue mr-2 btn${row.id}"  data-id="${row.id}" data-note="${row.note}"><i style="padding-right: 5px;" class="fa fa-edit"></i>SỬA</a>
+                                <a href="javascript:;" style="color: white" class="btn btn-sm btn-primary delete-reminder-custom-order" target="_blank" data-id="${row.id}"><i style="padding-right: 5px;" class="fa fa-trash"></i>HỦY</a>
+                                </div>
+                                <p style="color:#557f38"><strong>Ghi Chú Giao Hàng:</strong></p>
+                                <p>${(row.note) ? row.note : ""}</p>
+                                 </div>`;
+                    }
+                }
+
+            ],
+            "drawCallback": function (settings) {
+            },
+            "order": [[0, 'DESC']],
+            searching: false,
+            info: false,
+            // lengthChange: false, // Will Disabled Record number per page
+            processing: true,
+            language: {
+                emptyTable: " ",
+                loadingRecords: '&nbsp;',
+                processing: 'Loading...',
+                lengthMenu: 'Hiển Thị <select>' +
+                    '<option value="10">10</option>' +
+                    '<option value="20">20</option>' +
+                    '<option value="50">50</option>' +
+                    '<option value="-1">Tất cả</option>' +
+                    '</select> Dòng'
+            }
+
+        });
+        table.on('order.dt search.dt', function () {
+            table.column(1, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
+                cell.innerHTML = `<div style="text-align: center">${i + 1}</div>`;
+            });
+
+        }).draw();
+        $('.kh-tab4 table').removeClass('dataTable')
+    };
+
+    function getColorStatus(status) {
+        let color = "";
+        switch (status) {
+            case "Chờ Duyệt":
+                color = "#0b8a00";
+                break;
+            case "Chờ Lấy Hàng":
+                color = "#0b8a00";
+                break;
+            case "Đang Lấy Hàng":
+                color = "#0b8a00";
+                break;
+            case "Đã Lấy Hàng":
+                color = "#4f0080";
+                break;
+            case "Hoãn Lấy Hàng":
+                color = "#cca200";
+                break;
+            case "Không Lấy Được":
+                color = "#424242";
+                break;
+            case "Đang Nhập Kho":
+                color = "#B40404";
+                break;
+            case "Đã Nhập Kho":
+                color = "#04B4AE";
+                break;
+            case "Đang Chuyển Kho Giao":
+                color = "#0040FF";
+                break;
+            case "Đã Chuyển Kho Giao":
+                color = "#0B614B";
+                break;
+            case "Đang Giao Hàng":
+                color = "#B40404";
+                break;
+            case "Đã Giao Hàng Toàn Bộ":
+                color = "#610B0B";
+                break;
+            case "Đã Giao Hàng Một Phần":
+                color = "#0080FF";
+                break;
+            case "Hoãn Giao Hàng":
+                color = "#cca200";
+                break;
+            case "Không Giao Được":
+                color = "#424242";
+                break;
+            case "Đã Đối Soát Giao Hàng":
+                color = "#060070";
+                break;
+            case "Đã Đối Soát Trả Hàng":
+                color = "#060070";
+                break;
+            case "Đang Chuyển Kho Trả":
+                color = "#00646F";
+                break;
+            case "Đã Chuyển Kho Trả":
+                color = "#777100";
+                break;
+            case "Đang Trả Hàng":
+                color = "#B40404";
+                break;
+            case "Đã Trả Hàng":
+                color = "#322F65";
+                break;
+            case "Hoãn Trả Hàng":
+                color = "#cca200";
+                break;
+            case "Hủy":
+                color = "#5F5F5F";
+                break;
+            case "Đang Vận Chuyển":
+                color = "#B40404";
+                break;
+            case "Xác Nhận Hoàn":
+                color = "#98782E";
+                break;
+            case "Đã Trả Hàng Một Phần":
+                color = "#322F65";
+                break;
+        }
+        return color
+    }
+
+
+
+    
+
+    function clickSearchTab4() {
+
+        let link = getLinkTab4();
+        $('#example').dataTable().fnDestroy();
+        loadDatatablesNew(link)
+    }
+
+    function convertDate(userDate) {
+        str = userDate.split("/");
+        return str[1] + "/" + str[0] + "/" + str[2]
+    }
+
+    function getLinkTab4(checkExcel = false) {
+        let date_form = $("#order-from-date-tab4").val();
+        let date_to = $("#order-to-date-tab4").val();
+        let customer = $("#id_customer").val();
+        let code_order = $("#code_order").val();
+        let code_request = $("#code_request").val();
+        let city = $("#cityTab4").val();
+        let district = $("#districtTab4").val();
+        let data = {
+            date_form: (date_form) ? moment(new Date(convertDate(date_form))).format('YYYY/MM/DD') : "",
+            date_to: (date_to) ? moment(new Date(convertDate(date_to))).format('YYYY/MM/DD') : "",
+            customer: customer,
+            status: status,
+            code_order: code_order,
+            code_request: code_request,
+            city: city,
+            district: district,
+        };
+        let linkApi = baseUrl+'/khachhang/api/order_tab4?jsonData=' + JSON.stringify(data);
+        if (checkExcel) {
+            linkApi = baseUrl+'/system/api/order/export_excel?jsonData=' + JSON.stringify(data)
+        }
+        return linkApi;
+    }
+
+    function get_region_by_city(city, district) {
+        let data = {
+            city: city,
+            district: district,
+        };
+        let linkApi = '/api/get_region_by_city?jsonData=' + JSON.stringify(data);
+        return linkApi;
+    }
+
+    function formatCurrency(amount) {
+        if (!amount) {
+            amount = 0;
+        }
+        let _currency = '';
+        var formatter = new Intl.NumberFormat('vi-VN');
+        amount = amount.toString().match(/\d+/);
+        if (amount) {
+            _currency = formatter.format(amount);
+        }
+        return _currency;
+    }
+
+    function modalUpdate(_this) {
+        $("#modal-update").modal();
+        document.getElementById("shop_id").value = $(_this).data('id');
+        document.getElementById("ghi-chu-noi-bo-old").value = ($(_this).attr('data-note') != "null") ? $(_this).attr('data-note') : "";
+        document.getElementById("ghi-chu-noi-bo-new").value = ""
+    }
+
+    function updateNode() {
+        let noteOld = document.getElementById("ghi-chu-noi-bo-old").value;
+        let noteNew = document.getElementById("ghi-chu-noi-bo-new").value;
+        if (noteOld != "") {
+            noteOld += '\n';
+        }
+        if (noteNew != "") {
+            noteNew +=  moment(new Date()).format('HH:mm DD/MM') + " " + noteNew;
+        }
+        let text = noteOld + noteNew;
+        note = JSON.stringify(text);
+        let id = document.getElementById("shop_id").value;
+
+        $.ajax({
+            url: `/khachhang/api/order/update?note=${note}&id=${id}`, success: function (result) {
+                if (result == true) {
+                    $("#modal-update").modal('hide');
+                    toastr.success('Ghi Chú Nội Bộ!', 'Cập Nhật Thành Công');
+                    $(`.span${id}`).html(text);
+                    $(`.btn${id}`).attr('data-note', text)
+                }
+            }
+        });
+    }
+    function getDistrictTab4(_this) {
+        let city = $(_this).val();
+
+        $.ajax({
+            url: "/khachhang/api/order/district?city=" + city, success: function (result) {
+                let data = JSON.parse(result);
+                if (data.data.length > 0) {
+                    let html = "<option></option>";
+                    html += data.data.map(function (value) {
+                        return `<option value="${value.district}">${value.district}</option>`
+                    }).join('');
+                    $("#kh-district-tab4").html(html)
+                }
+            }
+        });
+    }
+
+</script>
+
+
 <script type="text/javascript">
+
     $('#success-order').on('hidden.bs.modal', function () {
         window.location.reload();
     });
@@ -32,20 +465,26 @@
                     html += '   <div class="left-width">';
                     html += '       <div class="row-1 border-row">';
                     html += '           <p class="left-row">';
-                    html += '               <span style="color:red;font-weight:bold">' + value.created.split('-')[2] + '/' + value.created.split('-')[1] + '</span>';
+                    html += '               <span style="color:red;font-weight:bold">' + moment(value.created).format('DD/MM HH:mm') + '</span>';
                     html += '               <span style="color:#000;font-weight:bold">' + value.required_code + '</span>';
                     html += '           </p>';
                     html += '<br>';
-                    html += '           <p>';
-                    html += '               <span>Mã ĐH: </span>';
-                    html += '               <span style="color:#000;font-weight:bold">' + value.code + '</span>';
-                    html += '           </p>';
+                    if(value.soc !="" && value.soc !="null" && value.soc != null){
+                        html += '           <p>';
+                        html += '               <span>Mã KH: </span>';
+                        html += '               <span style="color:#000;font-weight:bold">' + value.soc + '</span>';
+                        html += '           </p>';
+                    }
+
                     html += '       </div>';
                     html += '       <div class="row-3 border-row" style="color:red">';
                     html += '             KL:' + value.weight + ' $Thu hộ:' + formatNumber(value.amount, '.') + ' $Phí:' + formatNumber(value.supership_value, '.');
                     html += '       </div>';
                     html += '       <div class="row-3 border-row">';
                     html += value.name + ' - ' + value.phone + ' - ' + value.province + ' - ' + value.district;
+                    html += '       </div>';
+                    html += '       <div class="row-3 border-row">';
+                    html += value.note;
                     html += '       </div>';
                     html += '</div><div class="clear-fix"></div></li>';
                 });
@@ -166,13 +605,113 @@
                             $('#special').append(html);
                         }
 
-
+						if (JSON.parse(check).note_default !== '')
+                            $("#note_create").val(JSON.parse(check).note_default);
                     }
                 }
             })
 
         });
 
+
+		// Add excel
+        $(".open-modal-addnew-create-order-excel").click(function (){
+            $("#create_order-excel").modal("show");
+            var token = $("#token_customer").val();
+            $.ajax({
+                url: '/khachhang/app/curlGetRepo',
+                method: 'POST',
+                data: {token},
+                success: function (data) {
+                    $('.disable-view').hide();
+                    $('#loader-repo').hide();
+                    data = JSON.parse(data);
+
+                    var html = '<label for="repo_customer" style="margin-top: 2%">Kho hàng <span style="color: red">[*]</span></label><select class="form-control" id="repo_customer_order_excel" name="repo_customer_order_excel">';
+
+                    // $('#repo_customer_cover');
+                    for (var i = 0; i < data.length; i++) {
+                        html += `<option value="${data[i].formatted_address}">${data[i].formatted_address}</option>`;
+                    }
+                    html += '</select>';
+                    $('#repo_customer_cover_create_order_excel').empty();
+                    $('#repo_customer_cover_create_order_excel').append(html);
+
+
+                },
+                error: function (e) {
+                    console.log(e);
+                }
+            });
+
+        });
+
+        // Upload
+        var http_arr = new Array();
+        $(".submit_create_order_excel").click(function () {
+            var http = new XMLHttpRequest();
+            http_arr.push(http);
+            $("#btn_upload").html("<i class='fa fa-spin fa-refresh'></i>");
+            var files = document.getElementById('uploadfile').files[0];
+            var warehouse = $('#repo_customer_order_excel').find(":selected").val();
+            var id_customer = $('#id_customer').val();
+
+            if(warehouse == ""){
+                $("#alertError").show();
+                $("#alertError").html('Kho hàng không được để trống.');
+                $("#btn_upload").html("Tải");
+                setTimeout(function () {
+                    $("#alertError").hide();
+                }, 5000);
+
+                return false;
+            }
+
+            if(files == undefined){
+                $("#alertError").show();
+                $("#alertError").html('Bạn chưa chọn tệp tin.');
+                $("#btn_upload").html("Tải");
+                setTimeout(function () {
+                    $("#alertError").hide();
+                }, 5000);
+                return false;
+            }
+            var data = new FormData();
+            data.append('filename', files.name);
+            data.append('uploadfile', files);
+            data.append('warehouse', warehouse);
+            data.append('id_customer', id_customer);
+            http.open('POST',  '<?= base_url()?>app/upload', true);
+            http.send(data);
+
+            http.onreadystatechange = function (event) {
+                $("#btn_upload").html("Tải");
+                //Kiểm tra điều kiện
+                if (http.readyState == 4 && http.status == 200){
+                    try {
+                        var server = JSON.parse(http.responseText);
+                        if (server.status) {
+                            $("#alertSuccess").show();
+                            $("#alertSuccess").html(server.message);
+                        } else {
+                            $("#alertError").show();
+                            $("#alertError").html(server.message);
+
+                            setTimeout(function () {
+                                $("#alertError").hide();
+                            }, 5000);
+                        }
+                    } catch (e) {
+
+                    }
+                };
+            }
+
+        });
+
+		$('#create_order-excel').on('hidden.bs.modal', function () {
+            window.location.reload();
+        });
 
         $(document).on('click', '.explain', function () {
 
@@ -188,6 +727,10 @@
         });
 
         $('.submit_create_order').click(function () {
+            $('#create_order_ob').submit();
+        });
+
+        $('.submit_edit_order').click(function () {
             $('#create_order_ob').submit();
         });
 
@@ -215,6 +758,11 @@
             $('#cod').val('');
             $('#supership_value').val('');
         });
+
+        var data_area = '';
+        var data_city = '';
+        var data_district = '';
+
         $(document).on('change', '#repo_customer_order', function () {
 
             var code = $(this).find(':selected').attr('data-code');
@@ -240,7 +788,9 @@
                     url: '/khachhang/app/get_district_by_hd/' + val.code,
                     method: 'GET',
                     success: function (data) {
-
+                        data_area = '';
+                        data_city = '';
+                        data_district = '';
 
                         $('.disable-view').hide();
                         $('#loader-repo2').hide();
@@ -271,13 +821,11 @@
                     }
                 });
             }
-
-
         });
 
 
         $(document).on('change', '#district_order', function () {
-
+            console.log(district);
 
             var index = $(this).val();
 
@@ -303,7 +851,7 @@
                         data = JSON.parse(data);
                         area_hd_order = data;
                         $('#area_hd_order').empty();
-                        var html = '';
+                        var html = `<option  value='-1'>Vui lòng chọn xã / Phường</option>`;
                         for (var i = 0; i < data.length; i++) {
                             html += `<option  value='${i}'>${data[i].name}</option>`;
                         }
@@ -357,7 +905,8 @@
                                     $('#cod').val('');
                                     $('#supership_value').val('');
                                     $('#total_money').val('');
-
+                                    data_district = "";
+                                    data_area = "";
                                     $('.region-box input').val(region.id);
                                     var tableHTML = `<table class="table">
                                           <tbody>
@@ -381,9 +930,14 @@
                     }
                 });
             }
-
-
         });
+
+		$(document).on('change', '#area_hd_order', function(){
+			var index = $(this).val();
+			if(index > -1){
+				data_area = area_hd_order[index].name;
+			}
+		});
 
 
         $.validator.addMethod("valueNotEquals", function (value, element, arg) {
@@ -420,7 +974,6 @@
 
         $('#success-order').on('hidden.bs.modal', function () {
             $('#table_customer_order').DataTable().ajax.reload();
-
         });
 
 
@@ -465,6 +1018,171 @@
 
 
             }
+        });
+
+        // Edit order
+        $(document).on('click', '.edit-reminder-custom-order', function () {
+            var id = $(this).attr('data-id');
+            $.ajax({
+                url: '<?= base_url('app/get_order')?>',
+                data: {id: id},
+                method: "GET",
+                beforeSend: function () {
+                    $(".loading-page").show();
+                },
+                success: function (data) {
+                    $(".loading-page").hide();
+                    var result = JSON.parse(data).order;
+                    $("#product").val(result.product);
+                    $("#ap").val(result.phone);
+                    if (result.sphone != "") {
+                        $("#phone-more").show();
+                        $("#phone_more").val(result.sphone);
+                    }
+                    $("#f").val(result.name);
+                    $("#a").val(result.address);
+                    $("#mass").val(result.weight);
+                    $("#value_order").val(formatNumber(result.value));
+                    $("#cod").val(formatNumber(result.cod));
+                    $("#note_create").val(result.note);
+                    $("#total_money").val(formatNumber(result.amount));
+                    $("#supership_value").val(formatNumber(result.supership_value));
+
+                    $('#province').val(JSON.stringify({'name': result.province}));
+                    $('.filter-option-inner-inner').html(result.province);
+
+                    var districts = result.list_districts;
+                    district = result.list_districts;
+                    // Quận huyện
+                    $('#district_order').empty();
+                    var html = '';
+                    html += `<option  value='null'>Chọn Quận Huyện/Thành Phố</option>`;
+                    for (var i = 0; i < districts.length; i++) {
+                        html += '<option value="' + i + '">' + districts[i].name + '</option>';
+                    }
+                    $('#district_order').append(html);
+                    $('#district_order').selectpicker({
+                        liveSearch: true
+                    });
+
+                    $('#district_order').selectpicker('refresh');
+                    // district = result.district;
+                    $('#district_order').val(JSON.stringify({'name': result.district}));
+                    $('#district_order').parent().find('.filter-option-inner-inner').html(result.district);
+
+                    var areas = result.list_areas;
+					area_hd_order = result.list_areas;
+
+                    $('#area_hd_order').empty();
+                    var html = '<option  value="null">Chọn Phường Xã</option>';
+                    for (var i = 0; i < areas.length; i++) {
+                        html += `<option  value='${i}'>${areas[i].name}</option>`;
+                    }
+                    $('#area_hd_order').append(html);
+                    $('#area_hd_order').selectpicker({
+                        liveSearch: true
+                    });
+                    $('#area_hd_order').selectpicker('refresh');
+                    $('#area_hd_order').parent().find('.filter-option-inner-inner').html(result.commune);
+                    $('#area_hd_order').val(result.commune);
+
+                    data_area = result.commune;
+                    data_city = result.province;
+                    province = result.province;
+                    data_district = result.district;
+
+					$.ajax({
+                        url: '/khachhang/app/check_customer_policy_exits/' + $('#id_customer').val(),
+                        method: 'GET',
+                        success: function (check) {
+                            //
+                            if (check === "custommer_no") {
+                                alert("Khách Hàng Này Chưa Có Chính Sách");
+                            } else {
+                                policy_id = JSON.parse(check).id;
+
+                                if (JSON.parse(check).special_policy !== '') {
+
+                                    var html = `<label>Chhính Sách Đặc Biệt</label><div style="height: 100px;overflow: auto;" class="form-control">${JSON.parse(check).special_policy}</div>`;
+
+                                    $('#special').empty();
+                                    $('#special').append(html);
+                                }
+
+
+								$.ajax({
+                        url: `/khachhang/app/search_region?province=${result.province}&district=${result.district}&policy_id=${policy_id}`,
+                        method: 'GET',
+                        success: function (region) {
+                            region = JSON.parse(region);
+                            if (region.error === true) {
+                                alert('Huyện – Tỉnh này chưa có trong cơ sở dữ liệu thuộc nhóm vùng miền tính phí nào. Vui lòng chọn nhóm vùng miền tính phí.');
+                                // open modal add new region
+                                $('#create_order').modal('hide');
+                                $('#repo_customer_cover').empty();
+                                $('#search_customer_create').val('');
+
+                                $('#pickup_phone').val('');
+
+                                $('#create_order_ob input').val('');
+                                $('#special').val('');
+                                $('#pickup_code').val(0);
+                                $('#province').val('');
+                                $('#province').selectpicker('refresh');
+
+                                $('#district_order').empty();
+                                $('#area_hd_order').empty();
+
+
+                                $('#add_new_region').modal('show');
+
+                                $('#city_region').val(province);
+                                $('#district_region').val(district);
+                                province = '';
+                                district = '';
+                                policy_id = '';
+                                data_for_calc = '';
+                            } else {
+                                var cost_super_ship;
+                                var fee_transport = '';
+
+                                data_for_calc = region.data_region;
+                                $('.load-html').empty();
+                                // $('#cod').val('');
+                                // $('#supership_value').val('');
+                                // $('#total_money').val('');
+
+                                $('.region-box input').val(region.id);
+                                var tableHTML = `<table class="table">
+                                          <tbody>
+                                                <tr>
+                                                  <td style="color:red">Nhóm Vùng Miền : ${region.name_region}</td>
+                                                </tr>
+                                          </tbody>
+                                        </table>`;
+                                $('.region-box .load-html').empty();
+                                $('.region-box .load-html').append(tableHTML);
+                            }
+
+
+                        }
+                    });
+
+					GetRepoOrder();
+                    setValid();
+
+                    $("#create_order").modal();
+                    $("#btn_create").removeClass('submit_create_order');
+                    $("#btn_create").addClass('submit_edit_order');
+                    $("#btn_create").attr('data-id', result.id);
+
+                            }
+                        }
+                    });
+
+
+                }
+            });
         });
 
 
@@ -532,6 +1250,10 @@
                     var data = {};
                     var repo_customer = $('#repo_customer_order').val().split(",");
 
+                    var order_id = $("#btn_create").attr("data-id");
+                    if (order_id > 0) {
+                        data.id = order_id;
+                    }
 
                     data.customer_id = $('#id_customer').val();
 
@@ -546,7 +1268,7 @@
                         return false;
                     }
 
-                    if ($('#value_order').val() && parseINT($('#value_order').val()) >= 0 && parseINT($('#value_order').val()) < parseINT($("#cod").val())) {
+                    if (parseINT($('#value_order').val()) > 0 && parseINT($('#value_order').val()) < parseINT($("#cod").val())) {
                         alert('Trị giá đơn hàng phải lớn hơn hoặc bằng tiền hàng. ');
                         return false;
                     }
@@ -556,9 +1278,33 @@
                     data.phone = $('#ap').val();
                     data.sphone = $('#phone_more').val();
                     data.address = $('#a').val();
-                    data.province = JSON.parse($('#province').val()).name;
-                    data.district = district[$('#district_order').val()].name;
-                    data.commune = area_hd_order[$('#area_hd_order').val()].name;
+
+                    if (order_id < 1) {
+                        data.province = JSON.parse($('#province').val()).name;
+                        data.district = district[$('#district_order').val()].name;
+                        data.commune = area_hd_order[$('#area_hd_order').val()].name;
+                    } else {
+                        if (data_city != "") {
+                            data.province = data_city;
+                        } else {
+                            data.province = JSON.parse($('#province').val()).name;
+                            data.district = district[$('#district_order').val()].name;
+                            data.commune = area_hd_order[$('#area_hd_order').val()].name;
+                        }
+
+                        if(data_district != ""){
+                            data.district = data_district;
+                        }else{
+                            data.district = district[$('#district_order').val()].name;
+                        }
+
+                        if(data_area != ""){
+                            data.commune = data_area;
+                        }else{
+                            data.commune = area_hd_order[$('#area_hd_order').val()].name;
+                        }
+                    }
+
                     data.amount = parseINT($('#total_money').val());
                     data.weight = parseINT($('#mass').val());
                     data.volume = parseINT($('#volume').val());
@@ -582,11 +1328,16 @@
 
                     data.value = value_order;
                     data.token = $('#token_customer').val();
-					data.region_id = $("#region_id").val();
+                    data.region_id = $("#region_id").val();
                     $('.loading-page').show();
 
+                    var url = '/khachhang/app/create_order/';
+                    if (order_id > 0) {
+                        url = '/khachhang/app/edit_order/';
+                    }
+
                     $.ajax({
-                        url: '/khachhang/app/create_order/',
+                        url: url,
                         data,
                         type: 'POST',
                         success: function (data) {
@@ -634,7 +1385,6 @@
 
 
         $(document).on('keyup', '#supership_value', function (e) {
-
             var cod = parseINT($('#cod').val());
             var super_ship = parseINT($('#supership_value').val());
             var total = Number(cod) + Number(super_ship);
@@ -673,8 +1423,6 @@
 
 
         function CalcAll() {
-
-
             var supership_cost = '';
             var cod;
             if (policy_id === '') {
@@ -839,7 +1587,7 @@
 
                     // $('#repo_customer_cover');
                     for (var i = 0; i < data.length; i++) {
-                        html += `<option value="${data[i].formatted_address.replace(", Tỉnh Hải Dương", "")}">${data[i].formatted_address.replace(", Tỉnh Hải Dương", "")}</option>`;
+                        html += `<option value="${data[i].formatted_address}">${data[i].formatted_address}</option>`;
                     }
                     html += '</select>';
                     $('#repo_customer_cover_create_order').empty();
@@ -1112,13 +1860,13 @@
                     html += '   <div class="left-width">';
                     html += '       <div class="row-1 border-row">';
                     html += '           <p class="left-row">';
-                    html += '               <span style="color:red;font-weight:bold">' + value.created.split('-')[2] + '/' + value.created.split('-')[1] + '</span>';
+                    html += '               <span style="color:red;font-weight:bold">' + moment(value.created).format('DD/MM HH:mm') + '</span>';
                     html += '               <span style="color:#000;font-weight:bold">' + value.required_code + '</span>';
                     html += '           </p>';
                     html += '<br>';
                     html += '           <p>';
                     html += '               <span>Mã ĐH: </span>';
-                    html += '               <span style="color:#000;font-weight:bold">' + value.code + '</span>';
+                    html += '               <span style="color:#000;font-weight:bold">' + value.soc + '</span>';
                     html += '           </p>';
                     html += '       </div>';
                     html += '       <div class="row-3 border-row" style="color:red">';
