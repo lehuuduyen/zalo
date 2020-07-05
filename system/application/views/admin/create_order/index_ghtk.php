@@ -385,6 +385,7 @@ $mass_fake = ($default_data) ? number_format($default_data->mass_fake) : '';
 $volume = ($default_data) ? number_format($default_data->volume_default) : '';
 $token_ghtk = ($default_data) ? $default_data->token_ghtk : '';
 $address_id = ($default_data) ? $default_data->address_id : '';
+$code_default = ($default_data) ? $default_data->code : '';
 $id_default = ($default_data) ? $default_data->id : '';
 ?>
 <script>
@@ -1383,6 +1384,14 @@ $id_default = ($default_data) ? $default_data->id : '';
                            name="token_ghtk" value="<?php echo $token_ghtk ?>">
                     <!-- <span style="color:#03a9f4;">Token .</span> -->
                 </div>
+				
+				<div class="form-group ">
+                    <label for="token_ghtk">Mã Code Mặc Định </label>
+                    <input type="text" class="form-control" placeholder="Mã Code Mặc Định" id="code" maxlength="5"
+                           name="code" value="<?php echo $code_default ?>">
+                    <!-- <span style="color:#03a9f4;">Token .</span> -->
+                </div>
+				
             </div>
 
             <div class="modal-footer">

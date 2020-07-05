@@ -386,6 +386,7 @@ $volume = ($default_data) ? number_format($default_data->volume_default) : '';
 $username = ($default_data) ? $default_data->username : '';
 $password = ($default_data) ? base64_decode($default_data->password) : '';
 $id_default = ($default_data) ? $default_data->id : '';
+$code_default = ($default_data) ? $default_data->code : '';
 
 // warehouse
 $id_warehouse = ($warehouse_send_list) ? $warehouse_send_list->id : '';
@@ -1391,6 +1392,14 @@ $commune_default = ($warehouse_send_list) ? $warehouse_send_list->commune : '';
                            name="password" value="<?php echo $password ?>">
                     <!-- <span style="color:#03a9f4;">Token .</span> -->
                 </div>
+				
+				<div class="form-group ">
+                    <label for="password">Mã Code Mặc Định</label>
+                    <input type="text" class="form-control" placeholder="Mã Code Mặc Định" id="code"
+                           name="code" value="<?php echo $code_default ?>">
+                    <!-- <span style="color:#03a9f4;">Token .</span> -->
+                </div>
+				
             </div>
 
             <div class="modal-footer">

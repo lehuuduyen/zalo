@@ -208,7 +208,7 @@ class Create_order_bestinc extends AdminController
         $id = $this->db->insert_id();
 
         if ($id) {
-            $codeNew = CODE_VNC . randerCode(2) . code(4);
+            $codeNew =$data_default->code . randerCode(6);
             $this->db->where('id', $id_default);
             $warehouser = $this->db->get('tbl_warehouse_send')->row();
 

@@ -1,11 +1,39 @@
-<?ph
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<?php init_head(); ?>
+<div id="wrapper">
+    <div class="overlay-dark">
+        <div id="loader-repo3" class="lds-ellipsis">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="content return-style">
+        <div class="row">
+            <div class="col-md-12">
+                <select id="status" class="hidden" name="status">
+                    <option></option>
+                    <?php
+                    foreach ($list_status as $status => $color) { ?>
+                        <option data-color="<?= $color ?>" value="<?= $status ?>"><?= $status ?></option>
+                    <?php }
 
+                    ?>
+                </select>
+                <div class="panel_s">
+                    <div class="panel-body">
+
+
+
+
+<!---->
 <?php $this->load->view('admin/includes/alerts'); ?>
-
+<!---->
 <?php hooks()->do_action( 'before_start_render_dashboard_content' ); ?>
-
+<!---->
 <div class="clearfix"></div>
-
+<!---->
 <div class="col-md-12 mtop30" data-container="top-12">
     <?php render_dashboard_widgets('top-12'); ?>
 </div>
@@ -29,20 +57,18 @@
 </div>
 
 <div class="clearfix"></div>
+                    </div>
+                    <!--                    border red-->
 
-<div class="col-md-4" data-container="bottom-left-4">
-    <?php render_dashboard_widgets('bottom-left-4'); ?>
-</div>
-<div class="col-md-4" data-container="bottom-middle-4">
-    <?php render_dashboard_widgets('bottom-middle-4'); ?>
-</div>
-<div class="col-md-4" data-container="bottom-right-4">
-    <?php render_dashboard_widgets('bottom-right-4'); ?>
+
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <?php hooks()->do_action('after_dashboard'); ?>
-p defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<?php init_head(); ?>
+
 <div id="wrapper">
     <div class="screen-options-area"></div>
     <div class="screen-options-btn">

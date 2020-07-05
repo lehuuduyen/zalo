@@ -195,6 +195,10 @@ class Reports extends AdminController
                     $dataPush['Old_data'][$i]['ps_in'] = 0;
                 }
 
+                if ($dataPush['Old_data'][$i]['status'] == "Đã Trả Hàng Toàn Bộ") {
+                    $dataPush['Old_data'][$i]['ps_in'] = 0;
+                }
+
                 if ($dataPush['Old_data'][$i]['status'] == "Không Giao Được") {
                     $dataPush['Old_data'][$i]['ps_in'] = 0;
                 }
@@ -207,6 +211,10 @@ class Reports extends AdminController
                 }
 
                 if ($dataPush['Old_data'][$i]['status'] == "Đã Chuyển Kho Trả") {
+                    $dataPush['Old_data'][$i]['ps_in'] = 0;
+                }
+
+                if ($dataPush['Old_data'][$i]['status'] == "Đã Chuyển Kho Trả Toàn Bộ") {
                     $dataPush['Old_data'][$i]['ps_in'] = 0;
                 }
             }
@@ -231,6 +239,10 @@ class Reports extends AdminController
                     $dataPush['data'][$i]['ps_in'] = 0;
                 }
 
+                if ($dataPush['data'][$i]['status'] == "Đã Trả Hàng Toàn Bộ") {
+                    $dataPush['data'][$i]['ps_in'] = 0;
+                }
+
                 if ($dataPush['data'][$i]['status'] == "Không Giao Được") {
                     $dataPush['data'][$i]['ps_in'] = 0;
                 }
@@ -243,6 +255,10 @@ class Reports extends AdminController
                 }
 
                 if ($dataPush['data'][$i]['status'] == "Đã Chuyển Kho Trả") {
+                    $dataPush['data'][$i]['ps_in'] = 0;
+                }
+
+                if ($dataPush['data'][$i]['status'] == "Đã Chuyển Kho Trả Toàn Bộ") {
                     $dataPush['data'][$i]['ps_in'] = 0;
                 }
             }
@@ -315,6 +331,255 @@ class Reports extends AdminController
         "iTotalDisplayRecords" => sizeof($dataTable),
         "iTotalRecords"=> sizeof($dataTable)
       ];
+
+        echo json_encode($dataTableInit);
+    }
+
+
+	public function debts_porters_customer_30_days()
+    {
+
+        $start_date = $this->input->post('date_start_customer');
+        $start_end = $this->input->post('date_end_customer');
+
+
+        if ($start_date == "") {
+            $start_date = null;
+        }
+        if ($start_end == "") {
+            $start_end = null;
+        }
+        if (isset($start_end) && isset($start_date)) {
+            $start_date = to_sql_date($start_date);
+            $start_end = to_sql_date($start_end);
+        } elseif ((!isset($start_date)) && isset($start_end)) {
+            $start_end = to_sql_date($start_end);
+            $date = new DateTime($start_end);
+            date_sub($date, date_interval_create_from_date_string('30 days'));
+            $start_date = date_format($date, 'Y-m-d');
+        } elseif (isset($start_date) && !isset($start_end)) {
+            $start_date = to_sql_date($start_date);
+            $date = new DateTime($start_date);
+            $start_end = date("Y-m-d", strtotime("$date +30 day"));
+        } elseif (!isset($start_date) && !isset($start_end)) {
+            $start_end = date('Y-m-d');
+            $date = new DateTime($start_end);;
+            date_sub($date, date_interval_create_from_date_string('30 days'));
+            $start_date = date_format($date, 'Y-m-d');
+        }
+        if (!empty($start_date)) {
+            $date = new DateTime($start_date);;
+            date_sub($date, date_interval_create_from_date_string('1 days'));
+            $startdauky = date_format($date, 'Y-m-d') . ' ' . date('23:59:59');
+        }
+
+        if ($start_date == "") {
+            $start_date = null;
+        }
+        if ($start_end == "") {
+            $start_end = null;
+        }
+
+        $start_date = $start_date . ' 00:00:00';
+        $start_end = $start_end . ' ' . date('23:59:59');
+
+        $id_customer = $this->input->post('id_customer');
+        $id_rows_customer = $this->input->post('id_rows_customer');
+
+        $filter_yes = false;
+
+        if ($id_customer == "") {
+            $sql = "SELECT shop 
+                    FROM tblorders_shop 
+                    JOIN tblcustomers ON tblcustomers.customer_shop_code = tblorders_shop.shop
+                    WHERE tblorders_shop.date_create >= ? GROUP BY shop ORDER BY date_create DESC";
+            $list_order_30_days = $this->db->query($sql, array(date('Y-m-d H:i:s', strtotime("-30 days"))))->result();
+
+            foreach ($list_order_30_days as $order_30_day){
+                $customerLoad[] = array('customer_shop_code' => $order_30_day->shop);
+            }
+            $filter_yes = true;
+        } else {
+			$customer = get_table_where('tblcustomers');
+            foreach ($customer as $key => $value) {
+                if ($id_customer == $value['id']) {
+                    $customerLoad[] = $value;
+                }
+            }
+        }
+// pre($customerLoad);
+// die();
+        $data_aaDATA;
+        foreach ($customerLoad as $key => $value) {
+            $sql_order_date_null = "SELECT 
+                                        id , date_debits , 
+                                        date_create as created , 
+                                        status_debts , code_supership AS code_display , 
+                                        status , collect AS ps_in ,
+                                        hd_fee_stam AS ps_de , note ,
+                                        mass , receiver , city ,
+                                        district FROM tblorders_shop 
+                                    WHERE shop = ? AND date_debits IS NULL AND status != 'Huỷ' ORDER BY date_create DESC";
+
+
+            $paramSQL = array($value['customer_shop_code']);
+
+            $dataPush['top_data'] = $this->db->query($sql_order_date_null, $paramSQL)->result();
+
+            $dataPush['Old_data'] = $this->detail_debts_customer_calc(null, $start_date, $value['customer_shop_code'], $value['id']);
+
+            for ($i = 0; $i < sizeof($dataPush['Old_data']); $i++) {
+                if ($dataPush['Old_data'][$i]['status'] == "Đã Đối Soát Trả Hàng") {
+                    $dataPush['Old_data'][$i]['ps_in'] = 0;
+                }
+
+                if ($dataPush['Old_data'][$i]['status'] == "Xác Nhận Hoàn") {
+                    $dataPush['Old_data'][$i]['ps_in'] = 0;
+                }
+
+                if ($dataPush['Old_data'][$i]['status'] == "Hoãn Trả Hàng") {
+                    $dataPush['Old_data'][$i]['ps_in'] = 0;
+                }
+
+                if ($dataPush['Old_data'][$i]['status'] == "Đã Trả Hàng") {
+                    $dataPush['Old_data'][$i]['ps_in'] = 0;
+                }
+
+                if ($dataPush['Old_data'][$i]['status'] == "Đã Trả Hàng Toàn Bộ") {
+                    $dataPush['Old_data'][$i]['ps_in'] = 0;
+                }
+
+                if ($dataPush['Old_data'][$i]['status'] == "Không Giao Được") {
+                    $dataPush['Old_data'][$i]['ps_in'] = 0;
+                }
+
+                if ($dataPush['Old_data'][$i]['status'] == "Đang Trả Hàng") {
+                    $dataPush['Old_data'][$i]['ps_in'] = 0;
+                }
+                if ($dataPush['Old_data'][$i]['status'] == "Đang Chuyển Kho Trả") {
+                    $dataPush['Old_data'][$i]['ps_in'] = 0;
+                }
+
+                if ($dataPush['Old_data'][$i]['status'] == "Đã Chuyển Kho Trả") {
+                    $dataPush['Old_data'][$i]['ps_in'] = 0;
+                }
+
+                if ($dataPush['Old_data'][$i]['status'] == "Đã Chuyển Kho Trả Toàn Bộ") {
+                    $dataPush['Old_data'][$i]['ps_in'] = 0;
+                }
+            }
+
+            $dataPush['data'] = $this->detail_debts_customer_calc($start_date, $start_end, $value['customer_shop_code'], $value['id']);
+
+            for ($i = 0; $i < sizeof($dataPush['data']); $i++) {
+                if ($dataPush['data'][$i]['status'] == "Đã Đối Soát Trả Hàng") {
+                    $dataPush['data'][$i]['ps_in'] = 0;
+                }
+
+
+                if ($dataPush['data'][$i]['status'] == "Xác Nhận Hoàn") {
+                    $dataPush['data'][$i]['ps_in'] = 0;
+                }
+
+                if ($dataPush['data'][$i]['status'] == "Hoãn Trả Hàng") {
+                    $dataPush['data'][$i]['ps_in'] = 0;
+                }
+
+                if ($dataPush['data'][$i]['status'] == "Đã Trả Hàng") {
+                    $dataPush['data'][$i]['ps_in'] = 0;
+                }
+
+                if ($dataPush['data'][$i]['status'] == "Đã Trả Hàng Toàn Bộ") {
+                    $dataPush['data'][$i]['ps_in'] = 0;
+                }
+
+                if ($dataPush['data'][$i]['status'] == "Không Giao Được") {
+                    $dataPush['data'][$i]['ps_in'] = 0;
+                }
+
+                if ($dataPush['data'][$i]['status'] == "Đang Trả Hàng") {
+                    $dataPush['data'][$i]['ps_in'] = 0;
+                }
+                if ($dataPush['data'][$i]['status'] == "Đang Chuyển Kho Trả") {
+                    $dataPush['data'][$i]['ps_in'] = 0;
+                }
+
+                if ($dataPush['data'][$i]['status'] == "Đã Chuyển Kho Trả") {
+                    $dataPush['data'][$i]['ps_in'] = 0;
+                }
+
+                if ($dataPush['data'][$i]['status'] == "Đã Chuyển Kho Trả Toàn Bộ") {
+                    $dataPush['data'][$i]['ps_in'] = 0;
+                }
+            }
+
+            $dataPush['customer_shop_code'] = $value['customer_shop_code'];
+            $dataPush['id'] = $value['id'];
+            $data_aaDATA[] = $dataPush;
+        }
+
+
+        foreach ($data_aaDATA as $key => $value) {
+            $data_aaDATA[$key] = $this->formatDataCustomer($data_aaDATA[$key]);
+        }
+
+        $aColumns = array(
+            'id',
+            'name',
+            'previous_debt',
+            'ps_in',
+            'ps_de',
+            'next_debt',
+            'control_schedule'
+        );
+        $dataTable = [];
+
+        foreach ($data_aaDATA as $value) {
+            $dataTableValue['id'] = $value['id'];
+            $dataTableValue['name'] = $value['customer_shop_code'];
+            $dataTableValue['previous_debt'] = $this->get_calc_debts_customer($value['Old_data']);
+            $dataTableValue['ps_in'] = $this->get_calc_debts_customer_ps_in($value['data']);
+            $dataTableValue['ps_de'] = $this->get_calc_debts_customer_ps_de($value['data']);
+            $dataTableValue['next_debt'] = (int)$this->get_calc_debts_customer($value['data']) + (int)$this->get_calc_debts_customer($value['Old_data']);
+
+
+            $this->db->where(customer_id, $value['id']);
+            $get_customer_policy = $this->db->get('tblcustomer_policy')->row();
+            $dataTableValue['control_schedule'] = $get_customer_policy->control_schedule;
+            $dataTable[] = $dataTableValue;
+        }
+
+        if ($filter_yes) {
+            if ($id_rows_customer === "1") {
+                foreach ($dataTable as $key => $value) {
+                    if ((int)$value['next_debt'] < 0 || (int)$value['next_debt'] === 0) {
+                        unset($dataTable[$key]);
+                    }
+                }
+            } elseif ($id_rows_customer === "2") {
+                foreach ($dataTable as $key => $value) {
+                    if ((int)$value['next_debt'] > 0 || (int)$value['next_debt'] === 0) {
+                        unset($dataTable[$key]);
+                    }
+                }
+            }
+        }
+
+
+        usort($dataTable, function ($item1, $item2) {
+            if ($item1['next_debt'] == $item2['next_debt']) {
+                return 0;
+            }
+            return $item1['next_debt'] > $item2['next_debt'] ? -1 : 1;
+        });
+
+
+        $dataTableInit = [
+            "aaData" => $this->object_to_array_customer($dataTable, $aColumns),
+            "draw" => $_POST['draw'],
+            "iTotalDisplayRecords" => sizeof($dataTable),
+            "iTotalRecords" => sizeof($dataTable)
+        ];
 
         echo json_encode($dataTableInit);
     }
@@ -586,6 +851,12 @@ class Reports extends AdminController
                 if ($dataPush['Old_data'][$i]['status'] == "Đã Trả Hàng") {
                     $dataPush['Old_data'][$i]['ps_in'] = 0;
                 }
+
+                if ($dataPush['Old_data'][$i]['status'] == "Đã Trả Hàng Toàn Bộ") {
+                    $dataPush['Old_data'][$i]['ps_in'] = 0;
+                }
+
+
                 if ($dataPush['Old_data'][$i]['status'] == "Đang Trả Hàng") {
                     $dataPush['Old_data'][$i]['ps_in'] = 0;
                 }
@@ -596,6 +867,10 @@ class Reports extends AdminController
                     $dataPush['Old_data'][$i]['ps_in'] = 0;
                 }
                 if ($dataPush['Old_data'][$i]['status'] == "Đã Chuyển Kho Trả") {
+                    $dataPush['Old_data'][$i]['ps_in'] = 0;
+                }
+
+                if ($dataPush['Old_data'][$i]['status'] == "Đã Chuyển Kho Trả Toàn Bộ") {
                     $dataPush['Old_data'][$i]['ps_in'] = 0;
                 }
             }
@@ -618,6 +893,10 @@ class Reports extends AdminController
                     $dataPush['data'][$i]['ps_in'] = 0;
                 }
 
+                if ($dataPush['data'][$i]['status'] == "Đã Trả Hàng Toàn Bộ") {
+                    $dataPush['data'][$i]['ps_in'] = 0;
+                }
+
                 if ($dataPush['data'][$i]['status'] == "Không Giao Được") {
                     $dataPush['data'][$i]['ps_in'] = 0;
                 }
@@ -632,6 +911,10 @@ class Reports extends AdminController
                     $dataPush['data'][$i]['ps_in'] = 0;
                 }
                 if ($dataPush['data'][$i]['status'] == "Đã Chuyển Kho Trả") {
+                    $dataPush['data'][$i]['ps_in'] = 0;
+                }
+
+                if ($dataPush['data'][$i]['status'] == "Đã Chuyển Kho Trả Toàn Bộ") {
                     $dataPush['data'][$i]['ps_in'] = 0;
                 }
             }
@@ -4122,7 +4405,6 @@ class Reports extends AdminController
         if(!empty($getShop)) {
         	$filter_debits = $getShop->customer_shop_code;
         }
-
         $data_aaDATA;
         $sql = '
                 (
@@ -4141,7 +4423,8 @@ class Reports extends AdminController
                         city ,
                         district,
                         2 as type,
-                        phone
+                        phone,
+                        required_code
                     FROM tblorders_shop
                     WHERE shop = "'.$filter_debits.'"
                         '.$where_orders.'
@@ -4164,7 +4447,8 @@ class Reports extends AdminController
                          city ,
                          district,
                          type,
-                         0 as phone
+                         0 as phone,
+                         "" as required_code
                      FROM tblcash_book
                      WHERE id_object = "tblcustomers" and groups = 5
                           AND staff_id = "'.$id_customer.'"
@@ -4187,7 +4471,8 @@ class Reports extends AdminController
                         city ,
                         district,
                         2 as type,
-                        0 as phone
+                        0 as phone,
+                        "" as required_code
                     FROM tbldebit_object
                     WHERE id_object = "tblcustomers"
                         AND staff_id = "'.$id_customer.'"
@@ -4197,6 +4482,7 @@ class Reports extends AdminController
                 ';
 
         $dataPush = $this->db->query($sql)->result();
+
         $aColumns     = array(
             'id',
             'date_create',
@@ -4215,8 +4501,10 @@ class Reports extends AdminController
             'collect',
             'type',
             'phone',
+            'required_code',
         );
         $dataPush = $this->getDetailCustomer_Order($dataPush, $aColumns);
+
         $colums=array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC');
         include APPPATH . 'third_party/PHPExcel/PHPExcel.php';
         $this->load->library('PHPExcel');
@@ -4407,10 +4695,22 @@ class Reports extends AdminController
             $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(20);
 
             $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setAutoSize(false);
-            $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(12);
+            $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(15);
 
             $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setAutoSize(false);
             $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(75);
+
+            $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setAutoSize(false);
+            $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(15);
+
+            $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setAutoSize(false);
+            $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(15);
+
+            $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setAutoSize(false);
+            $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(15);
+
+            $objPHPExcel->getActiveSheet()->getColumnDimension('K')->setAutoSize(false);
+            $objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(15);
 
 
             $TITLE = 'BẢNG ĐỐI SOÁT TIỀN HÀNG KHÁCH HÀNG: '.mb_strtoupper($filter_debits, 'UTF-8').' TỪ NGÀY '.$start_date_title.' ĐẾN NGÀY '.$start_end_title;
@@ -4426,12 +4726,17 @@ class Reports extends AdminController
 
             $objPHPExcel->getActiveSheet()->SetCellValue('F2', 'Trả Shop')->getStyle('F2')->applyFromArray($Background_style);
             $objPHPExcel->getActiveSheet()->SetCellValue('G2', 'Nội Dung')->getStyle('G2')->applyFromArray($Background_style);
+            $objPHPExcel->getActiveSheet()->SetCellValue('H2', 'Mã Yêu Cầu')->getStyle('H2')->applyFromArray($Background_style);
+
+            $objPHPExcel->getActiveSheet()->SetCellValue('I2', 'Khối Lượng')->getStyle('I2')->applyFromArray($Background_style);
+            $objPHPExcel->getActiveSheet()->SetCellValue('J2', 'Thu Hộ')->getStyle('J2')->applyFromArray($Background_style);
+            $objPHPExcel->getActiveSheet()->SetCellValue('K2', 'Phí Ship')->getStyle('K2')->applyFromArray($Background_style);
         }
         $j = 3;
         $total = 0;
         foreach ($dataPush as $rom => $item) {
 
-            
+
             $item[6] = str_replace('+', '', $item[6]);
             $item[7] = str_replace('+', '', $item[7]);
             if($item[5] == "Điều Chỉnh Công Nợ") {
@@ -4445,7 +4750,13 @@ class Reports extends AdminController
             $objPHPExcel->getActiveSheet()->setCellValue('E'.($j), ($item[5]))->getStyle('E'.$j)->applyFromArray($BStyle_not_header_left);
 
             $objPHPExcel->getActiveSheet()->setCellValue('F'.($j), ((float)$item[6]))->getStyle('F'.$j)->applyFromArray($BStyle_not_header)->getNumberFormat()->setFormatCode('#,##0');
-            $objPHPExcel->getActiveSheet()->setCellValue('G'.($j), ($item[9]))->getStyle('G'.$j)->applyFromArray($BStyle_not_header_left);
+            $objPHPExcel->getActiveSheet()->setCellValue('G'.($j), ($item[19]))->getStyle('G'.$j)->applyFromArray($BStyle_not_header_left);
+            // $objPHPExcel->getActiveSheet()->setCellValue('G'.($j), ($item[9]))->getStyle('G'.$j)->applyFromArray($BStyle_not_header_left);
+            $objPHPExcel->getActiveSheet()->setCellValue('H'.($j), ($item[17]))->getStyle('H'.$j)->applyFromArray($BStyle_not_header_left);
+
+            $objPHPExcel->getActiveSheet()->setCellValue('I'.($j), ($item[10]))->getStyle('I'.$j)->applyFromArray($BStyle_not_header)->getNumberFormat()->setFormatCode('#,##0');
+            $objPHPExcel->getActiveSheet()->setCellValue('J'.($j), ($item[18]))->getStyle('J'.$j)->applyFromArray($BStyle_not_header)->getNumberFormat()->setFormatCode('#,##0');
+            $objPHPExcel->getActiveSheet()->setCellValue('K'.($j), ($item[7]))->getStyle('K'.$j)->applyFromArray($BStyle_not_header)->getNumberFormat()->setFormatCode('#,##0');
             $j++;
             $total += (float)$item[6];
         }
@@ -4458,6 +4769,11 @@ class Reports extends AdminController
         $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $j, 'Tổng')->mergeCells('A'.$j.':E'.$j)->getStyle('A'.$j)->getNumberFormat()->setFormatCode('#,##0')->applyFromArray($Background_style);
         $objPHPExcel->getActiveSheet()->SetCellValue('F'.($j), '=SUM(F3:F'.(($j - 1) >= 3 ? ($j - 1) : 4).')')->getStyle('F'.($j))->applyFromArray($Background_style)->getNumberFormat()->setFormatCode('#,##0');
         $objPHPExcel->getActiveSheet()->SetCellValue('G'.($j), '')->getStyle('G'.($j))->applyFromArray($Background_style);
+        $objPHPExcel->getActiveSheet()->SetCellValue('H'.($j), '')->getStyle('H'.($j))->applyFromArray($Background_style);
+
+        $objPHPExcel->getActiveSheet()->SetCellValue('I'.($j), '')->getStyle('I'.($j))->applyFromArray($Background_style);
+        $objPHPExcel->getActiveSheet()->SetCellValue('J'.($j), '')->getStyle('J'.($j))->applyFromArray($Background_style);
+        $objPHPExcel->getActiveSheet()->SetCellValue('K'.($j), '')->getStyle('K'.($j))->applyFromArray($Background_style);
 
 
 
@@ -4509,6 +4825,8 @@ class Reports extends AdminController
 
 
             $row6 = $row[6];
+            $row[18] = $row[6];
+            $row[19] = "";
             if ($row[1] == '') {
                 $row[6] = 0;
             } else {
@@ -4524,18 +4842,24 @@ class Reports extends AdminController
 
 
 
-
             if ($row[3] == "Đơn Hàng") {
                 $row[3] = "ĐH đã tính công nợ";
                 $row[9] = 'Thu hộ:' . $row6 . ', Phí:'. $row[7] .
                     ' ( KL:'. $row[10] .', '.  $row[11] .', '. $row[16]  .' - '.  $row[12]  .' - '.  $row[13]  . ' )';
+                $row[19] = $row[11] .', '. $row[16]  .' - '.  $row[12]  .' - '.  $row[13];
             }
-
-            if ($row[3] == "ĐH chưa đối soát") {
+            else if ($row[3] == "ĐH chưa đối soát") {
                 $row[9] = 'Thu hộ:' . $row6 . ', Phí:'. $row[7] .
                     ' ( KL:'. $row[10] .', '.  $row[11] .', '. $row[16]  .' - '.  $row[12]  .' - '.  $row[13]  . ' )';
+                $row[19] = $row[11] .', '. $row[16]  .' - '.  $row[12]  .' - '.  $row[13];
 
                 $row[3] = "ĐH chưa tính công nợ";
+            }
+            else {
+            	$row[7] = '';
+            	if($row[18] == 0) {
+            		$row[18] = "";
+            	}
             }
 
             if ($row[5] == 'Chờ Lấy Hàng'
@@ -4550,9 +4874,11 @@ class Reports extends AdminController
                 || $row[5] == 'Đang Trả Hàng'
                 || $row[5] == 'Hoãn Trả Hàng'
                 || $row[5] == 'Đã Trả Hàng'
+                || $row[5] == 'Đã Trả Hàng Toàn Bộ'
                 || $row[5] == 'Đang Chuyển Kho Trả'
                 || $row[5] == 'Đã Đối Soát Trả Hàng'
-                || $row[5] == 'Đã Chuyển Kho Trả') {
+                || $row[5] == 'Đã Chuyển Kho Trả'
+                || $row[5] == 'Đã Chuyển Kho Trả Toàn Bộ') {
                 $row[5] = 'Đơn Giao Thất Bại';
                 $row[6] = $row[7] * (-1);
             } elseif ($row[5] == 'Đã Giao Hàng Một Phần'

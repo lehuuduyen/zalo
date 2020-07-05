@@ -441,7 +441,7 @@
 
                 <div class="form-group ">
                     <label for="volume_default">Điện Thoại</label>
-                    <input type="text" class="form-control" name="phone_default" placeholder="Điện Thoại" value="<?= $phone_default ?>" id="phone_default">
+                    <input type="text" class="form-control" name="phone_default" placeholder="Điện Thoại" id="phone_default">
                 </div>
 
                 <div class="form-group ">

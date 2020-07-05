@@ -558,6 +558,17 @@
                     "targets": 5,
                     "data": null,
                     "render": function (data, type, row, meta) {
+                        let noteArr = row.note.split("\n");
+                        let htmlNode = "";
+                        htmlNode += noteArr.map(function (note,key) {
+                            if(note.indexOf("/")>0){
+                                return `<span style="color:red">${note}</span>`
+
+                            }
+                            return `<span style="color:blue">${note}</span>`
+
+
+                        }).join('\n');
                         let linkXem = getLinkView(row.DVVC,row.code_supership,row.code_ghtk);
                         let linkPrint = getLinkPrint(row.DVVC,row.create_order_id,row.code_supership);
                         return `<div style="width: 100%;table-layout: fixed;"><div class="mb-15" style="display:flex">
@@ -566,7 +577,7 @@
                                 <a style="color: white" class="btn btn-sm btn-primary button-blue" target="_blank" href="${linkPrint}"><i style="padding-right: 5px;" class="fa fa-print"></i>In</a>
                                 </div>
                                 <p style="color:#557f38"><strong>Ghi Chú Giao Hàng:</strong></p>
-                                <p>${(row.note)?row.note:""}</p>
+                                <p  style="white-space: pre-line">${htmlNode}</p>
                                 <p style="color:#A47FE1"><strong>Ghi Chú Nội Bộ:</strong></p>
                                 <div style="white-space: pre-line"><span class="span${row.id}">${(row.note_delay)?row.note_delay:""}</span></p>
                                 </div>`;

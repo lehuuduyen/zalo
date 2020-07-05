@@ -15,8 +15,9 @@
           <?php  echo render_select('id_rows_customer',array(array('id'=>'1','name'=>'Dương'),array('id'=>'2','name'=>'Âm')),array('id','name'),'Lọc giá trị');?>
       </div>
 
-      <div class="col-md-2">
-          <button class="btn btn-info mtop25" type="button" onclick="load_table_customer()">Load danh sách</button>
+      <div class="col-md-4">
+          <button class="btn btn-info mtop25" type="button" onclick="load_table_customer(0)">Load danh sách</button>
+		  <button class="btn btn-info mtop25" type="button" onclick="load_table_customer(1)">Load danh sách KH 30 ngày</button>
       </div>
      <div class="clearfix"></div>
 

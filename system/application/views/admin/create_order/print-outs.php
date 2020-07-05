@@ -63,7 +63,7 @@ $this->load->helper('number_vnd_string');
                 </div>
             <?php }elseif (isset($dv) && $dv =='NB'){?>
                 <div style="position: absolute;display: block;margin-top: 184px;margin-left: 245px;font-size: 20px;">
-                    NB
+                    Nội Bộ
                 </div>
             <?php }?>
             <div class="header-he">

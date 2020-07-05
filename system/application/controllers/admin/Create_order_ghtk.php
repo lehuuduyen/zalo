@@ -565,8 +565,8 @@ class Create_order_ghtk extends AdminController
 
 
             if ($id) {
-				
-				$codeNew = CODE_GHTK . randerCode(2) . code(6);
+				$default_mass_volume_ghtk = $this->db->get('tbl_default_mass_volume_ghtk')->row();
+				$codeNew = $default_mass_volume_ghtk->code . randerCode(6);
 				
 				$this->db->where('customer_shop_code', $shop);
 				$info_customer = $this->db->get('tblcustomers')->row();
@@ -1429,7 +1429,7 @@ class Create_order_ghtk extends AdminController
 
             }
 
-            if(isset($_GET['dv']) && in_array($_GET['dv'], array('VTP','VNC'))){
+            if(isset($_GET['dv']) && in_array($_GET['dv'], array('VTP','VNC','NB'))){
                 $data['dv'] = $_GET['dv'];
             }
 
@@ -1444,12 +1444,7 @@ class Create_order_ghtk extends AdminController
         $this->db->join('tblorders_shop', 'tblorders_shop.id = tbl_create_order.orders_shop_id');
 
         $create_order = $this->db->get('tbl_create_order')->row();
-// pre($create_order);
-//        var_dump($data['create_order']);die();
 
-//pre($create_order);
-
-//        $invoice_number = $customers->customer_shop_code;
 
         $data['create_order'] = $create_order;
 

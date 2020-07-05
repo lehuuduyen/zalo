@@ -62,7 +62,7 @@ $this->load->helper('number_vnd_string');
             </div>
         <?php }elseif (isset($dv) && $dv == 'NB'){?>
             <div style="position: absolute;display: block;margin-top: 184px;margin-left: 245px;font-size: 20px;">
-                SPSNB
+                Nội Bộ
             </div>
         <?php }?>
         <div class="header-he">
@@ -73,7 +73,9 @@ $this->load->helper('number_vnd_string');
         </div>
         <div class="list-detail" style="font-size:12px">
             <p style="margin-top: 0px;margin-bottom: 5px;margin-left: 10px;margin-right: 10px;">
-                <span style="text-align:left;"><b><?=$create_order->shop?></b></span>
+                <?php if(isset($dv) && !in_array($dv, array('VNC'))){?>
+					<span style="text-align:left;"><b><?=$create_order->shop?></b></span>
+				<?php }?>
                 <span style="float:right;"><b><?=$create_order->date_create?></b></span>
             </p>
 

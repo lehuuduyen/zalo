@@ -382,15 +382,35 @@
      debts_porters_report();
  }
 
-function load_table_customer() {
+function load_table_customer(obj) {
+	
   if ($.fn.DataTable.isDataTable('.table-debts_customer')) {
       $('.table-debts_customer').DataTable().ajax.reload();
   }
   $('#start_detail_customer').val($('#date_start_customer').val());
   $('#end_detail_customer').val($('#date_end_customer').val());
-  var debts_customer = initDataTableDungbt('.table-debts_customer', admin_url + 'reports/debts_porters_customer', false, false, fnServerParams, [0, 'ASC']);
+  
+  if(obj === 0){
+            var url = admin_url + 'reports/debts_porters_customer';
+        }else{
+            var url = admin_url + 'reports/debts_porters_customer_30_days';
+        }
+  console.log(obj);
+  console.log(url);
+
+  var debts_customer = initDataTableDungbt('.table-debts_customer', url, false, false, fnServerParams, [0, 'ASC']);
   debts_customer.column(0).visible(false);
 }
+
+// function load_table_customer_30_days() {
+        // if ($.fn.DataTable.isDataTable('.table-debts_customer')) {
+            // $('.table-debts_customer').DataTable().ajax.reload();
+        // }
+        // $('#start_detail_customer').val($('#date_start_customer').val());
+        // $('#end_detail_customer').val($('#date_end_customer').val());
+        // var debts_customer = initDataTableDungbt('.table-debts_customer', admin_url + 'reports/debts_porters_customer_30_days', false, false, fnServerParams, [0, 'ASC']);
+        // debts_customer.column(0).visible(false);
+    // }
 
  function load_table_borrrowing()
  {
