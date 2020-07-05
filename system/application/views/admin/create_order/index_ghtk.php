@@ -545,7 +545,8 @@ $id_default = ($default_data) ? $default_data->id : '';
                                 <th style="text-align: center">TT</th>
                                 <th style="text-align: center">Trạng thái gốc</th>
                                 <th style="text-align: center">Trạng thái chuyển đổi</th>
-                                <th style="text-align: center">Trạng thái tính nợ</th>
+                                <th style="text-align: center">Tính nợ theo ngày đối soát</th>
+                                <th style="text-align: center">Tính nợ theo ngày giao hàng</th>
                                 <th style="text-align: center">Hành động</th>
                             </tr>
                             </thead>
@@ -558,6 +559,7 @@ $id_default = ($default_data) ? $default_data->id : '';
                                     <td style="text-align: center"><?= $status_order->status_ghtk ?></td>
                                     <td style="text-align: center"><?= $status_order->status_change ?></td>
                                     <td style="text-align: center"><?= (empty($status_order->status_debit)) ? 'Không tính nợ' : 'Có tính nợ' ?></td>
+                                    <td style="text-align: center"><?= (empty($status_order->group_debits)) ? 'Không tính nợ' : 'Có tính nợ' ?></td>
                                     <td style="text-align: center">
                                         <a href="javascript:void(0)" onclick="fnEdit(<?= $status_order->id ?>)">Sửa</a>
                                         |
@@ -852,7 +854,7 @@ $id_default = ($default_data) ? $default_data->id : '';
 
                         <div class="cover-checked col-md-3">
                             <label for="barter" class="container-checkbox">Đổi/Lấy Hàng Về
-                                <input type="checkbox" id="barter" name="barter">
+                                <input type="checkbox" id="barter" onclick="calc()" name="barter">
                                 <span class="checkmark"></span>
                             </label>
                         </div>
@@ -915,7 +917,10 @@ $id_default = ($default_data) ? $default_data->id : '';
                                 Hàng Tiết Kiệm</h2>
                         </div>
                     </div>
-
+                    <div style="float: right;margin: 18px 18px 0px;">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo _l('close'); ?></button>
+                        <a href="javascript:;" class="btn btn-primary submit_customer_policy"><?php echo _l('confirm'); ?></a>
+                    </div>
 
                     <div class="col-md-12">
 
@@ -989,10 +994,7 @@ $id_default = ($default_data) ? $default_data->id : '';
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo _l('close'); ?></button>
-                <a href="javascript:;" class="btn btn-primary submit_customer_policy"><?php echo _l('confirm'); ?></a>
-            </div>
+
         </div><!-- /.modal-content -->
         <?php echo form_close(); ?>
     </div><!-- /.modal-dialog -->
@@ -1492,8 +1494,17 @@ $id_default = ($default_data) ? $default_data->id : '';
                 </div>
 
                 <div class="form-group ">
-                    <label for="volume_default">Trạng thái tính nợ</label>
+                    <label for="volume_default">Tính nợ theo ngày đối soát</label>
                     <select class="form-control" id="status_debit" name="status_debit">
+                        <option value="">-- Chọn trạng thái --</option>
+                        <option value="0">Không tính</option>
+                        <option value="1">Có tính</option>
+                    </select>
+                </div>
+
+                <div class="form-group ">
+                    <label for="volume_default">Tính nợ theo ngày giao hàng</label>
+                    <select class="form-control" id="group_debits" name="group_debits">
                         <option value="">-- Chọn trạng thái --</option>
                         <option value="0">Không tính</option>
                         <option value="1">Có tính</option>
@@ -1657,14 +1668,15 @@ $id_default = ($default_data) ? $default_data->id : '';
                     var result = JSON.parse(check);
                     if (result.address_id != "") {
                         $("#address_id_hide").val(result.address_id);
-                    } else {
-                        $("#create_order").modal('hide');
-                        $("#title").html(getLocalCustomer.search_text.trim());
-                        $("#shop_code").val(result.customer_shop_code);
-                        $("#shop_id").val(getLocalCustomer.customer_id);
-                        $("#modal-address").modal();
-                        return false;
-                    }
+                    } 
+					// else {
+                        // $("#create_order").modal('hide');
+                        // $("#title").html(getLocalCustomer.search_text.trim());
+                        // $("#shop_code").val(result.customer_shop_code);
+                        // $("#shop_id").val(getLocalCustomer.customer_id);
+                        // $("#modal-address").modal();
+                        // return false;
+                    // }
                 }
             });
             $("#shop").val(getLocalCustomer.search_text.trim());
@@ -2302,15 +2314,15 @@ $id_default = ($default_data) ? $default_data->id : '';
             messages: {},
             submitHandler: function (form) {
                 var shop_code = $("#shop").val();
-                var address_id_hide = $("#address_id_hide").val();
-                if (address_id_hide == "" || address_id_hide == null) {
-                    $("#create_order").modal('hide');
-                    $("#title").html($("#search_customer").val());
-                    $("#shop_code").val(shop_code);
-                    $("#shop_id").val($('#create_order_ob #customer_id').val());
-                    $("#modal-address").modal();
-                    return false;
-                }
+                // var address_id_hide = $("#address_id_hide").val();
+                // if (address_id_hide == "" || address_id_hide == null) {
+                    // $("#create_order").modal('hide');
+                    // $("#title").html($("#search_customer").val());
+                    // $("#shop_code").val(shop_code);
+                    // $("#shop_id").val($('#create_order_ob #customer_id').val());
+                    // $("#modal-address").modal();
+                    // return false;
+                // }
 
                 var data = {};
                 var repo_customer = $('#repo_customer').val().split(",");
@@ -2358,7 +2370,7 @@ $id_default = ($default_data) ? $default_data->id : '';
                 data.value = parseINT($('#value_order').val());
                 data.token = token;
                 data.token_ghtk = $('#token_ghtk').val();
-                data.address_id = address_id_hide;
+                // data.address_id = address_id_hide;
                 data.transport = $('#transport').val();
                 data.ghtk = 1;
                 data.price = parseINT($("#price").val());
@@ -2706,14 +2718,15 @@ $id_default = ($default_data) ? $default_data->id : '';
 
                     if (JSON.parse(check).address_id !== '') {
                         $("#address_id_hide").val(JSON.parse(check).address_id);
-                    } else {
-                        $("#create_order").modal('hide');
-                        $("#title").html(JSON.parse(check).customer_shop_code);
-                        $("#shop_code").val(JSON.parse(check).customer_shop_code);
-                        $("#shop_id").val(JSON.parse(check).customer_id);
-                        $("#modal-address").modal();
-                        return false;
-                    }
+                    } 
+					// else {
+                        // $("#create_order").modal('hide');
+                        // $("#title").html(JSON.parse(check).customer_shop_code);
+                        // $("#shop_code").val(JSON.parse(check).customer_shop_code);
+                        // $("#shop_id").val(JSON.parse(check).customer_id);
+                        // $("#modal-address").modal();
+                        // return false;
+                    // }
                     dataSaveLocal.address_id = JSON.parse(check).address_id;
                     if (JSON.parse(check).customer_shop_code !== '') {
                         $("#shop").val(JSON.parse(check).customer_shop_code);
@@ -2724,7 +2737,6 @@ $id_default = ($default_data) ? $default_data->id : '';
                     $('#customer_id').val(id);
                     $('#pickup_phone').val(phone);
                     $('.disable-view').show();
-                    $('#loader-repo').show();
 
                     $.ajax({
                         url: '/system/admin/pick_up_points/curlGetRepo',
@@ -2732,7 +2744,6 @@ $id_default = ($default_data) ? $default_data->id : '';
                         data: {token},
                         success: function (data) {
                             $('.disable-view').hide();
-                            $('#loader-repo').hide();
 
                             data = JSON.parse(data);
 
@@ -2984,6 +2995,7 @@ $id_default = ($default_data) ? $default_data->id : '';
         var active = $("#active").val();
 
         var status_debit = $("#status_debit").find(':selected').val();
+        var group_debits = $("#group_debits").find(':selected').val();
 
         if (status_ghtk == "") {
             alert('Bạn chưa nhập trạng thái của giao hàng tiết kiệm!');
@@ -3010,6 +3022,7 @@ $id_default = ($default_data) ? $default_data->id : '';
                 status_ghtk: status_ghtk,
                 status_change: status_change,
                 status_debit: status_debit,
+                group_debits:group_debits,
                 active: active,
                 dvvc: 'GHTK'
             },
@@ -3040,6 +3053,7 @@ $id_default = ($default_data) ? $default_data->id : '';
                     $("#status_change").val(result.info.status_change);
                     $("#status_debit").val(result.info.status_debit);
                     $("#active").val(result.info.id);
+                    $("#group_debits").val(result.info.group_debits);
                     $("#default_declare").modal('show');
                 } else {
                     alert('Xảy ra lỗi.');
@@ -3073,6 +3087,17 @@ $id_default = ($default_data) ? $default_data->id : '';
                 $("#modal-address").modal('hide');
             }
         });
+    }
+
+	function calc() {
+        if (document.getElementById('barter').checked)
+        {
+            document.getElementById('note').value = document.getElementById('note').value + "\nCó Hàng Đổi Trả. Ship Lấy Hàng Về Giúp Shop"
+        } else {
+            textOld =  document.getElementById('note').value
+            document.getElementById('note').value = textOld.replace("\nCó Hàng Đổi Trả. Ship Lấy Hàng Về Giúp Shop", "");
+
+        }
     }
 </script>
 

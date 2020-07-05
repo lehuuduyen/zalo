@@ -7,6 +7,8 @@ class Header_controller_over_order extends AdminController
     public function __construct()
     {
         parent::__construct();
+        $this->edit_time_status();
+
     }
 
 
@@ -85,7 +87,7 @@ class Header_controller_over_order extends AdminController
 
         if (sizeof($data_over) > 0) {
             foreach ($data_over as $key => $value) {
-                if ($this->differenceInHours($start_check, $value->over_time) >= 24) {
+                if ($this->differenceInHours($start_check, $value->over_time) >= 12) {
                     $id_status_null['id'] = $value->id;
                     $id_status_null['delay_time'] = null;
                     $id_status_null['over_time'] = null;
@@ -101,6 +103,8 @@ class Header_controller_over_order extends AdminController
 
     public function index()
     {
+        $this->edit_time_status();
+
         $data_over =
             $this->db->select('tbl_orders_change_weight.id,created_date,order_shop_id,shop_name,tbl_orders_change_weight.code,old_weight,new_weight,tbl_orders_change_weight.status, tblorders_shop.DVVC, tblorders_shop.code_ghtk')
                 ->from('tbl_orders_change_weight')
@@ -210,8 +214,10 @@ class Header_controller_over_order extends AdminController
 
             if ($row[8] == 'GHTK')
                 $row[4] = "<a target='_blank' href='https://khachhang.giaohangtietkiem.vn/khachhang?code=" . $row[9] . "'>" . $row[4] . "</a>";
-            else
+            elseif ($row[8] == 'SPS')
                 $row[4] = "<a target='_blank' href='https://mysupership.com/search?category=orders&query=" . $row[4] . "'>" . $row[4] . "</a>";
+            elseif ($row[8] == 'VNC')
+                $row[4] = "<a target='_blank' href='https://cs.vncpost.com/order/list'>" . $row[4] . "</a>";
 
             $data_aaDATA[] = $row;
         }

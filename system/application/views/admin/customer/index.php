@@ -207,10 +207,10 @@
 
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" style="display:none">
                             <label for="customer_note">Địa Chỉ Giao Hàng Tiết Kiệm</label>
                             <input placeholder="Địa Chỉ Giao Hàng Tiết Kiệm (ID địa chỉ GHTK)" class="form-control txt-area" id="address_id"
-                                      name="address_id" value="<?php echo set_value('address_id'); ?>">
+                                      name="address_id" value="1">
 
                         </div>
 
@@ -220,6 +220,15 @@
 
                             </select>
                         </div>
+						
+						<div class="form-group">
+                            <label for="customer_note">Tính nợ theo</label>
+                            <select class="form-control txt-area" id="group_debits" name="group_debits">
+                                <option value="0">Ngày Đối Soát</option>
+                                <option value="1">Ngày Giao Hàng</option>
+                            </select>
+                        </div>
+						
                     </div>
                 </div>
 

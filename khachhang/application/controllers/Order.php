@@ -22,6 +22,17 @@ class Order extends CI_Controller
         header('Content-Type: application/json');
         echo json_encode($result);
     }
+    public function getListTab4Error($customer_id)
+    {
+        $this->load->model('Order_model');
+        $order_model = new Order_model();
+
+        $order = $order_model->getOrderTab4Error($customer_id);
+        $result = new stdClass();
+        $result->data = $order;
+        header('Content-Type: application/json');
+        echo json_encode($result);
+    }
     /* This is admin dashboard view */
     public function index()
     {
@@ -81,7 +92,7 @@ class Order extends CI_Controller
         if ($data->region != "") {
             $data = $order_model->getShopByRegion($data);
         }
-        $order = $order_model->getOrder($data);
+        $order = $order_model->getOrderMultiStatus($data);
         $result = new stdClass();
         $result->data = $order;
         header('Content-Type: application/json');
@@ -308,7 +319,8 @@ class Order extends CI_Controller
         if ($data->region != "") {
             $data = $order_model->getShopByRegion($data);
         }
-        $order = $order_model->getOrder($data);
+
+        $order = $order_model->getOrderMultiStatus($data);
 
         include APPPATH . 'third_party/PHPExcel/PHPExcel.php';
         $this->load->library("PHPExcel");

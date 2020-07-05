@@ -52,15 +52,23 @@ $this->load->helper('number_vnd_string');
 ?>
 <body>
     <div class="head-print" style="width: 321.84px;height: 207.56px;border: 1px solid black;">
-        <?php if(isset($dv)){?>
+        <?php if(isset($dv) && $dv == 'VTP'){?>
             <div style="position: absolute;display: block;margin-top: 184px;margin-left: 245px;font-size: 20px;">
                 SPSVTP
+            </div>
+        <?php }elseif (isset($dv) && $dv == 'VNC'){?>
+            <div style="position: absolute;display: block;margin-top: 184px;margin-left: 245px;font-size: 20px;">
+                SPSVNC
+            </div>
+        <?php }elseif (isset($dv) && $dv == 'NB'){?>
+            <div style="position: absolute;display: block;margin-top: 184px;margin-left: 245px;font-size: 20px;">
+                SPSNB
             </div>
         <?php }?>
         <div class="header-he">
             <p style=" margin-bottom: 5px;margin-top: 5px;">
                 <?php $code = explode('.', $create_order->code_supership)?>
-                <img style="height: 55px;width: 320px;" src="<?=base_url('cron/gen_barcode/'.$code[count($code) - 1].'/code128/40')?>"/>
+                <img style="    height: 55px;width: 286px;margin-left: 15px;;" src="<?=base_url('cron/gen_barcode/'.$code[count($code) - 1].'/code128/40')?>"/>
             </p>
         </div>
         <div class="list-detail" style="font-size:12px">
@@ -70,14 +78,15 @@ $this->load->helper('number_vnd_string');
             </p>
 
             <p style="margin-top: 5px; margin-bottom: 5px;margin-left: 10px;margin-right: 10px;">
-                <b><?= $create_order->required_code?></b>
+                <b>&nbsp;<?= $create_order->required_code?></b>
+                <b style="float:right">&nbsp;<?=$create_order->soc?></b>
             </p>
             <p style="margin-top: 5px; margin-bottom: 5px;margin-left: 10px;margin-right: 10px;">
                 <span>Thu Hộ: <b><?=number_format_data($create_order->collect)?></b></span>
                 <span style="float:right"><b><?=$create_order->name?></b></span>
             </p>
             <div style="display: block;"></div>
-            <p style="margin-top: 5px;margin-bottom: 5px;margin-left: 10px;margin-right: 10px;"><i><?=$create_order->address.','.$create_order->district.'-'.$create_order->province?></i></p>
+            <p style="margin-top: 5px;margin-bottom: 5px;margin-left: 10px;margin-right: 10px"><i><?=$create_order->address.','.$create_order->district.'-'.$create_order->province?></i></p>
             <p style="margin-top: 5px;margin-bottom: 5px;margin-left: 10px;margin-right: 10px;">Ghi Chú: <i style="font-size:10px"><?=$create_order->note?></i></p>
         </div>
     </div>
@@ -95,6 +104,7 @@ $this->load->helper('number_vnd_string');
            // }
 
         })();
+        window.print()
     </script>
 
 </body>

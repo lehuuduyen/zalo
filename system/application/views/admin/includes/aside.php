@@ -48,10 +48,51 @@
          </ul>
          <?php } ?>
       </li>
+
       <?php hooks()->do_action('after_render_single_aside_menu', $item); ?>
       <?php } ?>
       <?php if($this->app->show_setup_menu() == true && (is_staff_member() || is_admin())){ ?>
-      <li<?php if(get_option('show_setup_menu_item_only_on_hover') == 1) { echo ' style="display:none;"'; } ?> id="setup-menu-item">
+       <li class="menu-item-menu_object ">
+           <a href="#" aria-expanded="true" style="display: flex;">
+               <i class="fa fa-user-o menu-icon"></i>
+               <span class="menu-text">
+                    GIAO HÀNG             </span>
+               <span class="fa arrow"></span>
+           </a>
+           <ul class="nav nav-second-level collapse in" aria-expanded="true" style="">
+               <li class="sub-menu-item-customers"><a href="/system/admin/Delivery_order/view" style="display: flex;">
+                              <span class="sub-menu-text">
+                  Quản lý giao hàng                </span>
+                   </a>
+               </li>
+               <li class="sub-menu-item-staff"><a href="/system/admin/Delivery_order" style="display: flex;">
+                              <span class="sub-menu-text">
+                  Tạo giao hàng                </span>
+                   </a>
+               </li>
+
+           </ul>
+       </li>
+
+
+       <li id="declare">
+           <a href="/system/admin/declare_controller" class=""><i class="fa fa-cog menu-icon"></i>
+               <span class="menu-text">
+                KHAI BÁO
+
+         </span>
+           </a>
+       </li>
+       <li id="declare">
+           <a href="/system/admin/shipper" class=""><i class="fa fa-cog menu-icon"></i>
+               <span class="menu-text">
+                QUẢN LÝ ĐƠN SHIPPER
+
+         </span>
+           </a>
+       </li>
+
+       <li<?php if(get_option('show_setup_menu_item_only_on_hover') == 1) { echo ' style="display:none;"'; } ?> id="setup-menu-item">
          <a href="#" class="open-customizer"><i class="fa fa-cog menu-icon"></i>
          <span class="menu-text">
             <?php echo _l('setting_bar_heading'); ?>

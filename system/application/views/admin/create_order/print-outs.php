@@ -53,9 +53,17 @@ $this->load->helper('number_vnd_string');
 <body>
     <?php foreach ($create_order as $order){?>
         <div class="head-print" style="width: 321.84px;height: 207.56px;border: 1px solid black; margin-bottom:1%;">
-            <?php if(isset($dv)){?>
+            <?php if(isset($dv) && $dv == 'VTP'){?>
                 <div style="position: absolute;display: block;margin-top: 184px;margin-left: 245px;font-size: 20px;">
                     SPSVTP
+                </div>
+            <?php }elseif (isset($dv) && $dv =='VNC'){?>
+                <div style="position: absolute;display: block;margin-top: 184px;margin-left: 245px;font-size: 20px;">
+                    SPSVNC
+                </div>
+            <?php }elseif (isset($dv) && $dv =='NB'){?>
+                <div style="position: absolute;display: block;margin-top: 184px;margin-left: 245px;font-size: 20px;">
+                    NB
                 </div>
             <?php }?>
             <div class="header-he">
@@ -72,6 +80,7 @@ $this->load->helper('number_vnd_string');
 
                 <p style="margin-top: 5px; margin-bottom: 5px;margin-left: 10px;margin-right: 10px;">
                     <b><?= $order->required_code?></b>
+					<b style="float:right">&nbsp;<?= $order->soc?></b>
                 </p>
                 <p style="margin-top: 5px; margin-bottom: 5px;margin-left: 10px;margin-right: 10px;">
                     <span>Thu Hộ: <b><?=number_format_data($order->collect)?></b></span>

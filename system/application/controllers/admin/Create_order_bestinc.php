@@ -236,6 +236,14 @@ class Create_order_bestinc extends AdminController
                 'SourceAddress' => $warehouser->nameAddress,
                 'SourceName' => $shop,
                 'SourcePhoneNumber' => $warehouser->phone,
+				
+				'ReturnCity' => $warehouser->province,
+                'ReturnDistrict' => $warehouser->district,
+                'ReturnWard' => $warehouser->commune,
+                'ReturnAddress' => $warehouser->nameAddress,
+                'ReturnName' => $shop,
+                'ReturnPhoneNumber' => $warehouser->phone,
+				
                 'DestCity' => $this->input->post('province'),
                 'DestDistrict' => $this->input->post('district'),
                 'DestWard' => $this->input->post('commune'),

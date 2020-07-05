@@ -319,11 +319,15 @@ class Create_order_ghtk extends AdminController
     }
 
 
-    public function api_create_order_ghtk($data, $token, $id, $address_id)
+    public function api_create_order_ghtk($data, $token, $id, $customer_shop_name)
 
     {
 
         unset($data['pickup_commune']);
+
+		// Get info warehouse send
+        $this->db->where('is_default', true);
+        $info_warehouse_send = $this->db->get('tbl_warehouse_send')->row();
 
 
         if ($data['value'] === 'NaN') {
@@ -332,6 +336,15 @@ class Create_order_ghtk extends AdminController
 
         }
 
+
+		$value = $data['value'];
+		if ($value < 3000000) {
+			$valueNew = rand(2500000, 3000000);
+			if ($valueNew > $value) {
+				$number2 = substr($valueNew, 3,4);
+				$value = $valueNew - $number2;
+			}
+		}
 
         // $product =
 
@@ -356,9 +369,9 @@ class Create_order_ghtk extends AdminController
 
         $data_ghtk->order->id = $id;
 
-        $data_ghtk->order->pick_address_id = $address_id;
+        // $data_ghtk->order->pick_address_id = $address_id;
 
-        $data_ghtk->order->pick_name = $data['name'];
+        $data_ghtk->order->pick_name = $customer_shop_name;
 
         $data_ghtk->order->pick_address = $data['pickup_address'];
 
@@ -366,7 +379,7 @@ class Create_order_ghtk extends AdminController
 
         $data_ghtk->order->pick_district = $data['pickup_district'];
 
-        $data_ghtk->order->pick_tel = $data['pickup_phone'];
+        $data_ghtk->order->pick_tel = $info_warehouse_send->phone;
 
         $data_ghtk->order->tel = $data['phone'];
 
@@ -389,6 +402,14 @@ class Create_order_ghtk extends AdminController
         $data_ghtk->order->transport = $data['transport'];
 
         $data_ghtk->order->use_return_address = 0;
+		$data_ghtk->order->value = $value;
+			$data_ghtk->order->hamlet = "Hải dương";
+
+		// Warehouse
+        $data_ghtk->order->pick_address = $info_warehouse_send->nameAddress;
+        $data_ghtk->order->pick_province = $info_warehouse_send->province;
+        $data_ghtk->order->pick_district= $info_warehouse_send->district;
+        $data_ghtk->order->pick_ward= $info_warehouse_send->commune;
 
 
         $curl = curl_init();
@@ -453,13 +474,13 @@ class Create_order_ghtk extends AdminController
 
         unset($_POST['shop']);
 
-        if (empty($address_id)) {
+        // if (empty($address_id)) {
 
-            echo json_encode(['success' => 'false']);
+            // echo json_encode(['success' => 'false']);
 
-            die();
+            // die();
 
-        } else {
+        // } else {
 
             $data = array(
 
@@ -544,12 +565,17 @@ class Create_order_ghtk extends AdminController
 
 
             if ($id) {
+				
+				$codeNew = CODE_GHTK . randerCode(2) . code(6);
+				
+				$this->db->where('customer_shop_code', $shop);
+				$info_customer = $this->db->get('tblcustomers')->row();
 
-                $curl_status = $this->api_create_order_ghtk($_POST, $token_ghtk, $id, $address_id);
+                $curl_status = $this->api_create_order_ghtk($_POST, $token_ghtk, $codeNew, $info_customer->customer_shop_code);
 
                 $codeArr = explode('.', json_decode($curl_status)->order->label);
 
-                $code = 'SPS' . time() . '.' . $codeArr[count($codeArr) - 1];
+                $code = $codeNew . '.' . $codeArr[count($codeArr) - 1];
 
                 if (json_decode($curl_status)->success === false) {
 
@@ -607,7 +633,7 @@ class Create_order_ghtk extends AdminController
 
             die();
 
-        }
+        // }
 
     }
 
@@ -701,49 +727,11 @@ class Create_order_ghtk extends AdminController
 
     public function get_province()
     {
-        $curl = curl_init();
-        curl_setopt_array($curl, [
-            CURLOPT_URL => 'https://api.mysupership.vn/v1/partner/areas/province',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_HTTPHEADER => [
-                'Accept: */*',
-            ],
+        $this->db->select('province_id as code,province as name')->distinct();
+        $this->db->from('tbladdress_list');
+        $purchases = $this->db->get()->result();
 
-        ]);
-
-
-        $response = curl_exec($curl);
-
-        $err = curl_error($curl);
-
-
-        curl_close($curl);
-
-
-        if ($err) {
-
-            echo 'cURL Error #:' . $err;
-
-        } else {
-
-            if ($this->input->is_ajax_request()) {
-
-                echo json_encode(json_decode($response)->results);
-
-            }
-
-
-            $result = json_decode($response)->results;
-
-
-            return $result;
-
-        }
+        return $purchases;
 
     }
 
@@ -752,60 +740,14 @@ class Create_order_ghtk extends AdminController
 
     {
 
-        $curl = curl_init();
+        $this->db->select('district_id as code,district as name')->distinct();
+        $this->db->from('tbladdress_list');
+        $this->db->where('province_id', $code);
 
+        $purchases = $this->db->get()->result();
 
-        curl_setopt_array($curl, [
+        echo json_encode($purchases);
 
-            CURLOPT_URL => 'https://api.mysupership.vn/v1/partner/areas/district?province=' . $code,
-
-            CURLOPT_RETURNTRANSFER => true,
-
-            CURLOPT_ENCODING => '',
-
-            CURLOPT_MAXREDIRS => 10,
-
-            CURLOPT_TIMEOUT => 30,
-
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-
-            CURLOPT_CUSTOMREQUEST => 'GET',
-
-            CURLOPT_HTTPHEADER => [
-
-                'Accept: */*',
-
-            ],
-
-        ]);
-
-
-        $response = curl_exec($curl);
-
-        $err = curl_error($curl);
-
-        curl_close($curl);
-
-
-        if ($err) {
-
-        } else {
-
-            $result = json_decode($response)->results;
-
-
-            if ($this->input->is_ajax_request()) {
-
-                echo json_encode($result);
-
-                die();
-
-            }
-
-
-            return $result;
-
-        }
 
     }
 
@@ -935,7 +877,7 @@ class Create_order_ghtk extends AdminController
 
         $date = new DateTime($data['date_end']);
 
-        date_sub($date, date_interval_create_from_date_string('30 days'));
+        date_sub($date, date_interval_create_from_date_string('2 days'));
 
         $data['date_start'] = date_format($date, 'Y-m-d');
 
@@ -1487,13 +1429,13 @@ class Create_order_ghtk extends AdminController
 
             }
 
-            if(isset($_GET['dv']) && in_array($_GET['dv'], array('VTP'))){
-                $data['dv'] = true;
+            if(isset($_GET['dv']) && in_array($_GET['dv'], array('VTP','VNC'))){
+                $data['dv'] = $_GET['dv'];
             }
 
         }
 
-        $this->db->select('tblorders_shop.*, tbl_create_order.name, tbl_create_order.province, tbl_create_order.required_code');
+        $this->db->select('tblorders_shop.*,tbl_create_order.soc, tbl_create_order.name, tbl_create_order.province, tbl_create_order.required_code');
 
         $this->db->where('tbl_create_order.id', $id_orders);
 
@@ -1502,7 +1444,7 @@ class Create_order_ghtk extends AdminController
         $this->db->join('tblorders_shop', 'tblorders_shop.id = tbl_create_order.orders_shop_id');
 
         $create_order = $this->db->get('tbl_create_order')->row();
-
+// pre($create_order);
 //        var_dump($data['create_order']);die();
 
 //pre($create_order);

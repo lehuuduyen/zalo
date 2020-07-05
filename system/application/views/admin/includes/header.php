@@ -14,6 +14,50 @@ ob_start();
     #over_popup table.dataTable thead th {
         padding-right: 10px;
     }
+    .dropbtn {
+        background-color: #4CAF50;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+    }
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f1f1f1;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown-content a:hover {background-color: #ddd;}
+
+    .dropdown:hover .dropdown-content {display: block;}
+
+    .dropdown:hover .dropbtn {background-color: #3e8e41;}
+    .close-noti{
+        opacity:0;
+        margin-bottom: 10px;
+    }
+    .show-noti{
+        opacity:1 ;
+        transition: 1000ms;
+        margin-bottom: 0px;
+
+    }
 </style>
 
 
@@ -48,58 +92,70 @@ ob_end_clean();
                 <i class="fa fa-chevron-down"></i>
             </button>
             <ul class="mobile-icon-menu">
-                <?php
-                // To prevent not loading the timers twice
-                if (is_mobile()) { ?>
-                    <li class="dropdown notifications-wrapper header-notifications">
-                        <?php $this->load->view('admin/includes/notifications'); ?>
-                    </li>
-                    <li class="header-timers">
-                        <a href="#" id="top-timers" class="dropdown-toggle top-timers" data-toggle="dropdown"><i
-                                    class="fa fa-clock-o fa-fw fa-lg"></i>
-                            <span class="label bg-success icon-total-indicator icon-started-timers<?php if ($totalTimers = count($startedTimers) == 0) {
-                                echo ' hide';
-                            } ?>"><?php echo count($startedTimers); ?></span>
-                        </a>
-                        <ul class="dropdown-menu animated fadeIn started-timers-top width300" id="started-timers-top">
-                            <?php $this->load->view('admin/tasks/started_timers', array('startedTimers' => $startedTimers)); ?>
-                        </ul>
-                    </li>
-                <?php } ?>
 
+                <li class="icon all-noti">
+                    <a href="javascript:;" class="click-show-all-noti" data-toggle="tooltip" title="DS Thông Báo"
+                       data-placement="bottom">
+                        <i class="fa fa-bell" style="    font-size: 30px;
+    color: red;
+    margin-top: 12px;" aria-hidden="true"></i>
+                    </a>
+                </li>
+
+            </ul>
+            <ul class=" close-noti mobile-icon-menu">
                 <li class="icon">
-                    <a href="#" class="click-show-table-delay" data-toggle="tooltip" title="DS Hoãn Giao Hàng"
+                    <a href="javascript:;" class="click-show-table-delay" data-toggle="tooltip" title="DS Hoãn Giao Hàng"
                        data-placement="bottom">
                         <i class="fa fa-list fa-fw fa-lg" aria-hidden="true"></i>
-                        <i class="number_delay for-mobile"></i>
+                        <i class="number_delay"></i>
                     </a>
-                </li>
 
+                </li>
                 <li class="icon">
-                    <a href="#" class="click-show-table-order_half" data-toggle="tooltip"
-                       title="Danh Sách Đơn Hàng Giao Hàng Một Phần" data-placement="bottom">
+                    <a href="javascript:;" class="click-show-table-order_half" data-toggle="tooltip"
+                       title="Danh Sách Đơn Hàng Giao Hàng Một Phần Chưa Trả Hàng Về" data-placement="bottom">
                         <i class="fa fa-cart-plus" style="font-size: 21px;" aria-hidden="true"></i>
-                        <i class="number_status_half for-mobile"></i>
+                        <i class="number_status_half"></i>
                     </a>
                 </li>
 
 
                 <li class="icon">
-                    <a href="#" class="click-show-table-over" data-toggle="tooltip" title="DS Đơn Hàng Sửa Khối Lượng"
-                       data-placement="bottom">
+                    <a href="javascript:;" class="click-show-table-over" data-toggle="tooltip"
+                       title="DS Đơn Hàng Sửa Khối Lượng" data-placement="bottom">
                         <i class="fa fa-hourglass-end fa-fw fa-lg" aria-hidden="true"></i>
                         <i class="number_over"></i>
                     </a>
 
                 </li>
 
-
                 <li class="icon">
-                    <a href="#" class="click-show-table-check_status" data-toggle="tooltip"
-                       title="DS Đơn Hàng Cần Xử Lý"
-                       data-placement="bottom">
+                    <a href="javascript:;" class="click-show-table-check_status" data-toggle="tooltip"
+                       title="DS Đơn Hàng Cần Xử Lý" data-placement="bottom">
                         <i class="fa fa-calendar" aria-hidden="true"></i>
-                        <i class="number_status for-mobile"></i>
+                        <i class="number_status"></i>
+                    </a>
+                </li>
+                <li class="icon">
+                    <a href="javascript:;" class="click-show-table-check_status2" data-toggle="tooltip"
+                       title="DS Đơn Hàng Cần Xử Lý 2" data-placement="bottom">
+                        <i class="fa fa-industry" aria-hidden="true"></i>
+                        <i class="number_status2"></i>
+                    </a>
+                </li>
+                <li class="icon">
+                    <a href="javascript:;" class="click-show-table-check_status3" data-toggle="tooltip"
+                       title="Danh Sách Thông Báo GHTK" data-placement="bottom">
+                        <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+                        <i class="number_status3"></i>
+                    </a>
+                </li>
+                <li class="icon " >
+                    <a href="javascript:;" title="Khai Báo Vùng Miền" class="click-show-province" data-toggle="tooltip"
+                       data-placement="bottom">
+                        <i class="fa fa-flag" aria-hidden="true"></i>
+                        <i class="number_province"></i>
                     </a>
                 </li>
             </ul>
@@ -128,7 +184,63 @@ ob_end_clean();
                 </ul>
             </div>
         </div>
-        <ul class="nav navbar-nav navbar-right">
+        <ul class=" close-noti nav navbar-nav navbar-right">
+            <li class="icon">
+                <a href="javascript:;" class="click-show-table-delay" data-toggle="tooltip" title="DS Hoãn Giao Hàng"
+                   data-placement="bottom">
+                    <i class="fa fa-list fa-fw fa-lg" aria-hidden="true"></i>
+                    <i class="number_delay"></i>
+                </a>
+
+            </li>
+            <li class="icon">
+                <a href="javascript:;" class="click-show-table-order_half" data-toggle="tooltip"
+                   title="Danh Sách Đơn Hàng Giao Hàng Một Phần Chưa Trả Hàng Về" data-placement="bottom">
+                    <i class="fa fa-cart-plus" style="font-size: 21px;" aria-hidden="true"></i>
+                    <i class="number_status_half"></i>
+                </a>
+            </li>
+
+
+            <li class="icon">
+                <a href="javascript:;" class="click-show-table-over" data-toggle="tooltip"
+                   title="DS Đơn Hàng Sửa Khối Lượng" data-placement="bottom">
+                    <i class="fa fa-hourglass-end fa-fw fa-lg" aria-hidden="true"></i>
+                    <i class="number_over"></i>
+                </a>
+
+            </li>
+
+            <li class="icon">
+                <a href="javascript:;" class="click-show-table-check_status" data-toggle="tooltip"
+                   title="DS Đơn Hàng Cần Xử Lý" data-placement="bottom">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                    <i class="number_status"></i>
+                </a>
+            </li>
+            <li class="icon">
+                <a href="javascript:;" class="click-show-table-check_status2" data-toggle="tooltip"
+                   title="DS Đơn Hàng Cần Xử Lý 2" data-placement="bottom">
+                    <i class="fa fa-industry" aria-hidden="true"></i>
+                    <i class="number_status2"></i>
+                </a>
+            </li>
+            <li class="icon">
+                <a href="javascript:;" class="click-show-table-check_status3" data-toggle="tooltip"
+                   title="Danh Sách Thông Báo GHTK" data-placement="bottom">
+                    <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+                    <i class="number_status3"></i>
+                </a>
+            </li>
+            <li class="icon " >
+                <a href="javascript:;" title="Khai Báo Vùng Miền" class="click-show-province" data-toggle="tooltip"
+                   data-placement="bottom">
+                    <i class="fa fa-flag" aria-hidden="true"></i>
+                    <i class="number_province"></i>
+                </a>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right ">
             <?php
             if (!is_mobile()) {
                 echo $top_search_area;
@@ -174,75 +286,16 @@ ob_end_clean();
 
             </li>
 
-            <li class="icon">
-                <a href="javascript:;" class="click-show-table-delay" data-toggle="tooltip" title="DS Hoãn Giao Hàng"
+            <li class="icon all-noti">
+                <a href="javascript:;" class="click-show-all-noti" data-toggle="tooltip" title="DS Thông Báo"
                    data-placement="bottom">
-                    <i class="fa fa-list fa-fw fa-lg" aria-hidden="true"></i>
-                    <i class="number_delay"></i>
+                    <i class="fa fa-bell" style="    font-size: 30px;
+    color: red;
+    margin-top: 12px;" aria-hidden="true"></i>
                 </a>
-
-            </li>
-            <li class="icon">
-                <a href="javascript:;" class="click-show-table-order_half" data-toggle="tooltip"
-                   title="Danh Sách Đơn Hàng Giao Hàng Một Phần Chưa Trả Hàng Về" data-placement="bottom">
-                    <i class="fa fa-cart-plus" style="font-size: 21px;" aria-hidden="true"></i>
-                    <i class="number_status_half"></i>
-                </a>
-            </li>
-
-
-            <li class="icon">
-                <a href="javascript:;" class="click-show-table-over" data-toggle="tooltip"
-                   title="DS Đơn Hàng Sửa Khối Lượng" data-placement="bottom">
-                    <i class="fa fa-hourglass-end fa-fw fa-lg" aria-hidden="true"></i>
-                    <i class="number_over"></i>
-                </a>
-
-            </li>
-
-            <li class="icon">
-                <a href="javascript:;" class="click-show-table-check_status" data-toggle="tooltip"
-                   title="DS Đơn Hàng Cần Xử Lý" data-placement="bottom">
-                    <i class="fa fa-calendar" aria-hidden="true"></i>
-                    <i class="number_status"></i>
-                </a>
-            </li>
-
-            <?php if (is_staff_member()) { ?>
-                <li class="icon header-newsfeed">
-                    <a href="#" class="open_newsfeed desktop" data-toggle="tooltip"
-                       title="<?php echo _l('whats_on_your_mind'); ?>" data-placement="bottom"><i
-                                class="fa fa-share fa-fw fa-lg" aria-hidden="true"></i></a>
-                </li>
-            <?php } ?>
-            <li class="icon header-todo">
-                <a href="<?php echo admin_url('todo'); ?>" data-toggle="tooltip"
-                   title="<?php echo _l('nav_todo_items'); ?>" data-placement="bottom"><i
-                            class="fa fa-check-square-o fa-fw fa-lg"></i>
-                    <span class="label bg-warning icon-total-indicator nav-total-todos<?php if ($current_user->total_unfinished_todos == 0) {
-                        echo ' hide';
-                    } ?>"><?php echo $current_user->total_unfinished_todos; ?></span>
-                </a>
-            </li>
-            <li class="icon header-timers timer-button" data-placement="bottom" data-toggle="tooltip"
-                data-title="<?php echo _l('my_timesheets'); ?>">
-                <a href="#" id="top-timers" class="dropdown-toggle top-timers" data-toggle="dropdown">
-                    <i class="fa fa-clock-o fa-fw fa-lg" aria-hidden="true"></i>
-                    <span class="label bg-success icon-total-indicator icon-started-timers<?php if ($totalTimers = count($startedTimers) == 0) {
-                        echo ' hide';
-                    } ?>">
-            <?php echo count($startedTimers); ?>
-         </span>
-                </a>
-                <ul class="dropdown-menu animated fadeIn started-timers-top width350" id="started-timers-top">
-                    <?php $this->load->view('admin/tasks/started_timers', array('startedTimers' => $startedTimers)); ?>
-                </ul>
-            </li>
-            <li class="dropdown notifications-wrapper header-notifications" data-toggle="tooltip"
-                title="<?php echo _l('nav_notifications'); ?>" data-placement="bottom">
-                <?php $this->load->view('admin/includes/notifications'); ?>
             </li>
         </ul>
+
     </nav>
 </div>
 <div id="mobile-search" class="<?php if (!is_mobile()) {
@@ -257,6 +310,7 @@ ob_end_clean();
 
 
 </div>
+
 
 
 <div class="modal fade" id="delay_popup">
@@ -275,7 +329,7 @@ ob_end_clean();
                     _l('Trạng Thái'),
                     _l('Mã Đơn Hàng'), //ok
                     _l('Tên Shop'),//ok
-                    _l('SĐT Shop'),
+                    _l('DVVC'),
                     _l('Huyện Giao'),
                     _l('Tỉnh Giao'),
                     _l('status_delay'),
@@ -325,7 +379,7 @@ ob_end_clean();
                     _l('Trạng Thái'),
                     _l('Mã Đơn Hàng'), //ok
                     _l('Tên Shop'),//ok
-                    _l('SĐT Shop'),
+                    _l('DVVC'),
                     _l('Huyện Giao'),
                     _l('Tỉnh Giao'),
                     _l('Update lần cuối'),
@@ -341,7 +395,64 @@ ob_end_clean();
     </div>
 
 </div>
+<div class="modal fade" id="status_popup2">
+    <div class="modal-dialog">
 
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Danh Sách Đơn Hàng Cần Xử Lý 2</h4>
+            </div>
+            <div class="modal-body">
+                <?php render_datatable(array(
+                    _l('id'),
+                    _l('Ngày Tạo'), //ok
+                    _l('Mã Đơn Hàng'), //ok
+                    _l('Trạng Thái'),
+
+                    _l('Tên Shop'),//ok
+                    _l('DVVC'),
+                    _l('Huyện Giao'),
+                    _l('Tỉnh Giao'),
+                    _l('Deadline'),
+                    _l('status_status'),
+                    // _l('Ghi Chú'),
+                    _l('Cài Đặt')
+                ), 'header_status2'); ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="modal fade" id="webhook_gh">
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Danh Sách Thông Báo GHTK</h4>
+            </div>
+            <div class="modal-body">
+                <?php render_datatable(array(
+                    _l('id'),
+                    _l('Time Thông Báo'), //ok
+                    _l('Mã Đơn Hàng'), //ok
+                    _l('Tên Shop'),
+
+                    _l('Nội Dung'),//ok
+                    _l('Cài Đặt'),
+                ), 'header_status3'); ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+
+</div>
 <div class="modal fade" id="over_popup">
     <div class="modal-dialog">
 
@@ -370,6 +481,38 @@ ob_end_clean();
 
 </div>
 
+<div class="modal fade" id="province-flag">
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Danh Sách Khai Báo Vùng Miền</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Tỉnh</th>
+                        <th>Huyện/Thành Phố</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+
+
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" id="over_popup_note">
     <div class="modal-dialog">
@@ -397,7 +540,7 @@ ob_end_clean();
         white-space: nowrap;
     }
 
-    .table-header_status .label-border input, .table-header_order_half .label-border input {
+    .table-header_status  .label-border input,.table-header_status2  .label-border input,.table-header_status3  .label-border input, .table-header_order_half .label-border input {
         padding: 0;
         height: initial;
         width: initial;
@@ -406,12 +549,12 @@ ob_end_clean();
         cursor: pointer;
     }
 
-    .table-header_status .label-border, .table-header_order_half .label-border {
+    .table-header_status .label-border,.table-header_status2 .label-border,.table-header_status3 .label-border, .table-header_order_half .label-border {
         position: relative;
         cursor: pointer;
     }
 
-    .table-header_status .label-border:before, .table-header_order_half .label-border:before {
+    .table-header_status .label-border:before,.table-header_status2 .label-border:before,.table-header_status3 .label-border:before, .table-header_order_half .label-border:before {
         content: '';
         -webkit-appearance: none;
         background-color: transparent;
@@ -425,11 +568,11 @@ ob_end_clean();
         margin-right: 5px;
     }
 
-    .table-header_status .label-border.active:before, .table-header_order_half .label-border.active:before {
+    .table-header_status  .label-border.active:before,.table-header_status2  .label-border.active:before,.table-header_status3  .label-border.active:before, .table-header_order_half .label-border.active:before {
         border: 2px solid #008ece;
     }
 
-    .table-header_status .label-border.active:after,
+    .table-header_status .label-border.active:after,.table-header_status2 .label-border.active:after,.table-header_status3 .label-border.active:after,
     .table-header_order_half .label-border.active:after {
         content: '';
         display: block;
@@ -454,8 +597,16 @@ ob_end_clean();
     .table-header_status thead th:nth-child(9) {
         width: 50px;
     }
+    .table-header_status2 thead th:nth-child(9) {
+        width: 50px;
+    }
 
     .table-header_status td:nth-child(9) div {
+        display: -webkit-flex;
+        display: -ms-flex;
+        display: flex;
+        justify-content: center;
+    }.table-header_status2 td:nth-child(9) div {
         display: -webkit-flex;
         display: -ms-flex;
         display: flex;
@@ -493,6 +644,16 @@ ob_end_clean();
     }
 
     #status_popup .modal-dialog {
+        width: 95%;
+        margin: 0 auto;
+        margin-top: 20px;
+    }
+    #status_popup2 .modal-dialog {
+        width: 95%;
+        margin: 0 auto;
+        margin-top: 20px;
+    }
+    #webhook_gh .modal-dialog {
         width: 95%;
         margin: 0 auto;
         margin-top: 20px;
@@ -537,7 +698,57 @@ ob_end_clean();
         justify-content: center;
         align-items: center;
     }
-
+    .number_status2 {
+        display: block;
+        position: absolute;
+        top: 13px;
+        left: 2px;
+        padding: 3px;
+        border-radius: 50%;
+        color: #fff;
+        background: red;
+        margin: 0;
+        min-width: 20px;
+        height: 20px;
+        font-size: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .number_status3 {
+        display: block;
+        position: absolute;
+        top: 13px;
+        left: 2px;
+        padding: 3px;
+        border-radius: 50%;
+        color: #fff;
+        background: red;
+        margin: 0;
+        min-width: 20px;
+        height: 20px;
+        font-size: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .number_province {
+        display: block;
+        position: absolute;
+        top: 13px;
+        left: 2px;
+        padding: 3px;
+        border-radius: 50%;
+        color: #fff;
+        background: red;
+        margin: 0;
+        min-width: 20px;
+        height: 20px;
+        font-size: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
     .number_over {
         display: block;
         position: absolute;
@@ -588,6 +799,13 @@ ob_end_clean();
         position: relative;
     }
 
+    .table-header_status2 tbody tr td {
+        position: relative;
+    }
+    .table-header_status3 tbody tr td {
+        position: relative;
+    }
+
     .table-header_order_over tbody tr td {
         position: relative;
     }
@@ -607,6 +825,20 @@ ob_end_clean();
     #status_popup .dt-page-jump,
     #status_popup .dataTables_filter,
     #status_popup .dataTables_info {
+        display: none !important;
+    }
+    #status_popup2 .dataTables_length,
+    #status_popup2 .dataTables_paginate,
+    #status_popup2 .dt-page-jump,
+    #status_popup2 .dataTables_filter,
+    #status_popup2 .dataTables_info {
+        display: none !important;
+    }
+    #webhook_gh .dataTables_length,
+    #webhook_gh .dataTables_paginate,
+    #webhook_gh .dt-page-jump,
+    #webhook_gh .dataTables_filter,
+    #webhook_gh .dataTables_info {
         display: none !important;
     }
 
@@ -706,4 +938,5 @@ ob_end_clean();
             window.location.href ="/system/admin/order?search_fast="+input.value
         }
     });
+
 </script>

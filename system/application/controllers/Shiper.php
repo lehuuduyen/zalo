@@ -182,11 +182,13 @@ class Shiper extends AdminController {
       });
     }
 
-
+    $listDeliveryFirst = $this->get_frist_delivery($currentUser);
+    $data['list_delivery'] = $listDeliveryFirst;
     $data['waits'] = $waits;
     $data['regs'] = $reg;
     $data['user_display'] = $user_display;
     $data['tab2'] = false;
+    $data['current_user'] = $currentUser;
     if (!empty($_GET)) {
       if ($_GET['tab'] === '1') {
         $data['tab1'] = true;
@@ -195,8 +197,71 @@ class Shiper extends AdminController {
     $this->load->view('shiper/index.php',$data);
 
   }
+    public function get_delivery()
+    {
+        $json = $_GET['jsonData'];
+        $data = json_decode($json);
+
+        $this->db->select('tbldelivery_nb.orders,tblcustomers.customer_phone,tblcustomers.customer_shop_code,tbldelivery_nb.id as delivery_id,shop.*,tbldelivery_nb.date_create,tbldelivery_nb.date_report,tbldelivery_nb.code_delivery');
+        $this->db->join('tblorders_shop as shop','shop.id = tbldelivery_nb.shop','left');
+        $this->db->join('tblcustomers ','tblcustomers.id = tbldelivery_nb.customer_id','left');
+        if(!empty($data->staff)){
+
+            $this->db->where('tbldelivery_nb.sman',$data->staff);
+        }
+        if(!empty($data->code_supership)){
+            $this->db->where('shop.code_supership',$data->code_supership);
+        }
+        if(!empty($data->date_create)){
+            $this->db->where("tbldelivery_nb.date_create BETWEEN '$data->date_create 00:00:00' and '$data->date_create 23:59:59'");
+        }
+        $this->db->where('date_report is NULL', NULL, FALSE);
+        $this->db->order_by('tbldelivery_nb.orders', 'ASC');
+
+        $this->db->from('tbldelivery_nb');
+        $kq = $this->db->get()->result();
 
 
+        $result = new stdClass();
+        $result->data = $kq;
+        header('Content-Type: application/json');
+        echo json_encode($result);
+
+    }
+    public function get_frist_delivery($staffId)
+    {
+        $listCodeSupership=[];
+        $listDateCreate=[];
+        $listAddress=[];
+        $this->db->select('tblcustomers.customer_phone,tblcustomers.customer_shop_code,tbldelivery_nb.id as delivery_id,shop.*,tbldelivery_nb.date_create,tbldelivery_nb.date_report,tbldelivery_nb.code_delivery');
+        $this->db->join('tblorders_shop as shop','shop.id = tbldelivery_nb.shop','left');
+        $this->db->join('tblcustomers ','tblcustomers.id = tbldelivery_nb.customer_id','left');
+
+        $this->db->where('tbldelivery_nb.sman',$staffId);
+
+        $this->db->where('date_report is NULL', NULL, FALSE);
+
+        $this->db->from('tbldelivery_nb');
+        $kq = $this->db->get()->result();
+        foreach ($kq as $value){
+            $dataCreate = date('d/m/Y',strtotime($value->date_create));
+            $address    = $value->ward ." - ".$value->district ." - ".$value->city;
+
+            if(!in_array($value->code_supership,$listCodeSupership)){
+                $listCodeSupership[]=$value->code_supership;
+            }
+            if(!in_array($dataCreate,$listDateCreate)){
+                $listDateCreate[]=$dataCreate;
+            }
+            if(!in_array($address,$listAddress)){
+                $listAddress[]=$address;
+            }
+        }
+
+
+        return ['code_supership'=>$listCodeSupership,'date_create'=>$listDateCreate,'addresss'=>$listAddress];
+
+    }
 
   public function confirm($id_point) {
       $date = new DateTime();

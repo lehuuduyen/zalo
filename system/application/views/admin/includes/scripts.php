@@ -50,6 +50,8 @@ if (get_option('pusher_realtime_notifications') == 1) { ?>
   var data_delay;
   var data_over;
   var data_status;
+  var data_status2;
+  var data_status3;
   var data_half;
 
   $(document).on("click",".click-show-table-delay",function() {
@@ -113,6 +115,50 @@ if (get_option('pusher_realtime_notifications') == 1) { ?>
       data_status = initDataTable('.table-header_status', '/system/admin/Header_controller_status' , [1] , [1]);
       data_status.column(0).visible(false);
       data_status.column(9).visible(false);
+     setTimeout(function () {
+        highlightRowStaus();
+     }, 1000);
+
+
+    }
+
+
+  });
+  $(document).on("click",".click-show-table-check_status2",function() {
+
+    $('#status_popup2').modal('show');
+    if ($.fn.DataTable.isDataTable('.table-header_order_over')) {
+      $('.table-header_status2').DataTable().ajax.reload(function() {
+          setTimeout(function () {
+             highlightRowStaus();
+          }, 1000);
+      },false);
+    }else {
+        data_status2 = initDataTable('.table-header_status2', '/system/admin/Header_controller_status/status_second' , [1] , [1]);
+        data_status2.column(0).visible(false);
+        data_status2.column(9).visible(false);
+     setTimeout(function () {
+        highlightRowStaus();
+     }, 1000);
+
+
+    }
+
+
+  });
+  $(document).on("click",".click-show-table-check_status3",function() {
+
+    $('#webhook_gh').modal('show');
+    if ($.fn.DataTable.isDataTable('.table-header_order_over')) {
+      $('.table-header_status3').DataTable().ajax.reload(function() {
+          setTimeout(function () {
+             highlightRowStaus();
+          }, 1000);
+      },false);
+    }else {
+        data_status3 = initDataTable('.table-header_status3', '/system/admin/Header_controller_status/status_third' , [1] , [1]);
+        data_status3.column(0).visible(false);
+        data_status3.column(9).visible(false);
      setTimeout(function () {
         highlightRowStaus();
      }, 1000);
@@ -200,39 +246,8 @@ if (get_option('pusher_realtime_notifications') == 1) { ?>
         $('.number_status').hide();
       }
     });
-
-
-
-
   }
 
-  $.get("/system/admin/header_controller/getNumberList", function(data, status){
-    if (data != 0) {
-      $('.number_delay').html(data);
-      $('.number_delay').show();
-    }else {
-      $('.number_delay').hide();
-    }
-  });
-
-  $.get("/system/admin/header_controller_over_order/getNumberList", function(data, status){
-    if (data != 0) {
-      $('.number_over').html(data);
-      $('.number_over').show();
-    }else {
-      $('.number_over').hide();
-    }
-  });
-
-
-  $.get("/system/admin/Header_controller_status/getNumberList", function(data, status){
-    if (data != 0) {
-      $('.number_status').html(data);
-      $('.number_status').show();
-    }else {
-      $('.number_status').hide();
-    }
-  });
 
 
   function ajaxCallData(dom,data) {
@@ -258,6 +273,12 @@ if (get_option('pusher_realtime_notifications') == 1) { ?>
               highlightRowStaus();
             },false);
         }
+        if (data_status2) {
+            $('.table-header_status2').DataTable().ajax.reload(function() {
+              highlightRowStaus();
+            },false);
+        }
+
         alert_float('success', 'Thay Đổi Thành Công');
       },
       error:function(e) {
@@ -393,8 +414,67 @@ if (get_option('pusher_realtime_notifications') == 1) { ?>
   		}
 
   	});
+    $(document).on('click', '#status_popup2 .check-change-status-status', function(){
+  		var dom = $(this).parent();
+  		var id = $(this).parent().attr('data-id');
+        var status_delay;
+  		if (!$(this)[0].checked) {
+        status_delay = false;
+        data = {id , status_delay };
+        ajaxCallData(dom,data);
+  		}
+      else {
+        status_delay = true;
+        data = {id , status_delay };
+        ajaxCallData(dom,data);
+  		}
+
+  	});
+  $(document).on('click', '#webhook_gh .check-change-status-status3', function(){
+      var dom = $(this).parent();
+      var id = $(this).parent().attr('data-id');
+      var status_delay;
+      if ($(this)[0].checked) {
+          status_delay = false;
+          data = {id , status_delay };
+          $.ajax({
+              url: '/system/admin/header_controller/edit_handling',
+              type:'POST',
+              data:data,
+              success: function (data) {
+
+
+                  if (data_status3) {
+                      $('.table-header_status3').DataTable().ajax.reload(function() {
+                          highlightRowStaus();
+                      },false);
+                  }
+
+                  alert_float('success', 'Thay Đổi Thành Công');
+              },
+              error:function(e) {
+                  console.log(e);
+              }
+          });
+      }
+
+
+  });
+
 
     $(document).on('click', '#status_popup .change_status_to_back', function(){
+        var txt;
+        var r = confirm("Bạn chắc chắn đơn hàng này đã trả hàng cho shop!");
+        var id = $(this).attr('data-id');
+
+        if (r == true) {
+
+          ajaxCallDataBack(id);
+        } else {
+          txt = "You pressed Cancel!";
+        }
+
+  	}); $(document).on('click', '#status_popup2 .change_status_to_back', function(){
         var txt;
         var r = confirm("Bạn chắc chắn đơn hàng này đã trả hàng cho shop!");
         var id = $(this).attr('data-id');
@@ -478,6 +558,36 @@ if (get_option('pusher_realtime_notifications') == 1) { ?>
       }
     });
   });
+  $(document).on('click', '#status_popup2 .popup-edit-note', function(){
+      var id = $(this).attr('data-id');
+      $('#delay_popup_note').modal('show');
+      $.ajax({
+          url: '/system/admin/header_controller/get_note?id='+id,
+          success: function (data) {
+              data = JSON.parse(data);
+              $('#note_delay').val(data.note_delay);
+              $('#id_note').val(id);
+          },
+          error:function(e) {
+              console.log(e);
+          }
+      });
+  });
+  $(document).on('click', '#modal_order_half .popup-edit-note', function(){
+      var id = $(this).attr('data-id');
+      $('#delay_popup_note').modal('show');
+      $.ajax({
+          url: '/system/admin/header_controller/get_note?id='+id,
+          success: function (data) {
+              data = JSON.parse(data);
+              $('#note_delay').val(data.note_delay);
+              $('#id_note').val(id);
+          },
+          error:function(e) {
+              console.log(e);
+          }
+      });
+  });
 
 
   $(document).on('mouseover', '#delay_popup .popup-edit-note', function(){
@@ -534,8 +644,9 @@ if (get_option('pusher_realtime_notifications') == 1) { ?>
     ajaxCallDataNoteOver(data);
   });
 
-
-
+  $(document).on("click",".click-show-province",function () {
+      $("#province-flag").modal();
+  })
 
   $(document).on("click",".click-show-table-order_half",function() {
       $('#modal_order_half').modal('show');
@@ -548,40 +659,61 @@ if (get_option('pusher_realtime_notifications') == 1) { ?>
       }else {
           data_half = initDataTable('.table-header_order_half', '/system/admin/header_controller/get_order_half' , [1] , [1]);
           // data_delay.column(0).visible(false);
-          // data_delay.column(9).visible(false);
+          data_half.column(5).visible(false);
           setTimeout(function () {
               highlightRow();
           }, 1000);
       }
+      setTimeout(function () {
+          $("#modal_order_half").find('#DataTables_Table_0_paginate').hide()
+          $("#modal_order_half").find('#dt-page-jump-DataTables_Table_0').hide()
+      }, 3000);
+      setTimeout(function () {
+          $("#modal_order_half").find('#DataTables_Table_0_paginate').hide()
+          $("#modal_order_half").find('#dt-page-jump-DataTables_Table_0').hide()
+      }, 1000);
+      setTimeout(function () {
+          $("#modal_order_half").find('#DataTables_Table_0_paginate').hide()
+          $("#modal_order_half").find('#dt-page-jump-DataTables_Table_0').hide()
+      }, 6000);
+      setTimeout(function () {
+          $("#modal_order_half").find('#DataTables_Table_0_paginate').hide()
+          $("#modal_order_half").find('#dt-page-jump-DataTables_Table_0').hide()
+      }, 10000);
   });
 
 
   $(document).on('click', '#modal_order_half .check-change-status-status-half', function(){
-      var id = $(this).attr('data-id');
-      if($(this).attr('type') == 'checkbox') {
-            var data = $(this).val();
-      }
-      else {
-          var data = $(this).attr('value');
-      }
-      var colums = $(this).attr('id-colum');
-      $.ajax({
-          url: '/system/admin/header_controller/update_status_half?id=' + id + '&data=' + data + '&colums=' + colums,
-          success: function (data) {
-              data = JSON.parse(data);
-              if(data.success) {
-                  $('.table-header_order_half').DataTable().ajax.reload(function() {
-                      setTimeout(function () {
-                          highlightRow();
-                      }, 1000);
-                  },false);
-              }
-              alert_float(data.alert_type, data.message);
-          },
-          error:function(e) {
-              console.log(e);
+      var r = confirm("Bạn Có Chắc Chắn Muốn Xóa Đơn Này Khỏi Danh Sách Đơn Hàng Một Phần Không");
+      if (r == true) {
+          txt = "You pressed OK!";
+          var id = $(this).attr('data-id');
+          if($(this).attr('type') == 'checkbox') {
+                var data = $(this).val();
           }
-      });
+          else {
+              var data = $(this).attr('value');
+          }
+          var colums = $(this).attr('id-colum');
+          $.ajax({
+              url: '/system/admin/header_controller/update_status_half?id=' + id + '&data=' + data + '&colums=' + colums,
+              success: function (data) {
+                  data = JSON.parse(data);
+                  if(data.success) {
+                      $('.table-header_order_half').DataTable().ajax.reload(function() {
+                          setTimeout(function () {
+                              highlightRow();
+                          }, 1000);
+                      },false);
+                  }
+                  alert_float(data.alert_type, data.message);
+              },
+              error:function(e) {
+                  console.log(e);
+              }
+          });
+      }
+
 
   });
 
@@ -621,15 +753,86 @@ if (get_option('pusher_realtime_notifications') == 1) { ?>
       data = {id , note_half };
       ajaxCallDataNoteHalf(data);
   });
+  $(".all-noti").click(function () {
+      $('.all-noti').hide()
+      $('.close-noti').addClass('show-noti')
+      $('.close-noti').removeClass('close-noti')
+      $.get("/system/admin/Header_controller/getNumberListHalf", function(data, status){
+          if (data != 0) {
+              $('.number_status_half').html(data);
+              $('.number_status_half').show();
+          }
+          else {
+              $('.number_status_half').hide();
+          }
+      });
+      $.get("/system/admin/Header_controller_status/getNumberStatus2", function(data, status){
+          if (data != 0) {
+              $('.number_status2').html(data);
+              $('.number_status2').show();
+          }
+          else {
+              $('.number_status2').hide();
+          }
+      });
+      $.get("/system/admin/Header_controller_status/getNumberStatus3", function(data, status){
+          if (data != 0) {
+              $('.number_status3').html(data);
+              $('.number_status3').show();
+          }
+          else {
+              $('.number_status3').hide();
+          }
+      });
+      $.get("/system/admin/header_controller/getNumberList", function(data, status){
+          if (data != 0) {
+              $('.number_delay').html(data);
+              $('.number_delay').show();
+          }else {
+              $('.number_delay').hide();
+          }
+      });
 
-  $.get("/system/admin/Header_controller/getNumberListHalf", function(data, status){
-      if (data != 0) {
-          $('.number_status_half').html(data);
-          $('.number_status_half').show();
-      }
-      else {
-          $('.number_status_half').hide();
-      }
-  });
+      $.get("/system/admin/header_controller_over_order/getNumberList", function(data, status){
+          if (data != 0) {
+              $('.number_over').html(data);
+              $('.number_over').show();
+          }else {
+              $('.number_over').hide();
+          }
+      });
+
+
+      $.get("/system/admin/Header_controller_status/getNumberList", function(data, status){
+          if (data != 0) {
+              $('.number_status').html(data);
+              $('.number_status').show();
+          }else {
+              $('.number_status').hide();
+          }
+      });
+      $.get("/system/admin/header_controller/getNumberProvince", function(data, status){
+          let result = JSON.parse(data);
+          let number = result.length
+          let html = "";
+          $.each(result,function (key,val) {
+              html += `<tr>
+                    <td>${val.province}</td>
+                    <td>${val.district}</td>
+                    <td><a class="btn btn-info" href="/system/admin/create_order/add_new_region?province=${val.province}&district=${val.district}">Cập nhật</a></td>
+                    </tr>`
+          })
+          $("#province-flag tbody").html(html)
+
+          if (number != 0) {
+              $('.number_province').html(number);
+              $('.number_province').show();
+          }else {
+              $('.number_province').hide();
+          }
+      });
+  })
+
+
 
 </script>

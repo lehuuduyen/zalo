@@ -132,7 +132,25 @@
                             <input type="hidden" id="search_fast" name="search_fast" value="<?php echo (isset($_GET['search_fast']))? $_GET['search_fast']:"" ;?>">
                             <div class="col-md-5">
                                 <div class="col-md-12 no-padding mb-5">
-                                    <div class="col-sm-3 control-label">Ngày Tạo</div>
+                                    <div class="col-sm-3 control-label">
+
+                                    </div>
+                                    <div class="col-sm-9 " style="display: flex">
+
+                                        <select onchange="changeTypeDate(this)" id="type-date" class="form-control">
+
+                                            <option  value="1">Ngày Tạo</option>
+                                            <option  value="2">Ngày Tính Nợ</option>
+                                            <option  value="3">Ngày Đối Soát</option>
+                                        </select>
+                                    </div>
+
+
+                                </div>
+                                <div class="col-md-12 no-padding mb-5">
+                                    <div class="col-sm-3 control-label" id="label-date">
+                                        Ngày Tạo
+                                    </div>
                                     <div class="col-sm-9 " style="display: flex">
 
                                         <input class="form-control datetimepicker-date" onkeyup="enterOrder(event)" value="<?=(isset($_GET['search_fast']))? "" :$date_from?>" id="order-from-date"
@@ -160,11 +178,11 @@
                                 <div class="col-md-12 no-padding mb-5">
                                     <div class="col-sm-3 control-label ">Trạng Thái</div>
                                     <div class="col-sm-9 " style="display: flex">
-                                        <select id="status" name="status" >
+                                        <select id="status" multiple name="status" >
                                             <option></option>
                                             <?php
-                                            foreach ($list_status as $status){ ?>
-                                                <option value="<?=$status?>"><?=$status?></option>
+                                            foreach ($list_status as $status => $color){ ?>
+                                                <option data-color="<?=$color?>" value="<?=$status?>"><?=$status?></option>
                                             <?php }
 
                                             ?>
@@ -183,20 +201,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-12 no-padding mb-5">
-                                    <div class="col-sm-3 control-label ">Đơn Vị Vận Chuyển</div>
-                                    <div class="col-sm-9 " style="display: flex">
-                                        <select id="dvvc" name="dvvc" >
-                                            <option></option>
-                                            <?php
-                                            foreach ($dvvc as $value){ ?>
-                                                <option value="<?=$value['dvvc']?>"><?=$value['dvvc']?></option>
-                                            <?php }
 
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
                             </div>
                             <div class="col-md-7 mb-15" >
                                 <div class="col-md-12 no-padding mb-5">
@@ -237,6 +242,20 @@
                                             foreach ($regions as $key => $region){ ?>
                                                 <option value="<?=$region['name_region']?>"><?=$region['name_region']?></option>
                                             <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 no-padding mb-5">
+                                    <div class="col-sm-2 control-label ">Đơn Vị Vận Chuyển</div>
+                                    <div class="col-sm-9 " style="display: flex">
+                                        <select id="dvvc" name="dvvc" >
+                                            <option></option>
+                                            <?php
+                                            foreach ($dvvc as $value){ ?>
+                                                <option value="<?=$value['dvvc']?>"><?=$value['dvvc']?></option>
+                                            <?php }
+
+                                            ?>
                                         </select>
                                     </div>
                                 </div>
@@ -341,6 +360,7 @@
 <script>
 
     $(document).ready(function () {
+
         let search_fast = $("#search_fast").val()
         if(search_fast!=''){
             $("#code_order").val(search_fast)
@@ -412,6 +432,8 @@
             link = 'https://mysupership.com/search?category=orders&query='+code_supership;
         }else if(key =="GHTK"){
             link = 'https://khachhang.giaohangtietkiem.vn/khachhang?code='+code_ghtk;
+        }else if(key =="VNC"){
+            link = 'https://cs.vncpost.com/order/list';
         }
 
         return link;
@@ -422,6 +444,8 @@
             link = `https://mysupership.com/orders/print?code=${code_supership}&size=S9`;
         }else if(key =="GHTK"){
             link = `http://spshd.com/system/admin/create_order_ghtk/print_data_order/${create_order_id}?print=true`;
+        }else if(key =="VNC"){
+            link = `/system/admin/create_order_ghtk/print_data_order/${create_order_id}?print=true&dv=VNC`;
         }
         return link;
     }
@@ -458,8 +482,11 @@
                     "targets": 2,
                     "data": null,
                     "render": function (data, type, row, meta) {
-                        let backgroundStatus =getColorStatus(row.status)
-
+                        let color =$("#status").find(`option[value='${row.status}']`).data('color')
+                        let backgroundStatus ="#"+color
+                        if(!color){
+                            backgroundStatus="black"
+                        }
                         let dvvc ="";
                         if(row.DVVC !=""){
                             dvvc = `<p>ĐVVC: ${row.DVVC}</p>`
@@ -477,7 +504,7 @@
                             ghtk = `<p style="color:red">${row.code_ghtk}</p>`
                         }
                         return `
-                                <div style="width: 100%" class="mb-5"><label class="label label-orange label-xs tooltips" style="color:white;background-color:${backgroundStatus}">&emsp;&emsp;${row.status}  &emsp;&emsp;</label></div>
+                                <div style="width: 100%" class="mb-5"><label class="label label-orange label-xs tooltips" style="color:white;background-color:${backgroundStatus}">${row.status}  &emsp;&emsp;</label></div>
                                 <p style="color:red"> ${row.code_supership} </p>
                                 ${dvvc}
                                 ${ghtk}
@@ -576,93 +603,6 @@
         }).draw();
         $('table').removeClass('dataTable')
     };
-    function getColorStatus(status) {
-        let color = "";
-        switch (status) {
-            case "Chờ Duyệt":
-                color = "#0b8a00";
-                break;
-            case "Chờ Lấy Hàng":
-                color = "#0b8a00";
-                break;
-            case "Đang Lấy Hàng":
-                color = "#0b8a00";
-                break;
-            case "Đã Lấy Hàng":
-                color = "#4f0080";
-                break;
-            case "Hoãn Lấy Hàng":
-                color = "#cca200";
-                break;
-            case "Không Lấy Được":
-                color = "#424242";
-                break;
-            case "Đang Nhập Kho":
-                color = "#B40404";
-                break;
-            case "Đã Nhập Kho":
-                color = "#04B4AE";
-                break;
-            case "Đang Chuyển Kho Giao":
-                color = "#0040FF";
-                break;
-            case "Đã Chuyển Kho Giao":
-                color = "#0B614B";
-                break;
-            case "Đang Giao Hàng":
-                color = "#B40404";
-                break;
-            case "Đã Giao Hàng Toàn Bộ":
-                color = "#610B0B";
-                break;
-            case "Đã Giao Hàng Một Phần":
-                color = "#0080FF";
-                break;
-            case "Hoãn Giao Hàng":
-                color = "#cca200";
-                break;
-            case "Không Giao Được":
-                color = "#424242";
-                break;
-            case "Đã Đối Soát Giao Hàng":
-                color = "#060070";
-                break;
-            case "Đã Đối Soát Trả Hàng":
-                color = "#060070";
-                break;
-            case "Đang Chuyển Kho Trả":
-                color = "#00646F";
-                break;
-            case "Đã Chuyển Kho Trả":
-                color = "#777100";
-                break;
-            case "Đang Trả Hàng":
-                color = "#B40404";
-                break;
-            case "Đã Trả Hàng":
-                color = "#322F65";
-                break;
-            case "Hoãn Trả Hàng":
-                color = "#cca200";
-                break;
-            case "Hủy":
-                color = "#5F5F5F";
-                break;
-            case "Đang Vận Chuyển":
-                color = "#B40404";
-                break;
-            case "Xác Nhận Hoàn":
-                color = "#98782E";
-                break;
-            case "Đã Trả Hàng Một Phần":
-                color = "#322F65";
-                break;
-            case "Huỷ":
-                color = "#5F5F5F";
-                break;
-        }
-        return color
-    }
     function getDistrict(_this) {
         let city = $(_this).val();
 
@@ -704,6 +644,7 @@
         let region = $("#region").val();
         let is_hd_branch = $("#is_hd_branch").val();
         let dvvc = $("#dvvc").val();
+        let typeDate = $("#type-date").val();
         let data = {
             date_form:(date_form)?moment(new Date(convertDate(date_form))).format('YYYY/MM/DD'):"",
             date_to:(date_to)?moment(new Date(convertDate(date_to))).format('YYYY/MM/DD'):"",
@@ -715,7 +656,8 @@
             district:district,
             region:region,
             is_hd_branch:is_hd_branch,
-            dvvc:dvvc
+            dvvc:dvvc,
+            type_date:typeDate
         }
         let linkApi ='/system/api/order?jsonData='+JSON.stringify(data)
         if(checkExcel){
@@ -757,7 +699,8 @@
             noteOld+='\n';
         }
         if (noteNew != "") {
-            noteNew +=  moment(new Date()).format('HH:mm DD/MM') + " " + noteNew;
+            noteNew += " " + moment(new Date()).format('HH:mm DD/MM') ;
+
         }
         let text = noteOld + noteNew;
         note = JSON.stringify(text)
@@ -772,7 +715,16 @@
                 }
             }});
     }
-
+    function changeTypeDate(_this){
+        let value = $(_this).val()
+        if(value==1){
+            $('#label-date').html('Ngày Tạo')
+        }else if(value==2){
+            $('#label-date').html('Ngày Tính Nợ')
+        }else{
+            $('#label-date').html('Ngày Đối Soát')
+        }
+    }
 </script>
 
 

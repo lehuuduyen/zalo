@@ -422,10 +422,6 @@ $commune_default = ($warehouse_send_list) ? $warehouse_send_list->commune : '';
                                    class="open-modal-declare btn btn-info pull-left display-block">Khai Báo Trạng Thái
                                     Đơn Hàng</a>
 
-                                <a style="margin-right:10px;" href="javascript:;"
-                                   class="open-modal-warehouse btn btn-info pull-left display-block">Khai Báo Kho
-                                    Hàng</a>
-
                                 <!-- <a style="margin-right:10px;" href="javascript:;" class="btn btn-info pull-left display-block" id="import-customers">Import Excel</a> -->
                             </div>
                             <div class="clearfix"></div>
@@ -1536,72 +1532,6 @@ $commune_default = ($warehouse_send_list) ? $warehouse_send_list->commune : '';
 
 </div>
 
-<div class="modal fade" id="default_warehouse" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document" style="width:80%;margin:auto;margin-top:50px;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title"><?php echo "Khai Báo Kho Hàng"; ?></h4>
-            </div>
-
-            <div class="modal-body">
-                <input type="hidden" name="id_warehouse_default" value="<?php echo $id_warehouse ?>">
-                <div class="form-group ">
-                    <label for="mass_default">Địa chỉ kho</label>
-                    <input type="text" class="form-control" placeholder="Địa chỉ kho" value="<?= $nameAddress ?>"
-                           id="address"
-                           name="address">
-                </div>
-
-                <div class="form-group ">
-                    <label for="volume_default">Điện Thoại</label>
-                    <input type="text" class="form-control" name="phone_default" placeholder="Điện Thoại"
-                           value="<?= $phone_default ?>" id="phone_default">
-                </div>
-
-                <div class="form-group ">
-                    <label for="province">Tỉnh/Thành</label>
-                    <select data-live-search="true" class="form-control" id="province_default"
-                            name="province_default">
-                        <option value="null">Chọn Tỉnh/Thành</option>
-                        <?php foreach ($province as $value) { ?>
-                            <option value='<?php echo json_encode($value) ?>' <?= $value->name == $province_default ? 'selected' : '' ?>><?php echo $value->name ?></option>
-                        <?php } ?>
-                    </select>
-                </div>
-                <div class="form-group ">
-                    <label for="type_customer">Chọn Quận Huyện/Thành Phố:</label>
-                    <select class="form-control" id="district_default" name="district_default">
-
-                        <?php foreach ($district_hd as $key => $value): ?>
-                            <option value='<?php echo json_encode($value) ?>'><?php echo $value->name ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="form-group ">
-                    <label for="type_customer">Chọn Phường Xã:</label>
-                    <div class="load-area">
-                        <select class="form-control" id="area_hd_default" name="area_hd_default">
-
-                        </select>
-                    </div>
-                </div>
-
-
-            </div>
-
-            <div class="modal-footer">
-                <input type="hidden" id="active" value="0">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo _l('close'); ?></button>
-                <button type="button" class="btn btn-primary"
-                        onclick="setWareHouse()"><?php echo _l('confirm'); ?></button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div>
-
-</div>
-
 <div class="modal fade" id="modal-address" tabindex="-1" role="dialog" style="left: 35%;top: 10%;">
     <div class="modal-dialog">
         <div class="modal-content" style="text-align: center; height: 300px; width: 474px">
@@ -2145,75 +2075,7 @@ $commune_default = ($warehouse_send_list) ? $warehouse_send_list->commune : '';
     var commune_name = '<?= ($warehouse_send_list) ? $warehouse_send_list->commune : ''?>';
     var id_default = '<?= ($warehouse_send_list) ? $warehouse_send_list->id : ''?>';
 
-    $('.open-modal-warehouse').click(function () {
 
-        var p = JSON.parse($("#province_default").find(":selected").val());
-
-        if(p){
-            $('.disable-view').show();
-            $('#loader-repo2').show();
-            $.ajax({
-                url: '/system/admin/create_order_bestinc/get_district_by_hd/' + p.code,
-                method: 'GET',
-                success: function (data) {
-                    $('.disable-view').hide();
-                    $('#loader-repo2').hide();
-                    data = JSON.parse(data);
-                    data_districts_default = data;
-                    $('#district_default').empty();
-                    $('#area_hd_default').empty();
-                    $('.load-html').empty();
-
-                    var html = '';
-                    var val_district = '';
-                    var i = 0;
-
-                    html += '<option  value="null">Chọn Quận Huyện/Thành Phố</option>';
-                    $.each(data, function(index, value){
-                        if(value.name === district_name){
-                            html += '<option selected value="'+ i +'">'+ value.name +'</option>';
-                            val_district = value;
-                        }else{
-                            html += '<option value="'+ i +'">'+ value.name +'</option>';
-                        }
-                    });
-                    $('#district_default').append(html);
-
-
-                    // commune_name
-                    $.ajax({
-                        url: '/system/admin/pick_up_points/get_commune_by_hd/' + val_district.code,
-                        method: 'GET',
-                        success: function (data) {
-                            $('.disable-view').hide();
-                            $('#loader-repo2').hide();
-                            data = JSON.parse(data);
-                            data_commue_default = data;
-                            $('#area_hd_default').empty();
-                            var html = '<option  value="null">Chọn Phường Xã</option>';
-                            $.each(data, function(index, value){
-                                if(value.name === commune_name){
-                                    html += '<option selected value="'+ i +'">'+ value.name +'</option>';
-                                }else{
-                                    html += '<option value="'+ i +'">'+ value.name +'</option>';
-                                }
-                            });
-                            $('#area_hd_default').append(html);
-                        },
-                        error: function (e) {
-                            console.log(e);
-                        }
-                    });
-
-                },
-                error: function (e) {
-                    console.log(e);
-                }
-            });
-        }
-
-        $('#default_warehouse').modal('show');
-    });
 
     $(document).on('change', '#province_default', function () {
         var provinces = JSON.parse($("#province_default").find(":selected").val());
@@ -2282,34 +2144,6 @@ $commune_default = ($warehouse_send_list) ? $warehouse_send_list->commune : '';
             commune_name = val.name;
         }
     });
-
-
-    function setWareHouse() {
-        var address_default = $("#address").val();
-        var phone_default = $("#phone_default").val();
-        $.ajax({
-            url: '<?= base_url('api/set_warehouse')?>',
-            data: {
-                id_default: id_default,
-                address_default: address_default,
-                phone_default: phone_default,
-                province_name: province_name,
-                district_name: district_name,
-                commune_name: commune_name
-            },
-            method: "POST",
-            beforeSend: function () {
-
-            },
-            success: function (data) {
-                var result = JSON.parse(data);
-                if (result.status === true && result.error === '') {
-                    alert(result.message);
-                }
-            }
-        });
-
-    }
 
     // End warehouser
 

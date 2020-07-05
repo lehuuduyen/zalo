@@ -63,7 +63,9 @@
     }
 
     tr { border: 1px solid #ccc; }
-
+    .mr-2{
+        margin-right: 5px;
+    }
     td {
       /* Behave  like a "row" */
       border: none;
@@ -157,7 +159,7 @@
 }
 .footer-nav a span {
   color: #ddd;
-  font-size: 15px;
+  font-size: 12px;
 }
 .footer-nav a.active i , .footer-nav a.active span {
   color: #a73a3b;
@@ -289,9 +291,33 @@ margin-top: 30px;
 background: none;
 border: none;
 }
-</style>
-<div id="wrapper" class="shiper">
+  #myBtn {
+      display: none;
+    position: fixed;
+      bottom: 64px;
+      right: 5px;
+      z-index: 99;
+      font-size: 18px;
+      border: none;
+      outline: none;
+      /* background-color: red; */
+      /* color: white; */
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 4px;
+  }
 
+  #myBtn:hover {
+      background-color: #555;
+  }
+</style>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+
+<div id="wrapper" class="shiper">
+    <button onclick="topFunction()" id="myBtn" title="Go to top">
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+
+    </button>
   <div class="disable-view">
     <div id="loader-repo" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
   </div>
@@ -500,6 +526,84 @@ border: none;
 
     </div>
 
+      <div class="table-data  table5">
+          <div class="col-sm-12 row" style="background-color: white">
+              <div style="float:right;border: 3px solid red;padding: 5px;font-weight: bold;">
+                  Tổng: <span id="tong_5">0</span>
+              </div>
+              <div class="form-group" app-field-wrapper="date_end_customer">
+                  <label for="date_end_customer" class="control-label">Ngày Tạo</label>
+                  <div class="input-group date">
+                      <select id="date_create">
+                          <option value=""></option>
+                          <?php
+                            foreach($list_delivery['date_create'] as $date_create){
+                                ?>
+                                <option value="<?=$date_create?>"><?=$date_create?></option>
+                            <?php
+                            }
+                          ?>
+                      </select>
+                  </div>
+              </div>
+              <div class="form-group" app-field-wrapper="date_end_customer">
+                  <label for="date_end_customer" class="control-label">Mã Đơn Hàng</label>
+                  <div class="input-group date">
+                      <select id="code_supership">
+                          <option value=""></option>
+
+                          <?php
+                          foreach($list_delivery['code_supership'] as $code_supership){
+                              ?>
+                              <option value="<?=$code_supership?>"><?=$code_supership?></option>
+                              <?php
+                          }
+                          ?>
+                      </select>
+
+                  </div>
+              </div>
+              <div class="form-group" app-field-wrapper="date_end_customer">
+                  <label for="date_end_customer" class="control-label">Mã Đơn Hàng</label>
+                  <div class="input-group date">
+                      <select id="address">
+                          <option value=""></option>
+
+                          <?php
+                          foreach($list_delivery['addresss'] as $addresss){
+                              ?>
+                              <option value="<?=$addresss?>"><?=$addresss?></option>
+                              <?php
+                          }
+                          ?>
+                      </select>
+                  </div>
+              </div>
+              <div>
+                  <button class="btn-primary left" onclick="btnTable5Search()">
+                      Hiển Thị Tùy Chỉnh
+                  </button>
+                  <button class="btn-success right" onclick="btnTable5All()" style="float:right">
+                      Hiển Thị Toàn Bộ
+                  </button>
+              </div>
+              <div>&nbsp;</div>
+
+          </div>
+
+
+
+          <table class="table shiper-table">
+
+              <tbody id="scroll" style="height: 600px;
+    overflow: scroll;" onscroll="myFunction()">
+
+              </tbody>
+          </table>
+
+
+
+      </div>
 
   </div>
    <!-- Table -->
@@ -511,11 +615,15 @@ border: none;
        <span>Điểm Chờ</span>
      </a>
 
+
      <a class=" tab tab2" data-tab="2" href="javascript:;">
        <i class="fa fa-user" aria-hidden="true"></i>
        <span> Đã Đăng Kí</span>
      </a>
-
+       <a class=" tab tab5" data-tab="5" href="javascript:;">
+           <i class="fa fa-shopping-cart " aria-hidden="true"></i>
+           <span>Giao Hàng</span>
+       </a>
      <a class=" tab tab3" data-tab="3" href="javascript:;">
        <i class="fa fa-archive" aria-hidden="true"></i>
        <span>Đã Lấy</span>
@@ -562,6 +670,99 @@ border: none;
 </div>
 
 
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true"
+     id="modal_update_status">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 7px !important;display: flex">
+                <span>
+                    <h5 class="modal-title">Đã giao</h5>
+                </span>
+                <span style="margin-left: auto;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </span>
+
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="delivery_id">
+                <input type="hidden" id="shop_id">
+                <div class="m-heading-2 border-grey-mint m-bordered">
+                    <div>
+                        <span style="    font-size: 15px;" id="popup-code-delivery"></span>
+                        <span id=""> | </span>
+                        <span style="font-weight: bold;    font-size: 15px;" id="popup-code-order"></span>
+                    </div>
+                    <div id="popup-address">
+                    </div>
+                </div>
+                <div id="view_da_giao" style="height: 50px;" class="hidden">
+                    <div class="col-md-4">Trạng Thái <sub style="color:red">[*]</sub></div>
+                    <div class="col-md-4" style="display: flex;"><input type="radio" key="da_giao_hang" name="status"
+                                                 value="Đã Giao Hàng Toàn Bộ"> <div
+                                style="margin-top: 2px;margin-left: 5px">Đã Giao Hàng Toàn Bộ</div></div>
+                    <div class="col-md-4" style="display: flex;"><input type="radio" key="da_giao_hang" name="status"
+                                                 value="Đã Giao Hàng Một Phần"> <div
+                                style="margin-top: 2px;margin-left: 5px">Đã Giao Hàng Một Phần</div></div>
+                </div>
+                <div id="view_hoan_giao" style="height: 150px;" class="hidden">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-2">Tại Sao? <sub style="color:red">[*]</sub></div>
+                    <div class="col-md-8">
+
+                        <div class="col-md-12"style="display: flex;">
+                            <input type="radio" key="hoan_giao" name="status" value="Không Nghe Máy/Không Gọi Được">
+                            <div
+                                    style="margin-top: 2px;margin-left: 5px">Không Nghe Máy/Không Gọi Được</div>
+                        </div>
+                        <div class="col-md-12"style="display: flex;">
+                            <input type="radio" key="hoan_giao" name="status" value="Địa Chỉ Sai"> <div
+                                    style="margin-top: 2px;margin-left: 5px">Địa Chỉ Sai</div>
+                        </div>
+                        <div class="col-md-12"style="display: flex;">
+                            <input type="radio" key="hoan_giao" name="status" value="Lý Do Khác"> <div
+                                    style="margin-top: 2px;margin-left: 5px">Lý Do Khác</div>
+                        </div>
+                        <div class="col-md-12"style="display: flex;">
+                            <textarea type="text" key="hoan_giao" class="form-control ly_do_khac1 hidden"
+                                      value="Lý Do Khác"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div id="view_khong_giao_duoc" style="height: 150px;" class="hidden">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-2">Tại Sao? <sub style="color:red">[*]</sub></div>
+                    <div class="col-md-8">
+                        <div class="col-md-12" style="display: flex;">
+                            <input type="radio" key="khong_giao_duoc" name="status" value="Khách Không Đồng Ý Nhận">
+                            <div
+                                    style="margin-top: 2px;margin-left: 5px">Khách Không Đồng Ý Nhận</div>
+                        </div>
+                        <div class="col-md-12" style="display: flex;">
+                            <input type="radio" key="khong_giao_duoc" name="status" value="Shop Yêu Cầu Hủy Đơn"> <div
+                                    style="margin-top: 2px;margin-left: 5px">Shop Yêu Cầu Hủy Đơn</div>
+                        </div>
+                        <div class="col-md-12" style="display: flex;">
+                            <input type="radio" name="status" key="khong_giao_duoc" value="Lý Do Khác"> <div
+                                    style="margin-top: 2px;margin-left: 5px">Lý Do Khác</div>
+                        </div>
+                        <div class="col-md-12" style="display: flex;">
+                            <textarea type="text" key="khong_giao_duoc" class="form-control ly_do_khac2 hidden"
+                                      value="Lý Do Khác"></textarea>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" onclick="updateStatus()">Xác Nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <div class="modal fade" id="modal-edit-password" role="dialog">
@@ -604,10 +805,22 @@ border: none;
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 
 <script>
 
-
+    $("#date_create").select2({
+        placeholder: "Vui Lòng Chọn Ngày Tạo",
+        allowClear: true
+    })
+    $("#code_supership").select2({
+        placeholder: "Vui Lòng Chọn Mã Đơn Hàng",
+        allowClear: true
+    })
+    $("#address").select2({
+        placeholder: "Vui Lòng Chọn Nhóm Địa Chỉ Giao Hàng",
+        allowClear: true
+    })
 setTimeout(function () {
   $('.disable-view').fadeOut();
 }, 100);
@@ -651,7 +864,19 @@ $('#password_shiper').validate({
   }
 });
 
+$('input[type=radio][name=status]').change(function () {
+    if (this.value == "Lý Do Khác") {
+        if (this.getAttribute("key") == "hoan_giao") {
+            $(".ly_do_khac1").removeClass('hidden')
+        } else {
+            $(".ly_do_khac2").removeClass('hidden')
+        }
+    } else {
+        $(".ly_do_khac1").addClass('hidden')
+        $(".ly_do_khac2").addClass('hidden')
+    }
 
+});
 
 
 if (error_change_pass) {
@@ -788,7 +1013,139 @@ function date_format(date) {
   }
   return dd+'/'+mm+'/'+yyyy;
 }
+function btnTable5All() {
+    let data = {
+        // date_form:(date_form)?moment(new Date(convertDate(date_form))).format('YYYY/MM/DD'):"",
+        staff:<?=$current_user?>
+    }
+    callTable5(data)
+}
+function btnTable5Search() {
+    let dateCreate = $("#date_create").val();
+    let data = {
+        // date_form:(date_form)?moment(new Date(convertDate(date_form))).format('YYYY/MM/DD'):"",
+        staff:<?=$current_user?>,
+        date_create:(dateCreate)?moment(new Date(convertDate(dateCreate))).format('YYYY-MM-DD'):"",
+        code_supership:$("#code_supership").val(),
+        address:$("#address").val(),
+    }
+    callTable5(data)
+}
+    function convertDate(userDate) {
+        str = userDate.split("/");
+        return str[1] + "/" + str[0] + "/" + str[2]
+    }
+function callTable5(data){
 
+    $.ajax({
+        url: '/system/Shiper/get_delivery?jsonData='+JSON.stringify(data),
+        success: function (data) {
+            $('.disable-view').fadeOut();
+
+            // data = JSON.parse(data);
+            data = data.data
+            if (data.length > 0) {
+                $("#tong_5").html(data.length)
+                $('.table-data.table5 tbody').empty();
+                var html = '';
+
+                for (var i = 0; i < data.length; i++) {
+
+
+                    let address = `${(data[i].address) ? data[i].address + ", " : ""} ${(data[i].ward) ? data[i].ward + ", " : ""} ${(data[i].district) ? data[i].district + ", " : ""}  ${(data[i].city) ? data[i].city : ""} `
+                    let noteArr = data[i].note.split("\n");
+                    var filtered = noteArr.filter(function (el) {
+                        if(el != " " ){
+                            return true
+                        }
+                        return  false
+                    });
+
+                    let htmlNode = "";
+                    htmlNode += filtered.map(function (note,key) {
+                            if(note.indexOf("/")>0){
+                                var note2Arr = note.split(" ")
+                                var arrNam    = note2Arr[0].split("/")
+                                note2Arr[0] =arrNam[0] +"/"+arrNam[1];
+                                var arrGiay    = note2Arr[1].split(":")
+                                note2Arr[1] =arrGiay[0] +":"+arrGiay[1];
+                                return `<span style="color:red">${note2Arr.join(' ')}</span>`
+                            }
+                            return `<span style="color:blue">${note}</span>`
+
+
+
+                    }).join('\n');
+
+                    let htmlButton =`<a class="mr-2 btn btn-custom btn-primary " style="margin-right: 15px" onclick="modalDaGiao(this)"
+                                data-code_delivery="${data[i].code_delivery}"
+                                data-code_supership="${data[i].code_supership}"
+                                data-status_report="${data[i].status_report}"
+                                data-delivery_id="${data[i].delivery_id}"
+
+                                data-address="${data[i].address} ${data[i].ward}, ${data[i].district}, ${data[i].city}"
+                                data-id="${data[i].id}" ><i style="padding-right: 5px;" class="fa fa-gift"></i>Đã Giao</a>
+                                <a class="btn btn btn-custom btn-warning  mr-2 " style="background-color: #cc9a12" onclick="modalHoanGiao(this)"
+                                data-code_delivery="${data[i].code_delivery}"
+                                data-code_supership="${data[i].code_supership}"
+                                data-status_report="${data[i].status_report}"
+                                data-delivery_id="${data[i].delivery_id}"
+
+                                data-address="${data[i].address} ${data[i].ward}, ${data[i].district}, ${data[i].city}" data-id="${data[i].id}" ><i style="padding-right: 5px;" class="fa fa-cube"></i>Hoãn Giao</a>
+                                <a class="btn btn btn-custom btn-danger right " style="font-size: 9px" onclick="modalKhongGiaoDuoc(this)"
+                                data-code_delivery="${data[i].code_delivery}"
+                                data-code_supership="${data[i].code_supership}"
+                                data-status_report="${data[i].status_report}"
+                                data-delivery_id="${data[i].delivery_id}"
+
+                                data-address="${data[i].address} ${data[i].ward}, ${data[i].district}, ${data[i].city}" data-id="${data[i].id}" ><i style="padding-right: 5px;" class="fa fa-bullhorn"></i>Không Giao Được</a>`
+                    if(data[i].status_report){
+                        htmlButton=""
+                    }
+
+                    html += `<tr style="border-top: 3px solid;"><td>`;
+                    html += `${date_format(data[i].date_create)} - <span class="bold-shop" style="font-size: 13px;color: #a100ff">${data[i].code_delivery}</span> - <span class="bold-shop" style="font-size: 13px;color: #a100ff">${data[i].code_supership}</span>  `;
+
+                    html += `<td/>`;
+                    html += `<td>`;
+                    html += `<div class="bold-shop" style="text-align:center;font-size:15px;color: red"><span style="color:green">Sản Phẩm: ${data[i].product}</span></div> `;
+
+                    html += `<td/>`;
+                    html += `<td style="margin-bottom: 25px">`;
+                    html += `<div style="">${htmlButton} </div>`;
+
+                    html += `<td/>`;
+                    html += `<td>`;
+                    html += `<div class="bold-shop" style="text-align:center;font-size:16px;color: red"><span style="    padding: 2px;"><span style="color:black">Thu Hộ:</span> ${formatCurrency(data[i].collect)} - <span style="color:black">KL:</span> ${formatCurrency(data[i].mass)}</span></div> `;
+
+                    html += `<td/>`;
+                    html += ` <td><span style="">${data[i].receiver} - ${data[i].phone}</span> <a class="btn btn-custom btn-warning right" href="tel:${data[i].phone}">Gọi Người Nhận</a>`;
+
+                    html += `<div class="clear-fix"></td>`;
+                    html += `<td style="padding-left: 35px;min-height: 40px;"><a target="_blank" class="copy-address" style="position: absolute;top: -3px;font-size: 30px;    left: 10px;" href="https://www.google.com/maps/search/?api=1&query=${address}"><i class="fa fa-map-marker" aria-hidden="true"></i></a><span><b>Đ/C:</b> <span class="mycopy" style="font-weight:bold;color:blue;">${address}</span> </span></td>`
+
+
+                    html += ` <td><span style="">${data[i].customer_shop_code} - ${data[i].customer_phone}</span> <a class="btn btn-custom btn-primary right" href="tel:${data[i].customer_phone}">Gọi Shop</a>`;
+
+                    html += `<div class="clear-fix"></td>`;
+                    html += `<td><b>Ghi Chú:</b><div style="color:#a73b3b;white-space: pre-line">${htmlNode}</div> </td>`;
+
+
+
+                    html += `</tr>`;
+                }
+                $('.table-data.table5 tbody').append(html);
+            }
+            else {
+                $('.table-data.table5 tbody').empty();
+                var html = `<p class="data-empty">Chưa Có Danh Sách Điểm Đơn Hàng </p>`;
+                $('.table-data.table5 tbody').append(html);
+            }
+
+        }
+    });
+
+}
 $('.tab').click(function() {
   $('#limit_geted').css('display','none');
 
@@ -800,6 +1157,9 @@ $('.tab').click(function() {
   if (dataTab === '2') {
     $('.header-table h5').text('Danh Sách Đơn Hàng Đã Đăng Ký');
   }
+    if (dataTab === '5') {
+        $('.header-table h5').text('Danh Sách Đơn Hàng Chưa Báo Cáo');
+    }
   if (dataTab === '1') {
     $('.header-table h5').text('Danh Sách Đơn Hàng Chưa Lấy');
     $('.disable-view').fadeIn();
@@ -1053,9 +1413,133 @@ $('#modal-confirm-order').on('hide.bs.modal', function (e) {
           }
       });
     });
+    function modalDaGiao(_this) {
+        $("#view_da_giao").removeClass('hidden')
+        $("#view_hoan_giao").addClass('hidden')
+        $("#view_khong_giao_duoc").addClass('hidden')
+        $("#modal_update_status").modal();
+        $("#modal_update_status .modal-header").html('Đã Giao')
+        $("#popup-code-delivery").html($(_this).attr('data-code_delivery'))
+        $("#popup-code-order").html($(_this).attr('data-code_supership'))
+        $("#popup-address").html($(_this).attr('data-address'))
+        $("#delivery_id").val($(_this).attr('data-delivery_id'))
+        $("#shop_id").val($(_this).attr('data-id'))
+        status_report = $(_this).attr('data-status_report')
+        if (status_report) {
 
+        } else {
+            var ele = document.getElementsByName("status");
+            for (var i = 0; i < ele.length; i++)
+                ele[i].checked = false;
+        }
+    }
 
+    function modalHoanGiao(_this) {
+        $("#view_hoan_giao").removeClass('hidden')
+        $("#view_da_giao").addClass('hidden')
+        $("#view_khong_giao_duoc").addClass('hidden')
+        $("#modal_update_status").modal();
+        $("#modal_update_status .modal-header").html('Hoãn Giao')
+        $("#popup-code-delivery").html($(_this).attr('data-code_delivery'))
+        $("#popup-code-order").html($(_this).attr('data-code_supership'))
+        $("#popup-address").html($(_this).attr('data-address'))
+        $("#delivery_id").val($(_this).attr('data-delivery_id'))
+        $("#shop_id").val($(_this).attr('data-id'))
 
+        status_report = $(_this).attr('data-status_report')
+        if (status_report) {
+
+        } else {
+            var ele = document.getElementsByName("status");
+            for (var i = 0; i < ele.length; i++)
+                ele[i].checked = false;
+        }
+
+    }
+
+    function modalKhongGiaoDuoc(_this) {
+        $("#view_hoan_giao").addClass('hidden')
+        $("#view_da_giao").addClass('hidden')
+        $("#view_khong_giao_duoc").removeClass('hidden')
+        $("#modal_update_status").modal();
+        $("#modal_update_status .modal-header").html('Không Giao Được')
+        $("#popup-code-delivery").html($(_this).attr('data-code_delivery'))
+        $("#popup-code-order").html($(_this).attr('data-code_supership'))
+        $("#popup-address").html($(_this).attr('data-address'))
+        $("#delivery_id").val($(_this).attr('data-delivery_id'))
+        $("#shop_id").val($(_this).attr('data-id'))
+
+        status_report = $(_this).attr('data-status_report')
+        if (status_report) {
+
+        } else {
+            var ele = document.getElementsByName("status");
+            for (var i = 0; i < ele.length; i++)
+                ele[i].checked = false;
+        }
+
+    }
+
+    function updateStatus() {
+        let status = document.querySelector('input[name="status"]:checked').value;
+
+        let key = document.querySelector('input[name="status"]:checked').getAttribute("key")
+        if (status == "Lý Do Khác") {
+            if (key == "hoan_giao") {
+                status = $(".ly_do_khac1").val()
+            }else{
+                status = $(".ly_do_khac2").val()
+
+            }
+        }
+        let delivery_id = $("#delivery_id").val()
+        let shop_id = $("#shop_id").val()
+
+        $.ajax({
+            url: `/system/admin/Delivery_order/updateDelivery/${delivery_id}?status_report=${status}&key=${key}&shop_id=${shop_id}`,
+            success: function (result) {
+                $("#modal_update_status").modal('hide');
+                callTable5()
+
+                toastr.success('Trạng Thái!', 'Cập Nhật Thành Công')
+            }
+        });
+    }
+
+    function formatCurrency(amount) {
+        if (!amount) {
+            amount = 0;
+        }
+        let _currency = '';
+        var formatter = new Intl.NumberFormat('vi-VN');
+        amount = amount.toString().match(/\d+/);
+        if (amount) {
+            _currency = formatter.format(amount);
+        }
+        return _currency;
+    }
+
+</script>
+
+<script>
+    //Get the button
+    var mybutton = document.getElementById("myBtn");
+
+    // When the user scrolls down 20px from the top of the document, show the button
+    // window.onscroll = function() {console.log(123)scrollFunction()};
+    var x = 0;
+    function myFunction() {
+        if ($('#scroll').scrollTop() > 20 ) {
+            mybutton.style.display = "block";
+        } else {
+            mybutton.style.display = "none";
+        }
+    }
+
+    // When the user clicks on the button, scroll to the top of the document
+    function topFunction() {
+        $('#scroll').scrollTop(0)
+    }
 </script>
 
 </body>

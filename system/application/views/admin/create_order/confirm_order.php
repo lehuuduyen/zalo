@@ -385,6 +385,8 @@ $mass = ($default_data) ? number_format($default_data->mass_default) : '';
 $mass_fake = ($default_data) ? number_format($default_data->mass_fake) : '';
 $mass_fake_ghtk = ($default_data) ? number_format($default_data->mass_fake_ghtk) : '';
 $mass_fake_vpost = ($default_data) ? number_format($default_data->mass_fake_vpost) : '';
+$mass_fake_vnc = ($default_data) ? number_format($default_data->mass_fake_vnc) : '';
+
 $volume = ($default_data) ? number_format($default_data->volume_default) : '';
 $id_default = ($default_data) ? $default_data->id : '';
 
@@ -531,26 +533,31 @@ $id_default = ($default_data) ? $default_data->id : '';
 
 <div class="modal fade" id="modal-choose-dvvc" tabindex="-1" role="dialog" style="left: 35%;top: 10%;">
     <div class="modal-dialog">
-        <div class="modal-content" style="text-align: center; height: 400px; width: 474px">
+        <div class="modal-content" style="text-align: center; height: 450px; width: 474px">
             <div class="modal-body" style="text-align: center;">
                 <p class="circle-check"><i class="fa fa-home" aria-hidden="true"></i></p>
                 <p class="code-order-show" id="titleCode"></p>
                 <select name="dvvc" id="dvvc" class="form-control"
-                        onchange="fnChooseDVVC(<?= str_replace(',', '', $mass_fake) ?>, <?= str_replace(',', '', $mass_fake_ghtk) ?>,<?= str_replace(',', '', $mass_fake_vpost) ?>)">
+                        onchange="fnChooseDVVC(<?= str_replace(',', '', $mass_fake) ?>, <?= str_replace(',', '', $mass_fake_ghtk) ?>,<?= str_replace(',', '', $mass_fake_vpost) ?>,<?= str_replace(',','',$mass_fake_vnc)?>)">
                     <option value="">-- Chọn đơn vị vận chuyển --</option>
                     <option value="SPS">SPS</option>
                     <option value="GHTK">GHTK</option>
                     <option value="VTP">Viettel Post</option>
+					<option value="VNC">VNC Post</option>
+					<option value="NB">NB</option>
                 </select>
                 <br>
-                <lable>Khối Lượng Thực</lable>
-                <input type="text" class="form-control" id="mass" name="mass" value="100">
+                <div id="boxmass">
+                    <lable>Khối Lượng Thực</lable>
+                    <input type="text" class="form-control" id="mass" name="mass" value="100">
+                </div>
                 <br>
                 <lable>Khối Lượng Ảo</lable>
                 <input type="text" class="form-control" id="mass_fake" name="mass_fake" value="">
                 <br>
+                <div id="boxtranspot"></div>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-                <button type="button" id="btnUpdate" data-id="" data-code="" class="btn btn-success"
+                <button type="button" id="btnUpdate" data-id="" data-code="" data-transport="" class="btn btn-success"
                         onclick="fnCreateOrder()">Tạo mới
                 </button>
             </div>
@@ -600,6 +607,25 @@ $id_default = ($default_data) ? $default_data->id : '';
                             id="show-code">sadasdsadasd</span></p>
                 <a class="print-order btn btn-primary" target="_blank" href="">In</a>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Xác Nhận</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-address" tabindex="-1" role="dialog" style="left: 35%;top: 10%;">
+    <div class="modal-dialog">
+        <div class="modal-content" style="text-align: center; height: 300px; width: 474px">
+            <div class="modal-body" style="text-align: center;">
+                <p class="circle-check"><i class="fa fa-home" aria-hidden="true"></i></p>
+                <p class="code-order-show">Khách Hàng Này Chưa Có Mã Kho ĐVVC Vui Lòng Nhập Mã Kho ĐVVC cho Khách Hàng
+                    <span id="title">sadasdsadasd</span></p>
+                <input type="hidden" value="" id="shop_code">
+                <input type="hidden" value="" id="shop_id">
+                <input type="text" value="" id="txt-address-id" class="form-control"
+                       placeholder="Nhập mã kho hàng..."><br>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                <button type="button" id="btnUpdate" class="btn btn-success" onclick="fnUpdateShop()">Cập nhật</button>
             </div>
 
         </div>
@@ -2273,18 +2299,22 @@ $id_default = ($default_data) ? $default_data->id : '';
         area_hd = JSON.parse($(this).val()).name;
     });
 
-    function fnConfirm_Order(id, code, mass) {
+
+    function fnConfirm_Order(id, code, mass, tranport) {
         $("#titleCode").html('Chọn đơn vị vận chuyển cho đơn hàng có mã <b>' + code + '</b>');
         $("#mass").val(mass).select();
 
         $("#btnUpdate").attr('data-id', id);
         $("#btnUpdate").attr('data-code', code);
+		$("#btnUpdate").attr('data-transport', tranport);
         $("#btnUpdate").attr('onclick', 'fnCreateOrder()');
-
+        $("#boxmass").show();
         $("#modal-choose-dvvc").modal('show');
     }
 
+
     function fnCreateOrder() {
+        var transpot = 0;
         var dvvc = $("#dvvc").find(":selected").val();
         var id = $("#btnUpdate").attr('data-id');
         var code = $("#btnUpdate").attr('data-code');
@@ -2297,9 +2327,13 @@ $id_default = ($default_data) ? $default_data->id : '';
             return false;
         }
 
+        if (dvvc === 'GHTK') {
+            transpot = $("#transspot").find(":selected").val();
+        }
+
         $.ajax({
             url: '<?= base_url('api/comfirm_order')?>',
-            data: {id: id, code: code, dvvc: dvvc, mass: mass, mass_fake: mass_fake},
+            data: {id: id, code: code, dvvc: dvvc, mass: mass, mass_fake: mass_fake, transpot: transpot},
             method: "POST",
             beforeSend: function () {
                 $("#btnUpdate").html('<i class="fa fa-spin fa-refresh"></i>');
@@ -2316,8 +2350,12 @@ $id_default = ($default_data) ? $default_data->id : '';
                     var url = 'https://mysupership.com/orders/print?code=' + result.code + '&size=S9';
                     if (dvvc === 'GHTK') {
                         url = '/system/admin/create_order_ghtk/print_data_order/' + JSON.parse(data).id + '?print=true';
-                    }else if(dvvc === 'VTP'){
+                    } else if (dvvc === 'VTP') {
                         url = '/system/admin/create_order_ghtk/print_data_order/' + JSON.parse(data).id + '?print=true&dv=VTP';
+                    }else if(dvvc === 'VNC'){
+                        url = '/system/admin/create_order_ghtk/print_data_order/' + JSON.parse(data).id + '?print=true&dv=VNC';
+                    }else if(dvvc === 'NB'){
+                        url = '/system/admin/create_order_ghtk/print_data_order/' + JSON.parse(data).id + '?print=true&dv=NB';
                     }
 
                     $('.print-order').attr('href', url);
@@ -2326,15 +2364,50 @@ $id_default = ($default_data) ? $default_data->id : '';
                     setTimeout(function () {
                         window.location.reload();
                     }, 5000);
-                }else if(result.status === false && result.error === 'Error'){
+                } else if (result.status === false && result.error === 'Error') {
                     alert_float('danger', 'Đơn hàng không tồn tại.');
-                }
+                }else if(result.status === false && result.error === 'noAddress_id'){
+					$("#title").html(result.code);
+					$("#shop_id").val(result.id);
+					$("#shop_code").val(result.code);
+					$("#modal-address").modal("show");
+				}
             }
         });
 
     }
 
+	function fnUpdateShop() {
+        var id = $("#shop_id").val();
+        var code = $("#shop_code").val();
+        var address_id = $("#txt-address-id").val();
+
+        $.ajax({
+            url: '<?= base_url('api/updateShop')?>',
+            data: {id: id, code: code, address_id: address_id},
+            method: "POST",
+            beforeSend: function () {
+                $("#btnUpdate").html('<i class="fa fa-spin fa-refresh"></i>');
+            },
+            success: function (data) {
+                $("#btnUpdate").html('CẬP NHẬT');
+                if (data == 1) {
+                    alert_float('success', 'Cập nhật thành công');
+                } else if (data == 2) {
+                    alert_float('danger', 'Không có thông tin liên quan.');
+                } else {
+                    alert_float('danger', 'Cập nhật thất bại');
+                }
+
+                $("#modal-address").modal('hide');
+            }
+        });
+    }
+
+
     function fnConfirm_Orders(obj) {
+
+		$("#boxmass").hide();
         var ids = new Array();
         $("input[type='checkbox']:checked").each(function () {
             if ($(this).val() != '0') {
@@ -2345,7 +2418,15 @@ $id_default = ($default_data) ? $default_data->id : '';
             alert('Bạn chưa chọn đơn nào');
             return false;
         }
-        if (obj == 0) {
+
+        if (obj === 0) {
+			var messages = 'Bạn Muốn Xoá Thực Sự';
+			var c = confirm(messages);
+
+			if (!c) {
+				return false;
+			}
+
             $.ajax({
                 url: '<?= base_url('api/removeOrder')?>',
                 data: {ids: ids},
@@ -2364,16 +2445,19 @@ $id_default = ($default_data) ? $default_data->id : '';
                         alert_float('danger', 'Xóa danh sách đơn hàng thất bại');
                 }
             });
-        } else if (obj == 1) {
-            console.log(ids);
+        } else if (obj === 1) {
             $("#titleCode").html('Chọn đơn vị vận chuyển cho danh sách đơn hàng đã chọn');
             $("#btnUpdate").attr('onclick', 'fnCreateOrders()');
             $("#btnUpdate").attr('data-id', btoa(ids));
             $("#modal-choose-dvvc").modal('show');
         }
+
+
     }
 
+
     function fnCreateOrders() {
+        var transport = 0;
         var dvvc = $("#dvvc").find(":selected").val();
         var id = $("#btnUpdate").attr('data-id');
         var mass = $("#mass").val();
@@ -2385,15 +2469,20 @@ $id_default = ($default_data) ? $default_data->id : '';
             return false;
         }
 
+        if (dvvc === 'GHTK') {
+            transport = $("#transspot").find(":selected").val();
+        }
+
         $.ajax({
             url: '<?= base_url('api/comfirm_orders')?>',
-            data: {id: id, dvvc: dvvc, mass: mass, mass_fake: mass_fake},
+            data: {id: id, dvvc: dvvc, mass: mass, mass_fake: mass_fake, transport: transport},
             method: "POST",
             beforeSend: function () {
                 $("#btnUpdate").html('<i class="fa fa-spin fa-refresh"></i>');
             },
             success: function (data) {
                 var result = JSON.parse(data);
+                $("#btnUpdate").html('Tạo mới');
                 $("#modal-choose-dvvc").modal('hide');
                 if (result.status == true && result.error == '') {
                     if (result.totalSuccess > 0) {
@@ -2404,8 +2493,12 @@ $id_default = ($default_data) ? $default_data->id : '';
                         var url = 'https://mysupership.com/orders/print?code=' + result.codes + '&size=S9';
                         if (dvvc === 'GHTK') {
                             url = '/system/admin/confirm_order/print_data_order/?ids=' + JSON.parse(data).codes + '&print=true';
-                        }else if(dvvc === 'VTP'){
+                        } else if (dvvc === 'VTP') {
                             url = '/system/admin/confirm_order/print_data_order/?ids=' + JSON.parse(data).codes + '&print=true&dv=VTP';
+                        }else if(dvvc === 'VNC'){
+                            url = '/system/admin/confirm_order/print_data_order/?ids=' + JSON.parse(data).codes + '&print=true&dv=VNC';
+                        }else if(dvvc === 'NB'){
+                            url = '/system/admin/confirm_order/print_data_order/?ids=' + JSON.parse(data).codes + '&print=true&dv=NB';
                         }
                         $('.print-order').attr('href', url);
 
@@ -2424,8 +2517,11 @@ $id_default = ($default_data) ? $default_data->id : '';
 
     }
 
-    function fnChooseDVVC(mass_fake, mass_fake_ghtk, mass_fake_vpost) {
+
+
+    function fnChooseDVVC(mass_fake, mass_fake_ghtk, mass_fake_vpost, mass_fake_vnc) {
         var dvvc = $("#dvvc").find(":selected").val();
+
         if (dvvc == "") {
             return false;
         }
@@ -2434,11 +2530,33 @@ $id_default = ($default_data) ? $default_data->id : '';
             $("#mass_fake").val(mass_fake);
         } else if (dvvc === 'VTP') {
             $("#mass_fake").val(mass_fake_vpost);
+        }else if(dvvc === 'VNC'){
+            $("#mass_fake").val(mass_fake_vnc);
         }
+        $("#boxtranspot").html("");
+        if (dvvc === "GHTK" || dvvc === 'VNC') {
+            var transport = $("#btnUpdate").attr('data-transport');
+            var html = "<lable>Phương Thức Vận Chuyển</lable>";
+            html += "<select class='form-control' name='transpot' id='transspot'>";
+            if(transport === 'road'){
+                html += "   <option value='1' selected>Tiết Kiệm</option>";
+            }else{
+                html += "   <option value='1'>Tiết Kiệm</option>";
+            }
 
+            if(transport === 'fly'){
+                html += "   <option value='2' selected>Tốc Hành</option>";
+            }else{
+                html += "   <option value='2'>Tốc Hành</option>";
+            }
+            html += "</select><br>";
+
+            $("#boxtranspot").html(html);
+        }
         var textmass = document.getElementById("mass");
         textmass.select();
     }
+
 
     function fnCheckAll(obj = 0) {
         if (obj == 0) {
