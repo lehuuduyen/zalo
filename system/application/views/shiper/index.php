@@ -564,7 +564,7 @@ border: none;
                   </div>
               </div>
               <div class="form-group" app-field-wrapper="date_end_customer">
-                  <label for="date_end_customer" class="control-label">Mã Đơn Hàng</label>
+                  <label for="date_end_customer" class="control-label">Địa Chỉ</label>
                   <div class="input-group date">
                       <select id="address">
                           <option value=""></option>
@@ -592,14 +592,15 @@ border: none;
           </div>
 
 
+            <div style="padding-bottom: 3500px">
+                <table class="table shiper-table" >
 
-          <table class="table shiper-table">
+                    <tbody id="scroll" style="height: 600px;" >
 
-              <tbody id="scroll" style="height: 600px;
-    overflow: scroll;" onscroll="myFunction()">
+                    </tbody>
+                </table>
+            </div>
 
-              </tbody>
-          </table>
 
 
 
@@ -1035,9 +1036,11 @@ function btnTable5Search() {
         str = userDate.split("/");
         return str[1] + "/" + str[0] + "/" + str[2]
     }
-function callTable5(data){
 
-    $.ajax({
+
+    function callTable5(data){
+
+         $.ajax({
         url: '/system/Shiper/get_delivery?jsonData='+JSON.stringify(data),
         success: function (data) {
             $('.disable-view').fadeOut();
@@ -1141,6 +1144,18 @@ function callTable5(data){
                 var html = `<p class="data-empty">Chưa Có Danh Sách Điểm Đơn Hàng </p>`;
                 $('.table-data.table5 tbody').append(html);
             }
+
+            $(window).scroll(function(){
+                var top_window2 = $(window).scrollTop();
+                console.log(top_window2)
+                console.log($(window).height())
+                var bottom_window2 = top_window2 + $(window).height();
+                var top_statistiche = $('#somedivs').offset().top;
+                if(((top_statistiche >= top_window2) && (top_statistiche <= bottom_window2))){
+                    animation_somedivs();
+                }
+            });
+
 
         }
     });
@@ -1524,17 +1539,19 @@ $('#modal-confirm-order').on('hide.bs.modal', function (e) {
 <script>
     //Get the button
     var mybutton = document.getElementById("myBtn");
+    $(document).ready(function() {
 
-    // When the user scrolls down 20px from the top of the document, show the button
-    // window.onscroll = function() {console.log(123)scrollFunction()};
-    var x = 0;
-    function myFunction() {
-        if ($('#scroll').scrollTop() > 20 ) {
-            mybutton.style.display = "block";
-        } else {
-            mybutton.style.display = "none";
-        }
-    }
+        $(window).scroll(function () {
+            console.log($('#scroll').scrollTop())
+            console.log($(window).scrollTop();)
+            if ($('#scroll').scrollTop() > 20) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
+
+        });
+    })
 
     // When the user clicks on the button, scroll to the top of the document
     function topFunction() {

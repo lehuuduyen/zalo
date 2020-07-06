@@ -202,6 +202,7 @@ class Shiper extends AdminController {
         $json = $_GET['jsonData'];
         $data = json_decode($json);
 
+
         $this->db->select('tbldelivery_nb.orders,tblcustomers.customer_phone,tblcustomers.customer_shop_code,tbldelivery_nb.id as delivery_id,shop.*,tbldelivery_nb.date_create,tbldelivery_nb.date_report,tbldelivery_nb.code_delivery');
         $this->db->join('tblorders_shop as shop','shop.id = tbldelivery_nb.shop','left');
         $this->db->join('tblcustomers ','tblcustomers.id = tbldelivery_nb.customer_id','left');
@@ -215,6 +216,21 @@ class Shiper extends AdminController {
         if(!empty($data->date_create)){
             $this->db->where("tbldelivery_nb.date_create BETWEEN '$data->date_create 00:00:00' and '$data->date_create 23:59:59'");
         }
+        if(!empty($data->address)){
+            $listAddress = explode(' - ',$data->address);
+            foreach ($listAddress as $key => $address){
+                if($key ==0){
+                    $column = "shop.ward";
+                }elseif ($key==1){
+                    $column = "shop.district";
+                }else{
+                    $column = "shop.city";
+                }
+                $this->db->where($column,$address);
+
+            }
+        }
+
         $this->db->where('date_report is NULL', NULL, FALSE);
         $this->db->order_by('tbldelivery_nb.orders', 'ASC');
 
