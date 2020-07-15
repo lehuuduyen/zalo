@@ -11,71 +11,29 @@ class App extends Private_Controller
         parent::__construct();
 		date_default_timezone_set('Asia/Ho_Chi_Minh');
     }
-   
+
     public function get_province()
     {
 
 
-        $curl = curl_init();
+        $this->db->select('province_id as code,province as name')->distinct();
+        $this->db->from('tbladdress_list');
+        $purchases = $this->db->get()->result();
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.mysupership.vn/v1/partner/areas/province",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "GET",
-            CURLOPT_HTTPHEADER => array(
-                "Accept: */*",
-            ),
-        ));
-
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-
-        curl_close($curl);
-
-        if ($err) {
-            echo "cURL Error #:" . $err;
-        } else {
-            if ($this->input->is_ajax_request()) {
-                echo json_encode(json_decode($response)->results);
-            }
-
-            $result = json_decode($response)->results;
-            return $result;
-        }
+        return $purchases;
     }
 
 
     public function get_commune_by_hd($code)
     {
 
-        $curl = curl_init();
-        //
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.mysupership.vn/v1/partner/areas/commune?district=" . $code,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "GET",
-            CURLOPT_HTTPHEADER => array(
-                "Accept: */*",
-            ),
-        ));
-        //
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-        curl_close($curl);
-        if ($this->input->is_ajax_request()) {
-            echo json_encode(json_decode($response)->results);
-            die();
-        } else {
-            return json_decode($response)->results;
-        }
+        $this->db->select('commune as code,commune as name')->distinct();
+        $this->db->from('tbladdress_list');
+        $this->db->where('district_id', $code);
+
+        $purchases = $this->db->get()->result();
+
+        echo json_encode($purchases);
 
 
     }
@@ -121,40 +79,13 @@ class App extends Private_Controller
     public function get_district_by_hd($code)
     {
 
-        $curl = curl_init();
+        $this->db->select('district_id as code,district as name')->distinct();
+        $this->db->from('tbladdress_list');
+        $this->db->where('province_id', $code);
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.mysupership.vn/v1/partner/areas/district?province=" . $code,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "GET",
-            CURLOPT_HTTPHEADER => array(
-                "Accept: */*",
-            ),
-        ));
+        $purchases = $this->db->get()->result();
 
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-        curl_close($curl);
-
-        if ($err) {
-
-        } else {
-
-            $result = json_decode($response)->results;
-
-            if ($this->input->is_ajax_request()) {
-                echo json_encode($result);
-                die();
-            } else {
-                return $result;
-            }
-
-
-        }
+        echo json_encode($purchases);
 
     }
 
@@ -762,6 +693,17 @@ class App extends Private_Controller
                 if ($dataPush['Old_data'][$i]['status'] == "Đã Trả Hàng") {
                     $dataPush['Old_data'][$i]['ps_in'] = 0;
                 }
+
+                if ($dataPush['Old_data'][$i]['status'] == "Đã Trả Hàng Toàn Bộ") {
+                    $dataPush['Old_data'][$i]['ps_in'] = 0;
+                }
+                if ($dataPush['Old_data'][$i]['status'] == "Đã Chuyển Kho Trả Toàn Bộ") {
+                    $dataPush['Old_data'][$i]['ps_in'] = 0;
+                }
+                if ($dataPush['Old_data'][$i]['status'] == "Đang Trả Hàng Toàn Bộ") {
+                    $dataPush['Old_data'][$i]['ps_in'] = 0;
+                }
+
             }
 
 
@@ -803,12 +745,15 @@ class App extends Private_Controller
                 }
 
 
-//                if ($dataPush['data'][$i]['status'] == "Đã Giao Hàng Toàn Bộ") {
-//                    $dataPush['data'][$i]['ps_in'] = 0;
-//                }
-//                if ($dataPush['data'][$i]['status'] == "Đã Giao Hàng Một Phần") {
-//                    $dataPush['data'][$i]['ps_in'] = 0;
-//                }
+                if ($dataPush['data'][$i]['status'] == "Đã Trả Hàng Toàn Bộ") {
+                    $dataPush['data'][$i]['ps_in'] = 0;
+                }
+                if ($dataPush['data'][$i]['status'] == "Đã Chuyển Kho Trả Toàn Bộ") {
+                    $dataPush['data'][$i]['ps_in'] = 0;
+                }
+                if ($dataPush['data'][$i]['status'] == "Đang Trả Hàng Toàn Bộ") {
+                    $dataPush['data'][$i]['ps_in'] = 0;
+                }
 //                if ($dataPush['data'][$i]['status'] == "Đã Đối Soát Giao Hàng") {
 //                    $dataPush['data'][$i]['ps_in'] = 0;
 //                }
@@ -1335,7 +1280,7 @@ class App extends Private_Controller
 
     public function filter_list()
     {
-        $province = htmlspecialchars($this->input->get('province'));
+        $listStatus = $this->input->get('province');
         $codeOrder = htmlspecialchars($this->input->get('code_order'));
 
         $date_start_customer_order = htmlspecialchars($this->input->get('date_start_customer_order'));
@@ -1345,8 +1290,8 @@ class App extends Private_Controller
             $limit_geted = 20;
         $logged_in = json_decode(json_encode(json_decode($this->input->cookie('logged_in'))), true);
         $customer =$logged_in['customer_shop_code'];
-        $dateFrom =date('Y-m-d', strtotime(str_replace('-', '-', $date_end_customer_order)));
-        $dateEnd =date('Y-m-d', strtotime(str_replace('-', '-', $date_start_customer_order)));
+        $dateFrom =date('Y-m-d', strtotime(str_replace('-', '-', $date_start_customer_order)));
+        $dateEnd =date('Y-m-d', strtotime(str_replace('-', '-', $date_end_customer_order)));
         $sql = "
         SELECT shop.*  FROM `tblorders_shop` as shop
         WHERE shop.`shop` LIKE '%$customer%'";
@@ -1355,7 +1300,19 @@ class App extends Private_Controller
         ($codeOrder !="")?$sql.="OR shop.required_code LIKE '%$codeOrder%'":"";
         ($codeOrder !="")?$sql.="OR shop.code_orders LIKE '%$codeOrder%'":"";
         ($codeOrder !="")?$sql.="OR shop.code_supership LIKE '%$codeOrder%'":"";
-        ($province !="null")?$sql.="AND shop.`status` LIKE '%$province%'":"";
+        $strStatus = "";
+        if($listStatus) {
+            foreach ($listStatus as $key => $status) {
+                $strStatus .= "'$status'";
+                if ($key + 1 < count($listStatus)) {
+                    $strStatus .= ",";
+                }
+            }
+            ($strStatus !="")?$sql.="AND shop.status IN ($strStatus)":"";
+
+        }
+        ($date_start_customer_order !="")?$sql.="AND shop.date_create BETWEEN '$dateFrom 00:00:00' AND '$dateEnd 23:59:59'":"";
+
         $sql.="AND shop.`status` <> 'Hủy'";
         $sql.="AND shop.`status` <> 'Huỷ'";
 
@@ -1607,6 +1564,9 @@ class App extends Private_Controller
         $_POST['user_created'] = get_staff_user_id();
         $_POST['required_code'] = $code;
         $_POST['created'] = date('Y-m-d H:i:s');
+
+		$_POST['transport'] = $_POST['service'] == 1 ? 'road':'fly';
+
         $this->db->insert('tbl_create_order', $_POST);
         $id = $this->db->insert_id();
 
@@ -2023,6 +1983,15 @@ class App extends Private_Controller
 
             curl_close($curl);
         }
+        if($dvvc == 'GHTK'){
+            $code_ghtk=$info_order[0]->code_ghtk;
+            $sql = "
+        SELECT webhook.*,status_order.status_change  FROM `tblwebhook_gh` as webhook
+        LEFT JOIN tblstatus_order as status_order ON status_order.status_ghtk= webhook.status_id
+        WHERE webhook.`label_id` = '$code_ghtk'  group by webhook.action_time ORDER BY webhook.action_time DESC";
+            $dataGHTK = $this->db->query($sql)->result();
+
+        }
 
         if ($err) {
             echo "cURL Error #:" . $err;
@@ -2041,10 +2010,20 @@ class App extends Private_Controller
                     echo json_encode(array('status' => false, 'error' => 'Error', 'Message' => 'Xảy ra lỗi.'));
                     die();
                 }
-
+//                $res['results']['journeys']
                 $res = json_decode($response, true);
-                $result = array('status' => true, 'error' => '', 'info_order' => $info_order[0], 'journeys' => array_reverse($res['results']['journeys']), 'phone' => $data[0]->phonenumber);
-            } else {
+
+                foreach ($res['results']['notes'] as $key => $value){
+                    $res['results']['notes'][$key]['time']=$value['created_at'];
+                }
+                $dataMerge =array_merge($res['results']['journeys'],$res['results']['notes']);
+                $result = array('status' => true, 'error' => '', 'info_order' => $info_order[0], 'journeys' => $dataMerge, 'phone' => $data[0]->phonenumber,);
+            }
+            elseif ($dvvc == 'GHTK'){
+                $result = array('status' => true, 'error' => '', 'info_order' => $info_order[0], 'journeys' => $dataGHTK, 'phone' => $data[0]->phonenumber,);
+
+            }
+            else {
                 $result = array('status' => true, 'error' => '', 'info_order' => $info_order[0], 'phone' => $data[0]->phonenumber);
             }
             echo json_encode($result);
@@ -2407,14 +2386,58 @@ class App extends Private_Controller
 
         echo json_encode(array('order' => $info_order));
     }
+// Edit order error
+    public function get_order_error()
+    {
+        $id = intval($this->input->get('id'));
 
+        $this->db->select('tbl_create_order_error.*, tblcustomers.token_customer, tblcustomers.customer_shop_code');
+        $this->db->where('tbl_create_order_error.id', $id);
+        $this->db->join('tblcustomers', 'tbl_create_order_error.customer_id = tblcustomers.id');
+
+        $info_order = $this->db->get('tbl_create_order_error')->row();
+        $info_order = json_encode($info_order);
+        $info_order = json_decode($info_order, true);
+
+        $provinces = $this->do_request_to_mysupership('https://api.mysupership.vn/v1/partner/areas/province', 'GET');
+        $cities = $provinces['results'];
+        foreach ($cities as $province) {
+            if (strcmp($province['name'], trim($info_order['province'])) == 0) {
+                $info_order['id_province'] = $province['code'];
+            }
+        }
+        if (!empty($info_order['id_province'])) {
+            $districts = $this->do_request_to_mysupership('https://api.mysupership.vn/v1/partner/areas/district?province=' . $info_order['id_province'], 'GET');
+            $info_order['list_districts'] = $districts['results'];
+
+            if(!empty($districts)){
+                $districts = $districts['results'];
+                $user['district'] = trim($info_order['district']);
+
+                foreach ($districts as $v){
+                    if(strcmp($v['name'], $info_order['district']) == 0){
+                        $info_order['id_district'] = $v['code'];
+                    }
+                }
+            }
+        }
+
+        if(!empty($info_order['id_district'])){
+            $result_areas = $this->do_request_to_mysupership("https://api.mysupership.vn/v1/partner/areas/commune?district=".$info_order['id_district'], "GET");
+            if(!empty($result_areas)){
+                $info_order['list_areas'] = $result_areas['results'];
+            }
+        }
+
+        echo json_encode(array('order' => $info_order));
+    }
     public function edit_order()
     {
         unset($_POST['token']);
         $id = $_POST['id'];
         unset($_POST['id']);
         $_POST['user_created'] = get_staff_user_id();
-        
+
 		$this->db->select('tbl_create_order.*, tblcustomers.customer_phone');
         $this->db->where('tbl_create_order.id', $id);
         $this->db->join('tblcustomers', 'tbl_create_order.customer_id = tblcustomers.id');
@@ -2422,7 +2445,7 @@ class App extends Private_Controller
         if(empty($_POST['pickup_phone'])){
             $_POST['pickup_phone'] = $info->customer_phone;
         }
-		
+
         // $_POST['created'] = date('Y-m-d H:i:s');
         foreach ($_POST as $key => $value)
             $_POST[$key] = trim($value);
@@ -2460,9 +2483,12 @@ public function do_request_to_mysupership($url, $method)
     }
 
 
-    
+
     public function upload()
     {
+        ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+        set_time_limit(300);
+
         require_once(APPPATH . "third_party" . DIRECTORY_SEPARATOR . 'PHPExcel/PHPExcel.php');
         $this->load->helper('security');
 
@@ -2500,6 +2526,7 @@ public function do_request_to_mysupership($url, $method)
                 }
             }
 
+//            die;
             // get list province
             $curl = curl_init();
             curl_setopt_array($curl, array(
@@ -2535,11 +2562,13 @@ public function do_request_to_mysupership($url, $method)
                 die();
             }
 
-            $data = $data_push = $errors = array();
+            $data = $data_push =$dataError= $errors = array();
 
             if (!empty($array_colum)) {
+                $this->db->where('customer_id', $id_customer);
+                $delete = $this->db->delete('tbl_create_order_error');
                 for ($i = 2; $i <= $highestRow; $i++) {
-                    if ($array_colum[$i][0] != "" && $array_colum[$i][2] != "" && $array_colum[$i][3] != "" && $array_colum[$i][4] != "" && $array_colum[$i][5] != "" && $array_colum[$i][6] != "" && $array_colum[$i][7] != "" && $array_colum[$i][8] != "" && $array_colum[$i][9] != "") {
+                    if ($array_colum[$i][0] != "" && $array_colum[$i][2] != "" && $array_colum[$i][3] != "" && $array_colum[$i][4] != "" && $array_colum[$i][5] != "" && $array_colum[$i][6] != "" && $array_colum[$i][7] >=0 && $array_colum[$i][8] >= 0) {
                         $data_push['customer_id'] = $id_customer;
                         $data_push['pickup_address'] = $warehouse;
                         $data_push['pickup_province'] = trim($ware[count($ware) - 1]);
@@ -2566,97 +2595,72 @@ public function do_request_to_mysupership($url, $method)
                         $data_push['status_cancel'] = 0;
                         $data_push['amount'] = $array_colum[$i][7];
                         $data_push['soc'] = $array_colum[$i][1];
+						$data_push['transport'] = 'road';
 
-                        $address = mb_strtolower($data_push['address']);
-                        $arrAdd = explode(',', $address);
-                        if (count($arrAdd) >= 3) {
-                            // Set province
-                            foreach ($province as $city) {
-                                $str_city = mb_strtolower(str_replace(array('Tỉnh', 'Thành phố'), '', $city->name));
-                                if (stripos($arrAdd[count($arrAdd) - 1], $str_city) !== false) {
-                                    $city_name = $city->name;
-                                    $code_province = $city->code;
-                                    $address = str_replace($str_city, '', $address);
-                                    break;
-                                }
-                            }
-                            // Check province
-                            if(!empty($city_name) && !empty($code_province)){
-                                $data_push['province'] = $city_name;
 
-                                // Set district
-                                $districts = $this->get_data('https://api.mysupership.vn/v1/partner/areas/district?province=' . $code_province);
-                                foreach ($districts as $district) {
-                                    $name_district = mb_strtolower(str_replace(array('Huyện', 'Quận', 'Thành phố', 'Thị Xã'), '', $district->name));
-                                    if (stripos($arrAdd[count($arrAdd) - 2], $name_district) !== false) {
-                                        $district_name = $district->name;
-                                        $code_district = $district->code;
-                                        $address = str_replace($name_district, '', $address);
-                                        break;
-                                    } else {
-                                        $district_name = "";
-                                        $code_district = "";
-                                    }
-                                }
 
-                                // Check district
-                                if (!empty($code_district) && !empty($district_name)) {
-                                    $data_push['district'] = $district_name;
+                        $this->load->model('Convert_model');
+                        $Convert_model = new Convert_model();
+                        $arrayAddress = $Convert_model->active($data_push['address']);
+                        $data_push['commune'] = $arrayAddress->commune;
+                        $data_push['province']=$arrayAddress->province;
+                        $data_push['district']=$arrayAddress->district;
+                        $this->db->select('*');
+                        $this->db->where('city', $data_push['province']);
+                        $this->db->where('district', $data_push['district']);
+                        $search_result = $this->db->get('tblregion_excel')->row();
 
-                                    // Set communes
-                                    $communes = $this->get_data('https://api.mysupership.vn/v1/partner/areas/commune?district=' . $code_district);
-                                    foreach ($communes as $commune) {
-                                        $name_commune = mb_strtolower(trim(str_replace(array('Phường', 'Xã', 'Thị trấn'), '', $commune->name)));
-                                        if (stripos($arrAdd[count($arrAdd) - 3], $name_commune) !== false) {
-                                            $commune_name = $commune->name;
-                                            $address = str_replace($name_commune, '', $address);
-                                            break;
-                                        } else {
+                        $data_push['region_id'] = $search_result->region_id;
 
-                                        }
-                                    }
+                        if ($search_result) {
+                            $this->db->select('*');
+                            $this->db->where('id_policy', $policy_result->id);
+                            $this->db->where('id_region', $search_result->region_id);
+                            $data_region = $this->db->get('tbldata_region')->row();
 
-                                    // Check communes
-                                    if (!empty($commune_name)) {
-                                        $data_push['commune'] = $commune_name;
+                            $data_push['supership_value'] = $data_region->price_region;
+                            array_push($data, $data_push);
 
-                                        // supership_value and region_id
-                                        $this->db->select('*');
-                                        $this->db->where('city', $city_name);
-                                        $this->db->where('district', $district_name);
-                                        $search_result = $this->db->get('tblregion_excel')->row();
-
-                                        $data_push['region_id'] = $search_result->region_id;
-
-                                        if ($search_result) {
-                                            $this->db->select('*');
-                                            $this->db->where('id_policy', $policy_result->id);
-                                            $this->db->where('id_region', $search_result->region_id);
-                                            $data_region = $this->db->get('tbldata_region')->row();
-
-                                            $data_push['supership_value'] = $data_region->price_region;
-                                        }
-
-                                        array_push($data, $data_push);
-                                    }else{
-                                        array_push($errors, $array_colum[$i][0]);
-                                    }
-
-                                } else {
-                                    array_push($errors, $array_colum[$i][0]);
-                                }
-                            }else
-                                array_push($errors, $array_colum[$i][0]);
-                        } else {
+                        }else{
                             array_push($errors, $array_colum[$i][0]);
+                            array_push($dataError, $data_push);
                         }
+
 
                     } elseif ($array_colum[$i][1] == "" && $array_colum[$i][2] == "" && $array_colum[$i][3] == "" && $array_colum[$i][4] == "" && $array_colum[$i][5] == "" && $array_colum[$i][7] == "" && $array_colum[$i][8] == "" && $array_colum[$i][9] == "") {
                         unset($array_colum[$i]);
-                    } else
+                    } else{
+                        $data_push=[];
+                        $data_push['customer_id'] = $id_customer;
+                        $data_push['pickup_address'] = $warehouse;
+                        $data_push['pickup_province'] = trim($ware[count($ware) - 1]);
+                        $data_push['pickup_district'] = trim($ware[count($ware) - 2]);
+                        $data_push['pickup_commune'] = '';
+                        $data_push['pickup_phone'] = $info_customer->customer_phone;
+                        $data_push['created'] = date('Y-m-d H:i:s');
+                        $data_push['required_code'] = 'YC' . '.' . code(3) . code(3) . code(3);
+                        $data_push['volume'] = 27000;
+                        $data_push['service'] = 1;
+                        $data_push['config'] = 1;
+                        $data_push['payer'] = 1;
+                        $data_push['product_type'] = 1;
+                        $data_push['barter'] = 0;
+                        $data_push['user_created'] = 0;
+                        $data_push['status_cancel'] = 0;
+                        $data_push['amount'] = $array_colum[$i][7];
+                        $data_push['soc'] = $array_colum[$i][1];
+                        $data_push['transport'] = 'road';
+
+                        array_push($dataError, $data_push);
                         array_push($errors, $array_colum[$i][0]);
+
+
+                    }
+
+
                 }
             }
+
 
             if(!empty($data)){
                 if (!$this->db->insert_batch('tbl_create_order', $data)) {
@@ -2664,15 +2668,22 @@ public function do_request_to_mysupership($url, $method)
                     echo json_encode($result);
                     die();
                 }
-
                 $message = '<p>+ Số đơn tạo thành công: ' . count($data) . '.</p> <p>+ Số đơn tạo thất bại: ' . count($errors) . '<br>';
                 if (!empty($errors)) {
+                    foreach ($dataError as $dataErr){
+                        $this->db->insert('tbl_create_order_error', $dataErr);
+
+                    }
+
+//                    $this->db->insert_batch('tbl_create_order_error', $dataError);
+
                     $message .= ' (STT: ' . implode(',', $errors) . ').</p>';
                 }
             }else{
                 $message = 'Tải lên thất bại. Chưa có đơn nào được tạo. Vui lòng kiểm tra lại file và nội dung bên trong.';
             }
 
+            $result['count_error'] = count($errors);
             $result['status'] = true;
             $result['message'] = $message;
             echo json_encode($result);
@@ -2684,7 +2695,7 @@ public function do_request_to_mysupership($url, $method)
     }
 
 
-	
+
     public function get_data($url)
     {
         $curl = curl_init();
@@ -2707,6 +2718,11 @@ public function do_request_to_mysupership($url, $method)
 
         return json_decode($response)->results;
 
+    }
+
+    public function delete_order_error($id){
+        $this->db->where('id',$id);
+        $this->db->delete('tbl_create_order_error');
     }
 
 }

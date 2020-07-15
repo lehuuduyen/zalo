@@ -178,17 +178,25 @@ class Delivery_order extends AdminController
         return $customer->id;
     }
     public function updateDelivery($id){
+        //get delivery
+        $this->db->select_sum('sman');
+        $this->db->where('tbldelivery_nb.id',$id);
+
+        $this->db->from('tbldelivery_nb');
+        $data = $this->db->get()->row();
+
+
+
         $strtotime = strtotime(date("Y-m-d H:i:s"));
         $dateTime  =date("Y-m-d H:i:s",$strtotime);
         $formatDateTime  =date("d/m/Y H:i:s",$strtotime);
         $status_report = $_GET['status_report'];
-        $status_order  = "";
         $key = $_GET['key'];
         $shop_id = $_GET['shop_id'];
         if($key =="da_giao_hang"){
             $status_order=$status_report;
-            $sql = "UPDATE tblorders_shop SET status = ? , date_debits = ? WHERE id = ?";
-            $this->db->query($sql, array($status_order,$dateTime, $shop_id));
+            $sql = "UPDATE tblorders_shop SET last_sman = ? ,status = ? , date_debits = ? WHERE id = ?";
+            $this->db->query($sql, array($data->sman,$status_order,$dateTime, $shop_id));
 
             $this->update($id,$status_order,$dateTime);
 
@@ -201,8 +209,8 @@ class Delivery_order extends AdminController
             $order = $this->db->get()->row();
             $note  = $order->note ."\n".$formatDateTime." ".$status_report;
 
-            $sql = "UPDATE tblorders_shop SET status = ? ,note = ? , date_debits = ? WHERE id = ?";
-            $this->db->query($sql, array($status_order,$note,$dateTime, $shop_id));
+            $sql = "UPDATE tblorders_shop SET last_sman = ? ,status = ? ,note = ? , date_debits = ? WHERE id = ?";
+            $this->db->query($sql, array($data->sman,$status_order,$note,$dateTime, $shop_id));
 
             $this->update($id,$status_order,$dateTime);
 
@@ -216,11 +224,12 @@ class Delivery_order extends AdminController
             $order = $this->db->get()->row();
             $note  = $order->note ."\n".$formatDateTime." ".$status_report;
 
-            $sql = "UPDATE tblorders_shop SET status = ? ,note = ? , date_debits = ? WHERE id = ?";
-            $this->db->query($sql, array($status_order,$note,$dateTime, $shop_id));
+            $sql = "UPDATE tblorders_shop SET last_sman = ? ,status = ? ,note = ? , date_debits = ? WHERE id = ?";
+            $this->db->query($sql, array($data->sman,$status_order,$note,$dateTime, $shop_id));
             $this->update($id,$status_order,$dateTime);
 
         }
+
 
 
     }
@@ -245,11 +254,11 @@ class Delivery_order extends AdminController
         echo json_encode($result);
     }
     public function sumCollectDaThu($deliveryCode){
-        $arrStatus = array('Đã Giao Hàng Toàn Bộ', 'Đã Giao Hàng Một Phần');
+        $arrStatus = array('Đã Trả Hàng Một Phần', 'Đã Giao Hàng Toàn Bộ','Đã Giao Hàng Một Phần','Đã Chuyển Kho Trả Một Phần','Đã Đối Soát Giao Hàng','Đang Trả Hàng Một Phần');
         $this->db->select_sum('collect');
         $this->db->join('tblorders_shop as shop','shop.id = tbldelivery_nb.shop','left');
         $this->db->where('tbldelivery_nb.code_delivery',$deliveryCode);
-        $this->db->where_in('status_report',$arrStatus);
+        $this->db->where_in('shop.status',$arrStatus);
 
         $this->db->from('tbldelivery_nb');
         $data = $this->db->get()->result();
@@ -286,8 +295,9 @@ class Delivery_order extends AdminController
         }
         $this->db->from('tbldelivery_nb');
         $kq = $this->db->get()->result();
+
         foreach ($kq as $key=> $value){
-            if($array[$value->code_delivery]){
+            if(isset($array[$value->code_delivery])){
                 $array[$value->code_delivery]->tong_don = $array[$value->code_delivery]->tong_don + 1;
 
             }else{

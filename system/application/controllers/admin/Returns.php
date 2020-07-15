@@ -73,14 +73,16 @@ class Returns extends AdminController
         $order_model = new Order_model();
         $resultOrderReturn = $order_model->getReturnTableDetail($data);
         foreach ($resultOrderReturn as $value){
-            $listCodeReturn[]=$value->code_return;
+            if(!in_array($value->code_return,$listCodeReturn)){
+                $listCodeReturn[]=$value->code_return;
+            }
         }
         foreach ($listCodeReturn as $codeReturn){
             $resultCodeReturn[]= $order_model->getOrderReturn($codeReturn);
         }
-        $listtTablePhieu[] = $resultCodeReturn[0];
+
         $result['table_detail']=$resultOrderReturn;
-        $result['table_phieu']=$listtTablePhieu;
+        $result['table_phieu']=$resultCodeReturn;
 
         header('Content-Type: application/json');
         echo json_encode($result);
@@ -100,7 +102,7 @@ class Returns extends AdminController
         $codeReturn = substr(strtotime("now"), 1);
 
         foreach ($data as $orderShopId){
-            $data =$order_model->createOrderReturn($codeReturn,$orderShopId);
+            $data[] =$order_model->createOrderReturn($codeReturn,$orderShopId);
             if(!$data){
                 $is_check=false;
             }
@@ -108,7 +110,8 @@ class Returns extends AdminController
 
         if($is_check){
            $result = $order_model->getOrderReturn($codeReturn);
-           //them ben shipper
+
+            //them ben shipper
             $order_model->createShipper($result);
         }
         header('Content-Type: application/json');

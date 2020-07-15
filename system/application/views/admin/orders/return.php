@@ -558,7 +558,7 @@
         let listId = $("#list-id-return").attr('list_id_return')
         $.ajax({
             url: "/system/api/return/create_order_return?data=" + JSON.parse(listId), success: function (result) {
-                window.location.href = '/system/admin/returns';
+                // window.location.href = '/system/admin/returns';
 
 
                 html += `

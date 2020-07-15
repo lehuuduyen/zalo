@@ -72,7 +72,7 @@ function app_init_admin_sidebar_menu_items()
             'position' => 5,
         ]);
         $CI->app_menu->add_sidebar_menu_item('pick_up_points', [
-            'name'     => 'Điểm Lấy Hàng',
+            'name'     => 'Điểm Lấy - Trả',
             'href'     => admin_url('pick_up_points'),
             'position' => 5,
             'icon'     => 'fa fa-user-o',

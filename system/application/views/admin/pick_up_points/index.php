@@ -17,8 +17,8 @@
 						<?php } ?>
 						<div class="clearfix"></div>
 						<ul class="nav nav-tabs tab-show-data">
-					    <li data-tab="tab1" class="active"><a href="javascript:;">Chưa Lấy</a></li>
-					    <li data-tab="tab2"><a href="javascript:;">Đã lấy</a></li>
+					    <li data-tab="tab1" class="active"><a href="javascript:;">Chưa Lấy - Trả</a></li>
+					    <li data-tab="tab2"><a href="javascript:;">Đã lấy - Trả</a></li>
 					  </ul>
 						<div class="tab-cover">
 							<div class="tab1 tab">
@@ -26,6 +26,7 @@
 										_l('Ngày Tạo'),
 										_l('id'),
 										_l('Tên Shop'),
+										_l('Loại'),
 										_l('Tên Shop'),
 										_l('SĐT Shop'),
 										_l('Kho'),
@@ -225,6 +226,51 @@
 </div><!-- /.modal -->
 
 
+<div class="modal fade" id="modalBtnDaTra" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Xác Nhận Đã Trả</h4>
+            </div>
+            <form action=""  method="post" id="form_da_tra" accept-charset="utf-8" enctype="multipart/form-data">
+                <?php echo form_open_multipart('/shiper/confirm_da_tra/', array('id' => 'form-login', 'class' => 'form-horizontal'));?>
+
+                <div class="modal-body">
+
+
+
+                    <p class="bold-shop">Tổng Số Đơn: <span style="color:blue" id="tong_so_don"></span></p>
+                    <hr>
+                    <p class="bold-shop">Danh Sách Đơn: </p>
+                    <div id="don_da_tra">
+
+                    </div>
+                    <hr>
+                    <div class="w-100">
+                        <input style="display:none" type="file" id="imgInp" name='user_file' capture="camera">
+
+                        <button onclick='$("#imgInp").trigger("click");' type="button" class="btn btn-primary">Thêm Ảnh </button>
+
+                        <img style="width: 50%;" id="blah" src="#" alt="your image" />
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                    <button type="submit" disabled name="button" id="buttonTraVe" class="btn btn-primary">Xác Nhận</button>
+
+                </div>
+            </form>
+
+        </div>
+        <?php echo form_close(); ?>
+
+    </div>
+</div>
 
 <div class="modal fade" id="modal-confirm-order" role="dialog">
   <div class="modal-dialog">
@@ -329,13 +375,13 @@
 		var data = initDataTable('.table-pick_up_points', $('#admin_url').val()+'pick_up_points' , [1], [0,1,2,3,4,5,6,7,8,9,10,11,12],{},[0,'desc']);
 		data.column(1).visible(false);
 		data.column(2).visible(false);
-		data.column(8).visible(false);
 		data.column(9).visible(false);
 		data.column(10).visible(false);
 		data.column(11).visible(false);
 		data.column(12).visible(false);
-		data.column(14).visible(false);
+		data.column(13).visible(false);
 		data.column(15).visible(false);
+		data.column(16).visible(false);
 
 
 
@@ -870,7 +916,75 @@
 		});
 
 	});
+  $(document).on('click', '.check-change-status-number-chua-tra', function(){
+      var dom = $(this).parent();
+      var id = $(this).attr('data-id');
+      var status;
 
+      if ($(this).attr('data-action') == 1) {
+          $.ajax({
+              url: '/system/admin/pick_up_points/danh_sach_don/'+id,
+              type:'get',
+              success: function (data) {
+                  data = JSON.parse(data)
+                  $("#modalBtnDaTra").modal();
+                  $("#blah").hide();
+                  let list = data;
+                  let htmlDonDaTra = "";
+                  htmlDonDaTra+= list.map(function(val,key){
+                      return `<div >${val} </div>`
+                  }).join('')
+                  $("#form_da_tra").attr('action',"/system/admin/pick_up_points/confirm_da_tra/"+id)
+                  $("#don_da_tra").html(htmlDonDaTra)
+                  $("#tong_so_don").html(list.length)
+                  $("#blah").attr('src', "")
+              },
+              error:function(e) {
+                  console.log(e);
+              }
+          });
+
+
+
+
+
+
+      }else {
+          status = false;
+          $('#loader-repo').show();
+          data = {id , status , mod:true };
+
+          $.ajax({
+              url: '/system/admin/pick_up_points/edit_status',
+              type:'POST',
+              data:data,
+              success: function (data) {
+
+                  $('#loader-repo').hide();
+                  if (data === '0') {
+                      dom.css('color','red');
+                      dom.find('span').text('Chưa Lấy');
+                  }else {
+                      dom.css('color','green');
+                      dom.find('span').text('Đã lấy');
+                  }
+                  alert_float('success', 'Thay Đổi Thành Công');
+                  setTimeout(function () {
+                      location.reload();
+                  }, 1000);
+
+              },
+              error:function(e) {
+                  console.log(e);
+              }
+          });
+
+      }
+
+
+
+
+  });
 	$(document).on('click', '.check-change-status-number', function(){
 		var dom = $(this).parent();
 		var id = $(this).parent().attr('data-id');
@@ -917,6 +1031,24 @@
 
 	});
 
+
+  function readURL(input) {
+      if (input.files && input.files[0]) {
+          var reader = new FileReader();
+
+          reader.onload = function (e) {
+              $('#blah').attr('src', e.target.result);
+          }
+
+          reader.readAsDataURL(input.files[0]);
+      }
+  }
+
+  $("#imgInp").change(function(){
+      $("#blah").show();
+      $("#buttonTraVe").attr('disabled',false)
+      readURL(this);
+  });
 
 </script>
 
@@ -1035,8 +1167,8 @@
 	.label-border span {
 		margin-right: 5px;
 	}
-	table.dataTable thead>tr>th:nth-child(4) {
-		width: 30%;
+	table.dataTable thead>tr>th:nth-child(5) {
+		width: 20%;
 	}
 	.tab-show-data {
 		border-bottom: none;

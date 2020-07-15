@@ -41,7 +41,59 @@ class Pick_up_points extends AdminController {
       }
     }
 
+    public function confirm_da_tra($id_point) {
+        $array = explode('.', $_FILES['user_file']['name']);
+        $extension = end($array);
+        $dest='/uploads/da_tra/'.date("Y_m_d")."_".strtotime(date("Y/m/d H:i:s"))."_".$id_point."_trave.". $extension;
+        move_uploaded_file( $_FILES['user_file']['tmp_name'], '.'.$dest);
 
+        $date = new DateTime();
+        $dateNow =$date->format('Y-m-d H:i:s');
+
+        $currentUser = $this->staff_model->get(get_staff_user_id());
+        $this->db->set('user_geted', $currentUser->staffid);
+        $this->db->set('status', 1);
+        $this->db->set('image', $dest);
+        $this->db->set('number_order_get', $_POST['order_get']);
+        $this->db->set('modified', $dateNow);
+        $this->db->where('id', $id_point);
+        $this->db->update('tblpickuppoint');
+
+        //get object
+        $this->db->where('id', $id_point);
+        $this->db->from('tblpickuppoint');
+        $tblpickuppoint = $this->db->get()->result()[0];
+
+        //update ngay tra order_returns
+        $this->db->set('date_return', $dateNow);
+        $this->db->where('code_return', $tblpickuppoint->code_return);
+        $this->db->where('shop', $tblpickuppoint->display_name);
+        $this->db->update('tbl_order_returns');
+        $this->session->set_flashdata('success',1);
+
+        //update hinh anh tra ve cho shop
+
+
+        $this->db->select('*');
+        $this->db->from('tblpickuppoint');
+        $this->db->where('id' , $id_point);
+        $data_pickuppoint = $this->db->get()->row();
+
+        $this->db->select('order_shop_id');
+        $this->db->from('tbl_order_returns');
+        $this->db->where('code_return' , $data_pickuppoint->code_return);
+        $this->db->like('shop', $data_pickuppoint->display_name, 'both');
+        $list_ordershop = $this->db->get()->result();
+        foreach ($list_ordershop as $orderShopId){
+            //update hinh anh tra ve cho shop
+            $data['order_shop_id']=$orderShopId->order_shop_id;
+            $data['image_return']=$dest;
+            $this->db->insert('tblorder_images', $data);
+
+        }
+
+        redirect('admin/pick_up_points');
+    }
     public function get_district_by_hd($code) {
 
       $curl = curl_init();
@@ -73,32 +125,24 @@ class Pick_up_points extends AdminController {
 
     public function get_commune_by_hd($code)
     {
+        $this->db->select('commune as code,commune as name')->distinct();
+        $this->db->from('tbladdress_list');
+        $this->db->where('district_id', $code);
 
-      $curl = curl_init();
-      //
-      curl_setopt_array($curl, array(
-        CURLOPT_URL => "https://api.mysupership.vn/v1/partner/areas/commune?district=".$code,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => "",
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 30,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => "GET",
-        CURLOPT_HTTPHEADER => array(
-          "Accept: */*",
-        ),
-      ));
-      //
-      $response = curl_exec($curl);
-      $err = curl_error($curl);
-      curl_close($curl);
-      if ($this->input->is_ajax_request()) {
-        echo json_encode(json_decode($response)->results);
-        die();
-      }else {
-        return json_decode($response)->results;
-      }
+        $purchases = $this->db->get()->result();
 
+        echo json_encode($purchases);
+
+    }
+    public function get_commune_by_hd_view($code)
+    {
+        $this->db->select('commune as code,commune as name')->distinct();
+        $this->db->from('tbladdress_list');
+        $this->db->where('district_id', $code);
+
+        $purchases = $this->db->get()->result();
+
+        return $purchases;
 
     }
       public function indexPicked() {
@@ -129,11 +173,33 @@ class Pick_up_points extends AdminController {
       }
 
       $data['district_hd'] = $district_hd;
-      $data['area_hd'] =  $this->get_commune_by_hd($district_hd[0]->code);
+      $data['area_hd'] =  $this->get_commune_by_hd_view($district_hd[0]->code);
       $data['tblstaff'] = $this->db->get('tblstaff')->result();
       $this->load->view('admin/pick_up_points/index.php',$data);
     }
+    public function danh_sach_don($id){
+        $list =[];
+        $this->db->select('*');
+         $this->db->where('id' , $id);
+        $this->db->from('tblpickuppoint');
+        $val = $this->db->get()->row();
 
+        $this->db->select('tbl_order_returns.*,tblorders_shop.code_supership');
+        $this->db->from('tbl_order_returns');
+        $this->db->join('tblorders_shop', 'tblorders_shop.id = tbl_order_returns.order_shop_id');
+
+        $this->db->where('tbl_order_returns.code_return' , $val->code_return);
+        $this->db->like('tbl_order_returns.shop', $val->display_name, 'both');
+        $orderReturn = $this->db->get()->result();
+        foreach ($orderReturn as $value){
+            $list[]=$value->code_supership;
+        }
+        echo json_encode($list);
+
+
+
+
+    }
     public function getCustomer($id) {
       $cus = $this->db->get_where('tblcustomers', array('id' => $id))->result()[0];
       echo json_encode($cus);

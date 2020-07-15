@@ -1,0 +1,165 @@
+ERROR - 2019-09-07 10:34:42 --> Could not find the language line "Email"
+ERROR - 2019-09-07 10:34:42 --> Could not find the language line "password"
+ERROR - 2019-09-07 10:34:42 --> Could not find the language line "Email"
+ERROR - 2019-09-07 10:34:42 --> Could not find the language line "password"
+ERROR - 2019-09-07 10:34:51 --> Could not find the language line "Email"
+ERROR - 2019-09-07 10:34:51 --> Could not find the language line "password"
+ERROR - 2019-09-07 16:38:03 --> Severity: error --> Exception: Call to a member function isMobile() on null /Users/QuangHan/Desktop/spshd/customer/application/core/MY_Controller.php 28
+ERROR - 2019-09-07 16:39:34 --> Severity: error --> Exception: syntax error, unexpected '$detect' (T_VARIABLE), expecting function (T_FUNCTION) or const (T_CONST) /Users/QuangHan/Desktop/spshd/customer/application/core/MY_Controller.php 20
+ERROR - 2019-09-07 16:39:48 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /Users/QuangHan/Desktop/spshd/customer/application/core/MY_Controller.php:20) /Users/QuangHan/Desktop/spshd/customer/system/core/Common.php 570
+ERROR - 2019-09-07 16:39:48 --> Severity: Compile Error --> Constant expression contains invalid operations /Users/QuangHan/Desktop/spshd/customer/application/core/MY_Controller.php 20
+ERROR - 2019-09-07 11:21:05 --> Severity: error --> Exception: Call to undefined function get_option() /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 167
+ERROR - 2019-09-07 11:21:38 --> Severity: error --> Exception: Call to undefined function get_option() /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 167
+ERROR - 2019-09-07 11:23:12 --> Severity: error --> Exception: Call to undefined function get_option() /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 167
+ERROR - 2019-09-07 11:24:09 --> Severity: error --> Exception: Call to undefined function get_option() /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 167
+ERROR - 2019-09-07 11:54:21 --> Could not find the language line "Email"
+ERROR - 2019-09-07 11:54:21 --> Could not find the language line "password"
+ERROR - 2019-09-07 12:10:17 --> Could not find the language line "Email"
+ERROR - 2019-09-07 12:10:17 --> Could not find the language line "password"
+ERROR - 2019-09-07 12:10:38 --> Could not find the language line "Email"
+ERROR - 2019-09-07 12:10:38 --> Could not find the language line "password"
+ERROR - 2019-09-07 12:11:05 --> Could not find the language line "Email"
+ERROR - 2019-09-07 12:11:05 --> Could not find the language line "password"
+ERROR - 2019-09-07 12:17:18 --> Could not find the language line "Email"
+ERROR - 2019-09-07 12:17:18 --> Could not find the language line "password"
+ERROR - 2019-09-07 12:18:30 --> Severity: Warning --> setcookie() expects parameter 2 to be string, array given /Users/QuangHan/Desktop/spshd/customer/system/core/Input.php 408
+ERROR - 2019-09-07 12:18:30 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /Users/QuangHan/Desktop/spshd/customer/system/core/Exceptions.php:271) /Users/QuangHan/Desktop/spshd/customer/system/helpers/url_helper.php 564
+ERROR - 2019-09-07 12:19:58 --> Severity: Warning --> setcookie() expects parameter 3 to be integer, float given /Users/QuangHan/Desktop/spshd/customer/system/core/Input.php 408
+ERROR - 2019-09-07 12:19:58 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /Users/QuangHan/Desktop/spshd/customer/system/core/Exceptions.php:271) /Users/QuangHan/Desktop/spshd/customer/system/helpers/url_helper.php 564
+ERROR - 2019-09-07 12:20:15 --> Severity: Warning --> setcookie() expects parameter 3 to be integer, float given /Users/QuangHan/Desktop/spshd/customer/system/core/Input.php 408
+ERROR - 2019-09-07 12:20:15 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /Users/QuangHan/Desktop/spshd/customer/system/core/Exceptions.php:271) /Users/QuangHan/Desktop/spshd/customer/system/helpers/url_helper.php 564
+ERROR - 2019-09-07 18:23:12 --> Severity: error --> Exception: syntax error, unexpected 'return' (T_RETURN) /Users/QuangHan/Desktop/spshd/customer/application/controllers/User.php 298
+ERROR - 2019-09-07 12:23:47 --> Severity: Warning --> setcookie() expects parameter 3 to be integer, float given /Users/QuangHan/Desktop/spshd/customer/system/core/Input.php 408
+ERROR - 2019-09-07 12:23:47 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /Users/QuangHan/Desktop/spshd/customer/system/core/Exceptions.php:271) /Users/QuangHan/Desktop/spshd/customer/system/helpers/url_helper.php 564
+ERROR - 2019-09-07 12:23:57 --> Severity: Warning --> Expiry date cannot have a year greater than 9999 /Users/QuangHan/Desktop/spshd/customer/system/core/Input.php 408
+ERROR - 2019-09-07 12:23:57 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /Users/QuangHan/Desktop/spshd/customer/system/core/Exceptions.php:271) /Users/QuangHan/Desktop/spshd/customer/system/helpers/url_helper.php 564
+ERROR - 2019-09-07 12:25:07 --> Could not find the language line "Email"
+ERROR - 2019-09-07 12:25:07 --> Could not find the language line "password"
+ERROR - 2019-09-07 12:25:51 --> Could not find the language line "Email"
+ERROR - 2019-09-07 12:25:51 --> Could not find the language line "password"
+ERROR - 2019-09-07 12:26:13 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /Users/QuangHan/Desktop/spshd/customer/application/controllers/User.php:35) /Users/QuangHan/Desktop/spshd/customer/system/core/Input.php 408
+ERROR - 2019-09-07 12:26:13 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /Users/QuangHan/Desktop/spshd/customer/application/controllers/User.php:35) /Users/QuangHan/Desktop/spshd/customer/system/helpers/url_helper.php 564
+ERROR - 2019-09-07 12:28:06 --> Could not find the language line "Email"
+ERROR - 2019-09-07 12:28:06 --> Could not find the language line "password"
+ERROR - 2019-09-07 12:33:17 --> Could not find the language line "Email"
+ERROR - 2019-09-07 12:33:17 --> Could not find the language line "password"
+ERROR - 2019-09-07 12:33:21 --> Could not find the language line "Email"
+ERROR - 2019-09-07 12:33:21 --> Could not find the language line "password"
+ERROR - 2019-09-07 12:34:46 --> Could not find the language line "Email"
+ERROR - 2019-09-07 12:34:46 --> Could not find the language line "password"
+ERROR - 2019-09-07 12:34:48 --> Could not find the language line "Email"
+ERROR - 2019-09-07 12:34:48 --> Could not find the language line "password"
+ERROR - 2019-09-07 12:40:53 --> Severity: error --> Exception: Call to undefined method User::set_cookie() /Users/QuangHan/Desktop/spshd/customer/application/controllers/User.php 291
+ERROR - 2019-09-07 12:42:05 --> Severity: Warning --> setcookie() expects parameter 2 to be string, array given /Users/QuangHan/Desktop/spshd/customer/system/core/Input.php 408
+ERROR - 2019-09-07 12:42:28 --> Severity: Warning --> Expiry date cannot have a year greater than 9999 /Users/QuangHan/Desktop/spshd/customer/system/core/Input.php 408
+ERROR - 2019-09-07 12:43:13 --> Severity: Warning --> Expiry date cannot have a year greater than 9999 /Users/QuangHan/Desktop/spshd/customer/system/core/Input.php 408
+ERROR - 2019-09-07 12:43:35 --> Could not find the language line "Email"
+ERROR - 2019-09-07 12:43:35 --> Could not find the language line "password"
+ERROR - 2019-09-07 12:46:16 --> Severity: Warning --> Illegal string offset 'is_admin' /Users/QuangHan/Desktop/spshd/customer/application/controllers/User.php 39
+ERROR - 2019-09-07 12:46:16 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /Users/QuangHan/Desktop/spshd/customer/system/core/Exceptions.php:271) /Users/QuangHan/Desktop/spshd/customer/system/helpers/url_helper.php 564
+ERROR - 2019-09-07 12:46:43 --> Severity: Warning --> Illegal string offset 'is_admin' /Users/QuangHan/Desktop/spshd/customer/application/controllers/User.php 39
+ERROR - 2019-09-07 12:46:43 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /Users/QuangHan/Desktop/spshd/customer/system/core/Exceptions.php:271) /Users/QuangHan/Desktop/spshd/customer/system/helpers/url_helper.php 564
+ERROR - 2019-09-07 12:46:44 --> Severity: Warning --> Illegal string offset 'is_admin' /Users/QuangHan/Desktop/spshd/customer/application/controllers/User.php 39
+ERROR - 2019-09-07 12:46:44 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /Users/QuangHan/Desktop/spshd/customer/system/core/Exceptions.php:271) /Users/QuangHan/Desktop/spshd/customer/system/helpers/url_helper.php 564
+ERROR - 2019-09-07 12:46:51 --> Severity: Warning --> Illegal string offset 'is_admin' /Users/QuangHan/Desktop/spshd/customer/application/controllers/User.php 39
+ERROR - 2019-09-07 12:46:52 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /Users/QuangHan/Desktop/spshd/customer/system/core/Exceptions.php:271) /Users/QuangHan/Desktop/spshd/customer/system/helpers/url_helper.php 564
+ERROR - 2019-09-07 12:47:05 --> Severity: Warning --> Illegal string offset 'is_admin' /Users/QuangHan/Desktop/spshd/customer/application/controllers/User.php 39
+ERROR - 2019-09-07 12:47:05 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /Users/QuangHan/Desktop/spshd/customer/system/core/Exceptions.php:271) /Users/QuangHan/Desktop/spshd/customer/system/helpers/url_helper.php 564
+ERROR - 2019-09-07 12:47:12 --> Could not find the language line "Email"
+ERROR - 2019-09-07 12:47:12 --> Could not find the language line "password"
+ERROR - 2019-09-07 12:48:19 --> Could not find the language line "Email"
+ERROR - 2019-09-07 12:48:19 --> Could not find the language line "password"
+ERROR - 2019-09-07 12:48:46 --> Could not find the language line "Email"
+ERROR - 2019-09-07 12:48:46 --> Could not find the language line "password"
+ERROR - 2019-09-07 12:49:08 --> Severity: error --> Exception: Cannot use object of type stdClass as array /Users/QuangHan/Desktop/spshd/customer/application/controllers/User.php 40
+ERROR - 2019-09-07 12:57:56 --> Could not find the language line "Email"
+ERROR - 2019-09-07 12:57:56 --> Could not find the language line "password"
+ERROR - 2019-09-07 12:58:00 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM tblcustomers
+                WHERE (customer_email = 'amin@admin.com')
+    ' at line 6 - Invalid query: 
+                SELECT
+                    id,
+                    customer_email,
+                    customer_password,
+                    customer_shop_code,
+                FROM tblcustomers
+                WHERE (customer_email = 'amin@admin.com')
+                LIMIT 1
+            
+ERROR - 2019-09-07 12:58:22 --> Could not find the language line "Email"
+ERROR - 2019-09-07 12:58:22 --> Could not find the language line "password"
+ERROR - 2019-09-07 12:58:35 --> Could not find the language line "Email"
+ERROR - 2019-09-07 12:58:35 --> Could not find the language line "password"
+ERROR - 2019-09-07 13:32:00 --> Could not find the language line "Email"
+ERROR - 2019-09-07 13:32:00 --> Could not find the language line "password"
+ERROR - 2019-09-07 14:56:11 --> Severity: Warning --> date_format() expects parameter 1 to be DateTimeInterface, boolean given /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 520
+ERROR - 2019-09-07 14:56:11 --> Severity: Warning --> date_format() expects parameter 1 to be DateTimeInterface, boolean given /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 520
+ERROR - 2019-09-07 14:57:40 --> Severity: Warning --> date_format() expects parameter 1 to be DateTimeInterface, boolean given /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 520
+ERROR - 2019-09-07 14:57:40 --> Severity: Warning --> date_format() expects parameter 1 to be DateTimeInterface, boolean given /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 520
+ERROR - 2019-09-07 14:59:07 --> Severity: Warning --> date_format() expects parameter 1 to be DateTimeInterface, boolean given /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 520
+ERROR - 2019-09-07 14:59:07 --> Severity: Warning --> date_format() expects parameter 1 to be DateTimeInterface, boolean given /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 520
+ERROR - 2019-09-07 15:03:01 --> Severity: Warning --> date_format() expects parameter 1 to be DateTimeInterface, boolean given /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 522
+ERROR - 2019-09-07 15:03:01 --> Severity: Warning --> date_format() expects parameter 1 to be DateTimeInterface, boolean given /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 522
+ERROR - 2019-09-07 15:03:17 --> Severity: Warning --> date_format() expects parameter 1 to be DateTimeInterface, boolean given /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 522
+ERROR - 2019-09-07 15:03:17 --> Severity: Warning --> date_format() expects parameter 1 to be DateTimeInterface, boolean given /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 522
+ERROR - 2019-09-07 15:03:37 --> Severity: Warning --> date_format() expects parameter 1 to be DateTimeInterface, boolean given /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 522
+ERROR - 2019-09-07 15:03:37 --> Severity: Warning --> date_format() expects parameter 1 to be DateTimeInterface, boolean given /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 522
+ERROR - 2019-09-07 15:03:51 --> Severity: Warning --> date_format() expects parameter 1 to be DateTimeInterface, boolean given /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 522
+ERROR - 2019-09-07 15:03:51 --> Severity: Warning --> date_format() expects parameter 1 to be DateTimeInterface, boolean given /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 522
+ERROR - 2019-09-07 15:04:05 --> Severity: Warning --> date_format() expects parameter 1 to be DateTimeInterface, boolean given /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 522
+ERROR - 2019-09-07 15:04:05 --> Severity: Warning --> date_format() expects parameter 1 to be DateTimeInterface, boolean given /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 522
+ERROR - 2019-09-07 15:04:51 --> Severity: Warning --> date_format() expects parameter 1 to be DateTimeInterface, boolean given /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 522
+ERROR - 2019-09-07 15:04:51 --> Severity: Warning --> date_format() expects parameter 1 to be DateTimeInterface, boolean given /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 522
+ERROR - 2019-09-07 15:13:02 --> Severity: error --> Exception: Call to undefined function get_table_where() /Users/QuangHan/Desktop/spshd/customer/application/controllers/App.php 578
+ERROR - 2019-09-07 15:15:21 --> Severity: error --> Exception: Cannot use object of type stdClass as array /Users/QuangHan/Desktop/spshd/customer/application/controllers/App.php 589
+ERROR - 2019-09-07 15:15:53 --> Severity: error --> Exception: Cannot use object of type stdClass as array /Users/QuangHan/Desktop/spshd/customer/application/controllers/App.php 589
+ERROR - 2019-09-07 15:16:07 --> Severity: error --> Exception: Cannot use object of type stdClass as array /Users/QuangHan/Desktop/spshd/customer/application/controllers/App.php 589
+ERROR - 2019-09-07 15:16:22 --> Severity: error --> Exception: Cannot use object of type stdClass as array /Users/QuangHan/Desktop/spshd/customer/application/controllers/App.php 589
+ERROR - 2019-09-07 15:17:39 --> Severity: error --> Exception: Cannot use object of type stdClass as array /Users/QuangHan/Desktop/spshd/customer/application/controllers/App.php 603
+ERROR - 2019-09-07 15:18:29 --> Severity: Warning --> json_decode() expects parameter 1 to be string, object given /Users/QuangHan/Desktop/spshd/customer/application/controllers/App.php 590
+ERROR - 2019-09-07 15:18:29 --> Severity: error --> Exception: Call to undefined function is_admin() /Users/QuangHan/Desktop/spshd/customer/application/controllers/App.php 147
+ERROR - 2019-09-07 15:18:29 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /Users/QuangHan/Desktop/spshd/customer/system/core/Exceptions.php:271) /Users/QuangHan/Desktop/spshd/customer/system/core/Common.php 570
+ERROR - 2019-09-07 15:20:02 --> Severity: error --> Exception: Call to undefined method CI_DB_mysqli_result::array() /Users/QuangHan/Desktop/spshd/customer/application/controllers/App.php 579
+ERROR - 2019-09-07 21:22:14 --> Severity: error --> Exception: syntax error, unexpected 'var_dump' (T_STRING) /Users/QuangHan/Desktop/spshd/customer/application/controllers/App.php 687
+ERROR - 2019-09-07 15:22:31 --> Severity: error --> Exception: Call to undefined function is_admin() /Users/QuangHan/Desktop/spshd/customer/application/controllers/App.php 147
+ERROR - 2019-09-07 15:23:12 --> Severity: error --> Exception: Call to undefined function is_admin() /Users/QuangHan/Desktop/spshd/customer/application/controllers/App.php 147
+ERROR - 2019-09-07 15:35:30 --> Could not find the language line "Email"
+ERROR - 2019-09-07 15:35:30 --> Could not find the language line "password"
+ERROR - 2019-09-07 16:19:59 --> Severity: Warning --> Invalid argument supplied for foreach() /Users/QuangHan/Desktop/spshd/customer/application/controllers/App.php 346
+ERROR - 2019-09-07 16:19:59 --> Severity: Warning --> Invalid argument supplied for foreach() /Users/QuangHan/Desktop/spshd/customer/application/controllers/App.php 403
+ERROR - 2019-09-07 16:19:59 --> Severity: Warning --> Invalid argument supplied for foreach() /Users/QuangHan/Desktop/spshd/customer/application/controllers/App.php 410
+ERROR - 2019-09-07 16:19:59 --> Severity: Warning --> Invalid argument supplied for foreach() /Users/QuangHan/Desktop/spshd/customer/application/controllers/App.php 437
+ERROR - 2019-09-07 16:19:59 --> Severity: Warning --> Invalid argument supplied for foreach() /Users/QuangHan/Desktop/spshd/customer/application/controllers/App.php 463
+ERROR - 2019-09-07 16:19:59 --> Severity: Warning --> Invalid argument supplied for foreach() /Users/QuangHan/Desktop/spshd/customer/application/controllers/App.php 466
+ERROR - 2019-09-07 16:19:59 --> Severity: Warning --> array_merge(): Argument #1 is not an array /Users/QuangHan/Desktop/spshd/customer/application/controllers/App.php 476
+ERROR - 2019-09-07 16:19:59 --> Severity: Warning --> Invalid argument supplied for foreach() /Users/QuangHan/Desktop/spshd/customer/application/controllers/App.php 168
+ERROR - 2019-09-07 16:21:20 --> Severity: error --> Exception: Call to undefined function is_admin() /Users/QuangHan/Desktop/spshd/customer/application/controllers/App.php 180
+ERROR - 2019-09-07 16:21:32 --> Severity: error --> Exception: Cannot use object of type stdClass as array /Users/QuangHan/Desktop/spshd/customer/application/controllers/App.php 352
+ERROR - 2019-09-07 16:21:46 --> Severity: error --> Exception: Cannot use object of type stdClass as array /Users/QuangHan/Desktop/spshd/customer/application/controllers/App.php 352
+ERROR - 2019-09-07 16:22:22 --> Severity: error --> Exception: Call to undefined function is_admin() /Users/QuangHan/Desktop/spshd/customer/application/controllers/App.php 180
+ERROR - 2019-09-07 16:22:42 --> Severity: Warning --> number_format() expects parameter 1 to be float, string given /Users/QuangHan/Desktop/spshd/customer/application/controllers/App.php 191
+ERROR - 2019-09-07 16:22:42 --> Severity: Warning --> number_format() expects parameter 1 to be float, string given /Users/QuangHan/Desktop/spshd/customer/application/controllers/App.php 192
+ERROR - 2019-09-07 17:03:38 --> Could not find the language line "Email"
+ERROR - 2019-09-07 17:03:38 --> Could not find the language line "password"
+ERROR - 2019-09-07 17:06:43 --> Could not find the language line "Email"
+ERROR - 2019-09-07 17:06:43 --> Could not find the language line "password"
+ERROR - 2019-09-07 17:07:13 --> Could not find the language line "Email"
+ERROR - 2019-09-07 17:07:13 --> Could not find the language line "password"
+ERROR - 2019-09-07 17:08:49 --> Could not find the language line "Email"
+ERROR - 2019-09-07 17:08:49 --> Could not find the language line "password"
+ERROR - 2019-09-07 17:09:14 --> Could not find the language line "Email"
+ERROR - 2019-09-07 17:09:14 --> Could not find the language line "password"
+ERROR - 2019-09-07 17:10:15 --> Could not find the language line "Email"
+ERROR - 2019-09-07 17:10:15 --> Could not find the language line "password"
+ERROR - 2019-09-07 17:10:41 --> Could not find the language line "Email"
+ERROR - 2019-09-07 17:10:41 --> Could not find the language line "password"
+ERROR - 2019-09-07 17:11:55 --> Could not find the language line "Email"
+ERROR - 2019-09-07 17:11:55 --> Could not find the language line "password"
+ERROR - 2019-09-07 17:12:58 --> Could not find the language line "Email"
+ERROR - 2019-09-07 17:12:58 --> Could not find the language line "password"
+ERROR - 2019-09-07 17:13:40 --> Could not find the language line "Email"
+ERROR - 2019-09-07 17:13:40 --> Could not find the language line "password"
+ERROR - 2019-09-07 17:14:18 --> Could not find the language line "Email"
+ERROR - 2019-09-07 17:14:18 --> Could not find the language line "password"
+ERROR - 2019-09-07 20:13:22 --> Could not find the language line "Email"
+ERROR - 2019-09-07 20:13:22 --> Could not find the language line "password"

@@ -1,0 +1,655 @@
+ERROR - 2020-03-30 01:43:24 --> Could not find the language line "Email"
+ERROR - 2020-03-30 01:43:24 --> Could not find the language line "password"
+ERROR - 2020-03-30 04:22:32 --> Could not find the language line "Email"
+ERROR - 2020-03-30 04:22:32 --> Could not find the language line "password"
+ERROR - 2020-03-30 04:22:53 --> Could not find the language line "Email"
+ERROR - 2020-03-30 04:22:53 --> Could not find the language line "password"
+ERROR - 2020-03-30 04:23:43 --> Could not find the language line "Email"
+ERROR - 2020-03-30 04:23:43 --> Could not find the language line "password"
+ERROR - 2020-03-30 04:25:12 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 04:25:12 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 04:25:12 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 04:25:12 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 04:25:12 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 04:25:12 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 04:25:12 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 04:25:12 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 04:25:12 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 04:25:12 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 04:25:12 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 04:25:13 --> Severity: Compile Error --> Cannot redeclare is_date() (previously declared in �t�:-436686560) /home/admin/domains/spshd.com/public_html/khachhang/application/helpers/general_helper.php 582
+ERROR - 2020-03-30 04:27:20 --> Could not find the language line "Email"
+ERROR - 2020-03-30 04:27:20 --> Could not find the language line "password"
+ERROR - 2020-03-30 04:28:50 --> Could not find the language line "Email"
+ERROR - 2020-03-30 04:28:50 --> Could not find the language line "password"
+ERROR - 2020-03-30 04:28:50 --> Could not find the language line "Email"
+ERROR - 2020-03-30 04:28:50 --> Could not find the language line "password"
+ERROR - 2020-03-30 04:29:43 --> Could not find the language line "Email"
+ERROR - 2020-03-30 04:29:43 --> Could not find the language line "password"
+ERROR - 2020-03-30 04:31:51 --> Could not find the language line "Email"
+ERROR - 2020-03-30 04:31:51 --> Could not find the language line "password"
+ERROR - 2020-03-30 04:31:51 --> Severity: Compile Error --> Cannot redeclare class Error /home/admin/domains/spshd.com/public_html/khachhang/application/vendor/paragonie/random_compat/lib/error_polyfill.php 32
+ERROR - 2020-03-30 04:37:51 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 04:37:51 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 04:37:51 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 04:37:51 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 04:37:51 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 04:37:51 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 04:37:51 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 04:37:51 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 04:37:51 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 04:37:51 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 04:37:51 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 04:39:59 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 04:39:59 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 04:39:59 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 04:39:59 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 04:39:59 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 04:39:59 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 04:39:59 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 04:39:59 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 04:39:59 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 04:39:59 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 04:39:59 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 04:48:24 --> Could not find the language line "Email"
+ERROR - 2020-03-30 04:48:24 --> Could not find the language line "password"
+ERROR - 2020-03-30 04:48:45 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 04:48:45 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 04:48:45 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 04:48:45 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 04:48:45 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 04:48:45 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 04:48:45 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 04:48:45 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 04:48:45 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 04:48:45 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 04:48:45 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 04:52:45 --> Could not find the language line "Email"
+ERROR - 2020-03-30 04:52:45 --> Could not find the language line "password"
+ERROR - 2020-03-30 04:53:14 --> Could not find the language line "Email"
+ERROR - 2020-03-30 04:53:14 --> Could not find the language line "password"
+ERROR - 2020-03-30 04:53:31 --> Could not find the language line "Email"
+ERROR - 2020-03-30 04:53:31 --> Could not find the language line "password"
+ERROR - 2020-03-30 04:54:00 --> Could not find the language line "Email"
+ERROR - 2020-03-30 04:54:00 --> Could not find the language line "password"
+ERROR - 2020-03-30 05:02:16 --> Could not find the language line "Email"
+ERROR - 2020-03-30 05:02:16 --> Could not find the language line "password"
+ERROR - 2020-03-30 05:03:31 --> Could not find the language line "Email"
+ERROR - 2020-03-30 05:03:31 --> Could not find the language line "password"
+ERROR - 2020-03-30 05:03:46 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 05:03:46 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 05:03:46 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 05:03:46 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 05:03:46 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 05:03:46 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 05:03:46 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 05:03:46 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 05:03:46 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 05:03:46 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 05:03:46 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 05:04:58 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 05:04:58 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 05:04:58 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 05:04:58 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 05:04:58 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 05:04:58 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 05:04:58 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 05:04:58 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 05:04:58 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 05:04:58 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 05:04:58 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 05:08:33 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 05:08:33 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 05:08:33 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 05:08:33 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 05:08:33 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 05:08:33 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 05:08:33 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 05:08:33 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 05:08:33 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 05:08:33 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 05:08:33 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 05:12:40 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 05:12:40 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 05:12:40 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 05:12:40 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 05:12:40 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 05:12:40 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 05:12:40 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 05:12:40 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 05:12:40 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 05:12:40 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 05:12:40 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 06:04:06 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 06:04:06 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 06:04:06 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 06:04:06 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 06:04:06 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 06:04:06 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 06:04:06 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 06:04:06 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 06:04:06 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 06:04:06 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 06:04:06 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 06:40:48 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 06:40:48 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 06:40:48 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 06:40:48 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 06:40:48 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 06:40:48 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 06:40:48 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 06:40:48 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 06:40:48 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 06:40:48 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 06:40:48 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 06:40:49 --> Severity: Compile Error --> Cannot redeclare is_date() (previously declared in p�:314) /home/admin/domains/spshd.com/public_html/khachhang/application/helpers/general_helper.php 582
+ERROR - 2020-03-30 07:43:29 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 07:43:29 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 07:43:29 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 07:43:29 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 07:43:29 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 07:43:29 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 07:43:29 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 07:43:29 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 07:43:29 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 07:43:29 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 07:43:29 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 07:59:41 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 07:59:41 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 07:59:41 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 07:59:41 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 07:59:41 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 07:59:41 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 07:59:41 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 07:59:41 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 07:59:41 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 07:59:41 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 07:59:41 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 08:14:01 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 08:14:01 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 08:14:01 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 08:14:01 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 08:14:01 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 08:14:01 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 08:14:01 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 08:14:01 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 08:14:01 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 08:14:01 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 08:14:01 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 08:24:29 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 08:24:29 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 08:24:29 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 08:24:29 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 08:24:29 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 08:24:29 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 08:24:29 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 08:24:29 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 08:24:29 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 08:24:29 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 08:24:29 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 08:24:30 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 08:24:30 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 08:24:30 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 08:24:30 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 08:24:30 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 08:24:30 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 08:24:30 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 08:24:30 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 08:24:30 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 08:24:30 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 08:24:30 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 08:31:27 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 08:31:27 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 08:31:27 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 08:31:27 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 08:31:27 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 08:31:27 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 08:31:27 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 08:31:27 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 08:31:27 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 08:31:27 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 08:31:27 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 08:31:28 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 08:31:28 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 08:31:28 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 08:31:28 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 08:31:28 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 08:31:28 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 08:31:28 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 08:31:28 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 08:31:28 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 08:31:28 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 08:31:28 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 08:54:09 --> Severity: Compile Error --> Cannot redeclare is_date() (previously declared in 9:1) /home/admin/domains/spshd.com/public_html/khachhang/application/helpers/general_helper.php 582
+ERROR - 2020-03-30 08:55:38 --> Severity: Compile Error --> Cannot redeclare is_date() (previously declared in pҋ:314) /home/admin/domains/spshd.com/public_html/khachhang/application/helpers/general_helper.php 582
+ERROR - 2020-03-30 08:56:24 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 08:56:24 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 08:56:24 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 08:56:24 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 08:56:24 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 08:56:24 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 08:56:24 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 08:56:24 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 08:56:24 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 08:56:24 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 08:56:24 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 09:01:12 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 09:01:12 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 09:01:12 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 09:01:12 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 09:01:12 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 09:01:12 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 09:01:12 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 09:01:12 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 09:01:12 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 09:01:12 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 09:01:12 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 09:04:05 --> Severity: Compile Error --> Cannot redeclare is_date() (previously declared in ��:314) /home/admin/domains/spshd.com/public_html/khachhang/application/helpers/general_helper.php 582
+ERROR - 2020-03-30 09:04:16 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 09:04:16 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 09:04:16 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 09:04:16 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 09:04:16 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 09:04:16 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 09:04:16 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 09:04:16 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 09:04:16 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 09:04:16 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 09:04:16 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 09:07:55 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 09:07:55 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 09:07:55 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 09:07:55 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 09:07:55 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 09:07:55 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 09:07:55 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 09:07:55 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 09:07:55 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 09:07:55 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 09:07:55 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 09:07:56 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 09:07:56 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 09:07:56 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 09:07:56 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 09:07:56 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 09:07:56 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 09:07:56 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 09:07:56 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 09:07:56 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 09:07:56 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 09:07:56 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 09:07:57 --> Severity: Compile Error --> Cannot redeclare is_date() (previously declared in ���:314) /home/admin/domains/spshd.com/public_html/khachhang/application/helpers/general_helper.php 582
+ERROR - 2020-03-30 09:24:31 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 09:24:31 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 09:24:31 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 09:24:31 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 09:24:31 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 09:24:31 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 09:24:31 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 09:24:31 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 09:24:31 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 09:24:31 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 09:24:31 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 09:26:16 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 09:26:16 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 09:26:16 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 09:26:16 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 09:26:16 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 09:26:16 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 09:26:16 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 09:26:16 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 09:26:16 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 09:26:16 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 09:26:16 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 09:28:16 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 09:28:16 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 09:28:16 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 09:28:16 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 09:28:16 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 09:28:16 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 09:28:16 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 09:28:16 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 09:28:16 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 09:28:16 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 09:28:16 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 09:28:16 --> Severity: Compile Error --> Cannot redeclare is_date() (previously declared in 8�m:314) /home/admin/domains/spshd.com/public_html/khachhang/application/helpers/general_helper.php 582
+ERROR - 2020-03-30 09:30:08 --> Could not find the language line "Email"
+ERROR - 2020-03-30 09:30:08 --> Could not find the language line "password"
+ERROR - 2020-03-30 09:31:57 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 09:31:57 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 09:31:57 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 09:31:57 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 09:31:57 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 09:31:57 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 09:31:57 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 09:31:57 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 09:31:57 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 09:31:57 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 09:31:57 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:05:28 --> Severity: Compile Error --> Cannot redeclare is_date() (previously declared in (��:314) /home/admin/domains/spshd.com/public_html/khachhang/application/helpers/general_helper.php 582
+ERROR - 2020-03-30 10:05:29 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 10:05:29 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 10:05:29 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 10:05:29 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:05:29 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:05:29 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 10:05:29 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 10:05:29 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:05:29 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:05:29 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:05:29 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:05:29 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 10:05:29 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 10:05:29 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 10:05:29 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:05:29 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:05:29 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 10:05:29 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 10:05:29 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:05:29 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:05:29 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:05:29 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:05:30 --> Severity: Compile Error --> Cannot redeclare is_date() (previously declared in �,��C:-436640024) /home/admin/domains/spshd.com/public_html/khachhang/application/helpers/general_helper.php 582
+ERROR - 2020-03-30 10:06:26 --> Could not find the language line "Email"
+ERROR - 2020-03-30 10:06:26 --> Could not find the language line "password"
+ERROR - 2020-03-30 10:06:37 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 10:06:37 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 10:06:37 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 10:06:37 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:06:37 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:06:37 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 10:06:37 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 10:06:37 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:06:37 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:06:37 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:06:37 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:06:39 --> Severity: Compile Error --> Cannot redeclare is_date() (previously declared in ��:1952539497) /home/admin/domains/spshd.com/public_html/khachhang/application/helpers/general_helper.php 582
+ERROR - 2020-03-30 10:08:13 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 10:08:13 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 10:08:13 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 10:08:13 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:08:13 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:08:13 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 10:08:13 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 10:08:13 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:08:13 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:08:13 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:08:13 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:08:47 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 10:08:47 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 10:08:47 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 10:08:47 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:08:47 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:08:47 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 10:08:47 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 10:08:47 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:08:47 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:08:47 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:08:47 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:16:30 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 10:16:30 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 10:16:30 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 10:16:30 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:16:30 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:16:30 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 10:16:30 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 10:16:30 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:16:30 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:16:30 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:16:30 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:16:34 --> Severity: Compile Error --> Cannot redeclare class Error /home/admin/domains/spshd.com/public_html/khachhang/application/vendor/paragonie/random_compat/lib/error_polyfill.php 32
+ERROR - 2020-03-30 10:16:47 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 10:16:47 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 10:16:47 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 10:16:47 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:16:47 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:16:47 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 10:16:47 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 10:16:47 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:16:47 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:16:47 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:16:47 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:48:57 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 10:48:57 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 10:48:57 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 10:48:57 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:48:57 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:48:57 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 10:48:57 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 10:48:57 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:48:57 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:48:57 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:48:57 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:49:32 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 10:49:32 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 10:49:32 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 10:49:32 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:49:32 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:49:32 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 10:49:32 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 10:49:32 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:49:32 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 10:49:32 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 10:49:32 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 11:09:09 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 11:09:09 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 11:09:09 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 11:09:09 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 11:09:09 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 11:09:09 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 11:09:09 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 11:09:09 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 11:09:09 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 11:09:09 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 11:09:09 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 11:11:56 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 11:11:56 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 11:11:56 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 11:11:56 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 11:11:56 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 11:11:56 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 11:11:56 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 11:11:56 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 11:11:56 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 11:11:56 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 11:11:56 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 11:16:15 --> Could not find the language line "Email"
+ERROR - 2020-03-30 11:16:15 --> Could not find the language line "password"
+ERROR - 2020-03-30 11:24:04 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 11:24:04 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 11:24:04 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 11:24:04 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 11:24:04 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 11:24:04 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 11:24:04 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 11:24:04 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 11:24:04 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 11:24:04 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 11:24:04 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 11:24:08 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 11:24:08 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 11:24:08 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 11:24:08 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 11:24:08 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 11:24:08 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 11:24:08 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 11:24:08 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 11:24:08 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 11:24:08 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 11:24:08 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 11:24:50 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 11:24:50 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 11:24:50 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 11:24:50 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 11:24:50 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 11:24:50 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 11:24:50 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 11:24:50 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 11:24:50 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 11:24:50 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 11:24:50 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 11:36:54 --> Could not find the language line "Email"
+ERROR - 2020-03-30 11:36:54 --> Could not find the language line "password"
+ERROR - 2020-03-30 11:37:10 --> Could not find the language line "Email"
+ERROR - 2020-03-30 11:37:10 --> Could not find the language line "password"
+ERROR - 2020-03-30 11:37:12 --> Could not find the language line "Email"
+ERROR - 2020-03-30 11:37:12 --> Could not find the language line "password"
+ERROR - 2020-03-30 11:37:28 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 11:37:28 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 11:37:28 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 11:37:28 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 11:37:28 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 11:37:28 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 11:37:28 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 11:37:28 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 11:37:28 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 11:37:28 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 11:37:28 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 12:13:11 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 12:13:11 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 12:13:11 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 12:13:11 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 12:13:11 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 12:13:11 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 12:13:11 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 12:13:11 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 12:13:11 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 12:13:11 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 12:13:11 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 12:13:11 --> Severity: Compile Error --> Cannot redeclare class Error /home/admin/domains/spshd.com/public_html/khachhang/application/vendor/paragonie/random_compat/lib/error_polyfill.php 32
+ERROR - 2020-03-30 12:27:56 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 12:27:56 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 12:27:56 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 12:27:56 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 12:27:56 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 12:27:56 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 12:27:56 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 12:27:56 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 12:27:56 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 12:27:56 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 12:27:56 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 12:31:14 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 12:31:14 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 12:31:14 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 12:31:14 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 12:31:14 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 12:31:14 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 12:31:14 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 12:31:14 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 12:31:14 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 12:31:14 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 12:31:14 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 13:15:07 --> Severity: Compile Error --> Cannot redeclare is_date() (previously declared in omposer/../twilio/sdk/Twilio/Rest/Preview/Understand/Assistant/TaskOptions.php:0) /home/admin/domains/spshd.com/public_html/khachhang/application/helpers/general_helper.php 582
+ERROR - 2020-03-30 13:15:07 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 13:15:07 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 13:15:07 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 13:15:07 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 13:15:07 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 13:15:07 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 13:15:07 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 13:15:07 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 13:15:07 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 13:15:07 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 13:15:07 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 13:15:09 --> Severity: Compile Error --> Cannot redeclare is_date() (previously declared in :69750152) /home/admin/domains/spshd.com/public_html/khachhang/application/helpers/general_helper.php 582
+ERROR - 2020-03-30 13:41:37 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 13:41:37 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 13:41:37 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 13:41:37 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 13:41:37 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 13:41:37 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 13:41:37 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 13:41:37 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 13:41:37 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 13:41:37 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 13:41:37 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 13:45:50 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 13:45:50 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 13:45:50 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 13:45:50 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 13:45:50 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 13:45:50 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 13:45:50 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 13:45:50 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 13:45:50 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 13:45:50 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 13:45:50 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 13:46:04 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 13:46:04 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 13:46:04 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 13:46:04 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 13:46:04 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 13:46:04 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 13:46:04 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 13:46:04 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 13:46:04 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 13:46:04 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 13:46:04 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 14:05:40 --> Severity: Compile Error --> Cannot redeclare is_date() (previously declared in @˛:314) /home/admin/domains/spshd.com/public_html/khachhang/application/helpers/general_helper.php 582
+ERROR - 2020-03-30 14:43:38 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 14:43:38 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 14:43:38 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 14:43:38 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 14:43:38 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 14:43:38 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 14:43:38 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 14:43:38 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 14:43:38 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 14:43:38 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 14:43:38 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 14:47:24 --> Severity: Compile Error --> Cannot redeclare is_date() (previously declared in l/khachhang/application/config/timezones.php:314) /home/admin/domains/spshd.com/public_html/khachhang/application/helpers/general_helper.php 582
+ERROR - 2020-03-30 14:47:24 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 14:47:24 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 14:47:24 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 14:47:24 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 14:47:24 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 14:47:24 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 14:47:24 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 14:47:24 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 14:47:24 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 14:47:24 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 14:47:24 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 15:10:51 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 15:10:51 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 15:10:51 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 15:10:51 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 15:10:51 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 15:10:51 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 15:10:51 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 15:10:51 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 15:10:51 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 15:10:51 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 15:10:51 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 15:31:02 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 15:31:02 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 15:31:02 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 15:31:02 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 15:31:02 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 15:31:02 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 15:31:02 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 15:31:02 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 15:31:02 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 15:31:02 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 15:31:02 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 16:31:25 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 16:31:25 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 16:31:25 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 16:31:25 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 16:31:25 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 16:31:25 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 16:31:25 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 16:31:25 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 16:31:25 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 16:31:25 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 16:31:25 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 17:06:34 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2020-03-30 17:06:34 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2020-03-30 17:06:34 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 394
+ERROR - 2020-03-30 17:06:34 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 17:06:34 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 17:06:34 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 161
+ERROR - 2020-03-30 17:06:34 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 172
+ERROR - 2020-03-30 17:06:34 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 17:06:34 --> Could not find the language line "Xác Nhận"
+ERROR - 2020-03-30 17:06:34 --> Could not find the language line "Đóng"
+ERROR - 2020-03-30 17:06:34 --> Could not find the language line "Xác Nhận"

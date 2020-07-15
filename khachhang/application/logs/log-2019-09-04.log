@@ -1,0 +1,81 @@
+ERROR - 2019-09-04 21:36:40 --> Severity: Warning --> mysqli::real_connect(): (HY000/1045): Access denied for user 'user'@'localhost' (using password: YES) /Users/QuangHan/Desktop/spshd/customer/system/database/drivers/mysqli/mysqli_driver.php 203
+ERROR - 2019-09-04 21:36:40 --> Unable to connect to the database
+ERROR - 2019-09-04 21:37:19 --> Severity: Warning --> mysqli::real_connect(): (HY000/1045): Access denied for user 'user'@'localhost' (using password: YES) /Users/QuangHan/Desktop/spshd/customer/system/database/drivers/mysqli/mysqli_driver.php 203
+ERROR - 2019-09-04 21:37:19 --> Unable to connect to the database
+ERROR - 2019-09-04 21:37:33 --> Severity: Warning --> mysqli::real_connect(): (HY000/1049): Unknown database 'ci3-fire-starter' /Users/QuangHan/Desktop/spshd/customer/system/database/drivers/mysqli/mysqli_driver.php 203
+ERROR - 2019-09-04 21:37:33 --> Unable to connect to the database
+ERROR - 2019-09-04 21:37:34 --> Severity: Warning --> mysqli::real_connect(): (HY000/1049): Unknown database 'ci3-fire-starter' /Users/QuangHan/Desktop/spshd/customer/system/database/drivers/mysqli/mysqli_driver.php 203
+ERROR - 2019-09-04 21:37:34 --> Unable to connect to the database
+ERROR - 2019-09-04 15:38:45 --> Query error: Table 'admin_sp.login_attempts' doesn't exist - Invalid query: 
+            DELETE FROM login_attempts
+            WHERE attempt < '2019-09-04 15:38:35'
+        
+ERROR - 2019-09-04 15:39:20 --> Query error: Table 'admin_sp.users' doesn't exist - Invalid query: 
+                SELECT
+                    id,
+                    username,
+                    password,
+                    salt,
+                    first_name,
+                    last_name,
+                    email,
+                    language,
+                    is_admin,
+                    status,
+                    created,
+                    updated
+                FROM users
+                WHERE (username = 'amin@admin.com'
+                        OR email = 'amin@admin.com')
+                    AND status = '1'
+                    AND deleted = '0'
+                LIMIT 1
+            
+ERROR - 2019-09-04 15:42:36 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM tblcustomers
+                WHERE (customer_email = 'amin@admin.com')
+    ' at line 5 - Invalid query: 
+                SELECT
+                    id,
+                    customer_email,
+                    customer_password,
+                FROM tblcustomers
+                WHERE (customer_email = 'amin@admin.com')
+                LIMIT 1
+            
+ERROR - 2019-09-04 16:12:00 --> Severity: error --> Exception: syntax error, unexpected 'Nhập' (T_STRING), expecting ',' or ';' /Users/QuangHan/Desktop/spshd/customer/assets/themes/default/login.php 38
+ERROR - 2019-09-04 16:24:37 --> Could not find the language line "Email"
+ERROR - 2019-09-04 16:24:37 --> Could not find the language line "password"
+ERROR - 2019-09-04 16:24:46 --> Could not find the language line "Email"
+ERROR - 2019-09-04 16:24:46 --> Could not find the language line "password"
+ERROR - 2019-09-04 16:25:13 --> Could not find the language line "Email"
+ERROR - 2019-09-04 16:25:13 --> Could not find the language line "password"
+ERROR - 2019-09-04 16:25:19 --> Could not find the language line "Email"
+ERROR - 2019-09-04 16:25:19 --> Could not find the language line "password"
+ERROR - 2019-09-04 16:25:28 --> Could not find the language line "Email"
+ERROR - 2019-09-04 16:25:28 --> Could not find the language line "password"
+ERROR - 2019-09-04 16:27:02 --> Could not find the language line "Email"
+ERROR - 2019-09-04 16:27:02 --> Could not find the language line "password"
+ERROR - 2019-09-04 16:27:56 --> Could not find the language line "Email"
+ERROR - 2019-09-04 16:27:56 --> Could not find the language line "password"
+ERROR - 2019-09-04 16:28:40 --> Could not find the language line "Email"
+ERROR - 2019-09-04 16:28:40 --> Could not find the language line "password"
+ERROR - 2019-09-04 16:31:48 --> Could not find the language line "Email"
+ERROR - 2019-09-04 16:31:48 --> Could not find the language line "password"
+ERROR - 2019-09-04 16:31:50 --> Could not find the language line "Email"
+ERROR - 2019-09-04 16:31:50 --> Could not find the language line "password"
+ERROR - 2019-09-04 17:02:01 --> Severity: error --> Exception: Call to undefined function render_select() /Users/QuangHan/Desktop/spshd/customer/application/views/welcome.php 6
+ERROR - 2019-09-04 17:02:16 --> Severity: error --> Exception: Call to undefined function render_select() /Users/QuangHan/Desktop/spshd/customer/application/views/welcome.php 7
+ERROR - 2019-09-04 17:02:26 --> Severity: error --> Exception: Call to undefined function render_select() /Users/QuangHan/Desktop/spshd/customer/application/views/welcome.php 7
+ERROR - 2019-09-04 17:03:13 --> Severity: error --> Exception: Call to undefined function render_select() /Users/QuangHan/Desktop/spshd/customer/application/views/welcome.php 7
+ERROR - 2019-09-04 17:04:05 --> Severity: error --> Exception: Call to undefined function render_select() /Users/QuangHan/Desktop/spshd/customer/application/views/welcome.php 7
+ERROR - 2019-09-04 17:07:27 --> Severity: error --> Exception: Call to undefined function _l() /Users/QuangHan/Desktop/spshd/customer/application/helpers/fields_helper.php 297
+ERROR - 2019-09-04 17:09:47 --> Severity: error --> Exception: Call to undefined function hooks() /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 413
+ERROR - 2019-09-04 17:12:06 --> Severity: error --> Exception: Call to undefined function hooks() /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 413
+ERROR - 2019-09-04 17:12:09 --> Severity: error --> Exception: Call to undefined function hooks() /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 413
+ERROR - 2019-09-04 17:13:48 --> Severity: error --> Exception: Call to a member function apply_filters() on null /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 413
+ERROR - 2019-09-04 17:24:22 --> Severity: error --> Exception: Call to a member function apply_filters() on null /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 413
+ERROR - 2019-09-04 17:24:24 --> Severity: error --> Exception: Call to a member function apply_filters() on null /Users/QuangHan/Desktop/spshd/customer/application/helpers/general_helper.php 413
+ERROR - 2019-09-04 17:25:43 --> Could not find the language line "dropdown_non_selected_tex"
+ERROR - 2019-09-04 17:25:43 --> Severity: Warning --> Invalid argument supplied for foreach() /Users/QuangHan/Desktop/spshd/customer/application/helpers/fields_helper.php 332
+ERROR - 2019-09-04 17:25:43 --> Could not find the language line "dropdown_non_selected_tex"
+ERROR - 2019-09-04 17:26:32 --> Could not find the language line "dropdown_non_selected_tex"

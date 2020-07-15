@@ -1,0 +1,13 @@
+ERROR - 2019-09-24 09:18:28 --> Could not find the language line "Email"
+ERROR - 2019-09-24 09:18:28 --> Could not find the language line "password"
+ERROR - 2019-09-24 09:18:33 --> Could not find the language line "Tạo Điểm Lấy Hàng"
+ERROR - 2019-09-24 09:18:33 --> Could not find the language line "Tạo Đơn Hàng"
+ERROR - 2019-09-24 09:18:33 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/tab4.php 365
+ERROR - 2019-09-24 09:18:33 --> Could not find the language line "Đóng"
+ERROR - 2019-09-24 09:18:33 --> Could not find the language line "Xác Nhận"
+ERROR - 2019-09-24 09:18:33 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 157
+ERROR - 2019-09-24 09:18:33 --> Severity: Warning --> Invalid argument supplied for foreach() /home/admin/domains/spshd.com/public_html/khachhang/application/views/app.php 168
+ERROR - 2019-09-24 09:18:33 --> Could not find the language line "Đóng"
+ERROR - 2019-09-24 09:18:33 --> Could not find the language line "Xác Nhận"
+ERROR - 2019-09-24 09:18:33 --> Could not find the language line "Đóng"
+ERROR - 2019-09-24 09:18:33 --> Could not find the language line "Xác Nhận"

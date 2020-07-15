@@ -6,6 +6,7 @@ $aColumns     = array(
   'created',
   db_prefix().'pickuppoint.id',
   'customer_id',
+  db_prefix().'pickuppoint.receive_or_pay',
   db_prefix().'customers.customer_shop_code as customer_shop_code',
   'phone_customer',
   'repo_customer',
@@ -46,6 +47,7 @@ usort($rResult, function ($a, $b) {
 
 $j=0;
 foreach ($rResult as $aRow) {
+
     $row = array();
     $j++;
     for ($i = 0; $i < count($aColumns); $i++) {
@@ -58,13 +60,16 @@ foreach ($rResult as $aRow) {
         $_data = $aRow['id'];
       }
       else if ($aColumns[$i] === 'status') {
-
+//
         if ($aRow['status'] === '0' || $aRow['status'] === '2') {
-          $_data = '<label class="label-border" data-id="'. $aRow['tblpickuppoint.id'] .'" style="color:red"> <span>Chưa Lấy</span>  <input class="check-change-status-number" type="checkbox"></label> ';
+            $chuaLay =1;
+//          $_data = '<label class="label-border" data-id="'. $aRow['tblpickuppoint.id'] .'" style="color:red"> <span>Chưa Lấy</span>  <input class="check-change-status-number" type="checkbox"></label> ';
         }else {
-          $_data = '<label class="label-border" data-id="'. $aRow['tblpickuppoint.id'] .'" style="color:green"> <span>Đã lấy</span>  <input class="check-change-status-number" type="checkbox" checked></label> ';
-        }
+            $chuaLay =0;
 
+//          $_data = '<label class="label-border" data-id="'. $aRow['tblpickuppoint.id'] .'" style="color:green"> <span>Đã lấy</span>  <input class="check-change-status-number" type="checkbox" checked></label> ';
+        }
+          $_data='<button data-id="'. $aRow['tblpickuppoint.id'] .'" data-action="'.$chuaLay.'" class="btn btn-warning check-change-status-number-chua-tra"> Báo Cáo</button>';
       }
 
       else {
@@ -89,12 +94,9 @@ foreach ($rResult as $aRow) {
 
     }
 
-
     if (is_admin()) {
 
-
-
-      if (strpos($row[7] , 'Chưa') !== false) {
+      if ($aRow['status']== 0 || $aRow['status']== 2) {
         $icon_delete = '<a  href="/system/admin/pick_up_points/delete/'.$aRow['id'] .'" class="btn btn-danger delete-reminder-custom btn-icon">
         <i class="fa fa-remove"></i>
         </a>';
@@ -103,6 +105,7 @@ foreach ($rResult as $aRow) {
         $icon_edit = "<a data-id='". $aRow['id'] ."'  style='padding: 3px;' class='btn btn-primary edit-customer' href='javascript:;'><i class='fa fa-pencil' ></i></a>";
 
         $row[] = $icon_delete.$icon_edit.'</div>';
+
       }else {
         $row[] = '</div>';
       }
@@ -116,14 +119,20 @@ foreach ($rResult as $aRow) {
 
 
 
-    if ($row[3] === null) {
-      $row[3] = $row[8];
+    if ($row[4] === null) {
+      $row[4] = $row[9];
     }
 
-    $row[13] = $row[15].' '.$row[14];
+    $row[14] = $row[16].' '.$row[15];
 
-
-
+    if($aRow['tblpickuppoint.receive_or_pay']==1){
+        $row[3] = "Trả";
+        foreach ($row as $key => $val){
+            $row[$key] = "<span style='color:blue'>".$val."</span>";
+        }
+    }else{
+        $row[3] = "Lấy";
+    }
 
     $output['aaData'][] = $row;
 

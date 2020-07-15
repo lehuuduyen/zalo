@@ -19,11 +19,11 @@ class Delivery_order_model extends App_Model
         return $data;
     }
     public function sumCollectDaThu($deliveryCode){
-        $arrStatus = array('Đã Giao Hàng Toàn Bộ', 'Đã Giao Hàng Một Phần');
+        $arrStatus = array('Đã Trả Hàng Một Phần', 'Đã Giao Hàng Toàn Bộ','Đã Giao Hàng Một Phần','Đã Chuyển Kho Trả Một Phần','Đã Đối Soát Giao Hàng','Đang Trả Hàng Một Phần');
         $this->db->select_sum('collect');
         $this->db->join('tblorders_shop as shop','shop.id = tbldelivery_nb.shop','left');
         $this->db->where('tbldelivery_nb.code_delivery',$deliveryCode);
-        $this->db->where_in('status_report',$arrStatus);
+        $this->db->where_in('shop.status',$arrStatus);
 
         $this->db->from('tbldelivery_nb');
         $data = $this->db->get()->result();

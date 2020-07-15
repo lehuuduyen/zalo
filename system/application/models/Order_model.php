@@ -56,35 +56,16 @@ class Order_model extends App_Model
 
     public function getStatus()
     {
-        $array = [
-            "Chờ Duyệt",
-            "Chờ Lấy Hàng",
-            "Đang Lấy Hàng",
-            "Đã Lấy Hàng",
-            "Hoãn Lấy Hàng",
-            "Không Lấy Được",
-            "Đang Nhập Kho",
-            "Đã Nhập Kho",
-            "Đang Chuyển Kho Giao",
-            "Đã Chuyển Kho Giao",
-            "Đang Giao Hàng",
-            "Đã Giao Hàng Toàn Bộ",
-            "Đã Giao Hàng Một Phần",
-            "Hoãn Giao Hàng",
-            "Không Giao Được",
-            "Đã Đối Soát Giao Hàng",
-            "Đã Đối Soát Trả Hàng",
-            "Đang Chuyển Kho Trả",
-            "Đã Chuyển Kho Trả",
-            "Đang Trả Hàng",
-            "Đã Trả Hàng",
-            "Hoãn Trả Hàng",
-            "Huỷ",
-            "Đang Vận Chuyển",
-            "Xác Nhận Hoàn",
-            "Đã Trả Hàng Một Phần"
-        ];
-        return $array;
+        $result = [];
+        $this->db->select('color,name');
+        $this->db->from('tbldeclare');
+        $region = $this->db->get()->result_array();
+
+        foreach ($region as $value){
+
+            $result[$value['name']]=$value['color'];
+        }
+        return $result;
     }
 
     public function getRegion()
@@ -127,6 +108,48 @@ class Order_model extends App_Model
         ($data->code_order !="")?$sql.="OR shop.phone LIKE '%$data->code_order%'":"";
         ($data->id !="")?$sql.="AND shop.id IN ($data->id)":"";
         ($data->code_request !="")?$sql.="AND create_order.required_code LIKE '%$data->code_request%'":"";
+        $strStatus = "";
+        foreach($data->status as $key => $status){
+            $strStatus.="'$status'";
+            if($key+1 < count($data->status)){
+                $strStatus.=",";
+            }
+        }
+        ($status !="")?$sql.="AND shop.status IN ($strStatus)":"";
+        if($data->type_date){
+            if($data->type_date ==1){
+                ($data->date_form !="")?$sql.="AND shop.date_create BETWEEN '$data->date_form 00:00:00' AND '$data->date_to 23:59:59'":"";
+            }elseif ($data->type_date ==2){
+                ($data->date_form !="")?$sql.="AND shop.date_debits BETWEEN '$data->date_form 00:00:00' AND '$data->date_to 23:59:59'":"";
+            }elseif ($data->type_date ==3){
+                ($data->date_form !="")?$sql.="AND shop.control_date BETWEEN '$data->date_form 00:00:00' AND '$data->date_to 23:59:59'":"";
+            }
+        }
+        ($data->is_hd_branch !="")?$sql.="AND shop.is_hd_branch ='$data->is_hd_branch'":"";
+        ($data->dvvc !="")?$sql.="AND shop.dvvc ='$data->dvvc'":"";
+        ($data->city !="")?$sql.="AND shop.city LIKE '%$data->city%'":"";
+        ($data->district !="")?$sql.="AND shop.district LIKE '%$data->district%'":"";
+        ($data->customer !="")?$sql.="AND shop.`shop` LIKE '%$data->customer%'":"";
+        $sql.= 'ORDER BY shop.date_create DESC';
+        $query = $this->db->query($sql)->result();
+
+        return $query;
+    }
+
+    public function getOrderMultiStatus($data)
+    {
+        $sql = "
+        SELECT shop.*,create_order.note_private,create_order.required_code,create_order.id as create_order_id,declared_region.name_region  FROM `tblorders_shop` as shop
+        LEFT JOIN tbl_create_order as create_order ON create_order.orders_shop_id= shop.id
+        LEFT JOIN tbldeclared_region as declared_region ON declared_region.id= shop.region_id
+        WHERE shop.id >= 0 ";
+//WHERE id IN (33, 34, 45)
+        ($data->code_order !="")?$sql.="AND shop.code_supership LIKE '%$data->code_order%'":"";
+        ($data->code_order !="")?$sql.="OR shop.code_orders LIKE '%$data->code_order%'":"";
+        ($data->code_order !="")?$sql.="OR shop.code_ghtk LIKE '%$data->code_order%'":"";
+        ($data->code_order !="")?$sql.="OR shop.phone LIKE '%$data->code_order%'":"";
+        ($data->id !="")?$sql.="AND shop.id IN ($data->id)":"";
+        ($data->code_request !="")?$sql.="AND create_order.required_code LIKE '%$data->code_request%'":"";
         ($data->status !="")?$sql.="AND shop.`status` LIKE '%$data->status%'":"";
         ($data->date_form !="")?$sql.="AND shop.date_create BETWEEN '$data->date_form 00:00:00' AND '$data->date_to 23:59:59'":"";
         ($data->is_hd_branch !="")?$sql.="AND shop.is_hd_branch ='$data->is_hd_branch'":"";
@@ -154,7 +177,6 @@ class Order_model extends App_Model
         ($data->city !="")?$sql.="AND shop.city LIKE '%$data->city%'":"";
         ($data->district !="")?$sql.="AND shop.district LIKE '%$data->district%'":"";
         ($data->customer !="")?$sql.="AND shop.`customer_id` LIKE '%$data->customer%'":"";
-        echo $sql;die;
         $query = $this->db->query($sql)->result();
         return $query;
     }
@@ -175,56 +197,167 @@ class Order_model extends App_Model
 
         return $query;
     }
+    public function getReturnBranchTableDetail($data)
+    {
+        $sql = "
+        SELECT order_returns.code_return,order_returns.created_at,orders_shop.*   FROM `tblreturn_branch` as order_returns
+        LEFT JOIN tblorders_shop as orders_shop ON orders_shop.id= order_returns.order_shop_id
+        WHERE order_returns.id >0";
+        ($data->code_return !="")?$sql.=" AND order_returns.code_return = '$data->code_return'":"";
+        ($data->created_date_from !="")?$sql.=" AND order_returns.created_at BETWEEN '$data->created_date_from 00:00:00' AND '$data->created_date_to 23:59:59'":"";
+        ($data->customer !="")?$sql.=" AND orders_shop.`shop` LIKE '%$data->customer%'":"";
+        ($data->code_super_ship !="")?$sql.=" AND orders_shop.`code_supership` LIKE '%$data->code_super_ship%'":"";
+        ($data->code_return !="")?$sql.=" AND order_returns.code_return = '$data->code_return'":"";
+        $sql.= 'ORDER BY order_returns.created_at DESC';
+        $query = $this->db->query($sql)->result();
+
+        return $query;
+    }
     //payment
 
     public function getPayment($data)
     {
-        $result= [];
+        $result = [];
+        $arrStatusCancel = array('Hủy', 'Huỷ');
+        $arrStatus = array('Đã Chuyển Kho Trả Một Phần', 'Đã Chuyển Kho Trả Toàn Bộ');
+
         $sql = "
         SELECT shop.*  FROM `tblorders_shop` as shop
         WHERE shop.id >= 0 ";
 
-//WHERE id IN (33, 34, 45)
-        foreach($data as $key => $value){
+        foreach ($data as $key => $value) {
             $condition = "OR";
-            if($key==0){
-                $condition ="AND";
+            if ($key == 0) {
+                $condition = "AND";
             }
-            $sql.=" $condition shop.code_supership LIKE '%$value%'";
+            $sql .= " $condition shop.code_supership LIKE '%$value%'";
         }
         $query = $this->db->query($sql)->result();
-        $result['table0'] =[];
-        $result['table1'] =[];
+        $result['table0'] = [];
+        $result['table1'] = [];
 
         $array = [];
-        foreach ($query as $value){
-            $array[]=explode('.',$value->code_supership)[1];
-            if($value->is_hd_branch ==1){
-                $result['table1'][]=$value;
-            }else{
-                $result['table0'][]=explode('.',$value->code_supership)[1];
+        foreach ($query as $value) {
+            $array[] = explode('.', $value->code_supership)[1];
+            if ($value->is_hd_branch == 1 && !in_array($value->status, $arrStatusCancel) && in_array($value->status, $arrStatus)) {
+                $result['table1'][] = $value;
+            } else {
+                $result['table0'][] = $value->code_supership;
             }
         }
 
-        $result['table0'] = array_merge(array_diff($data,$array),$result['table0']);
+        $result['table0'] = array_merge(array_diff($data, $array), $result['table0']);
         return $result;
     }
-    public function createOrderReturn($codeReturn,$orderShopId){
+//payment
+
+    public function getMaVachImports($data)
+    {
+        $result = [];
+        $arrStatusCancel = array('Hủy', 'Huỷ');
+
+        $sql = "
+        SELECT shop.*  FROM `tblorders_shop` as shop
+        WHERE shop.id >= 0 ";
+
+        foreach ($data as $key => $value) {
+            $condition = "OR";
+            if ($key == 0) {
+                $condition = "AND";
+            }
+            $sql .= " $condition shop.code_supership LIKE '%$value%'";
+        }
+        $query = $this->db->query($sql)->result();
+        $result['table0'] = [];
+        $result['table1'] = [];
+
+        $array = [];
+        foreach ($query as $value) {
+            $array[] = explode('.', $value->code_supership)[1];
+            if ($value->is_hd_branch == 1 && !in_array($value->status, $arrStatusCancel) ) {
+                $result['table1'][] = $value;
+            } else {
+                $result['table0'][] = $value->code_supership;
+            }
+        }
+
+        $result['table0'] = array_merge(array_diff($data, $array), $result['table0']);
+        return $result;
+    }
+	 public function createOrderReturn($codeReturn, $orderShopId)
+    {
         //get ordershop
         //get id shop
         $this->db->where('id', $orderShopId);
         $this->db->from('tblorders_shop');
         $orderShop = $this->db->get()->result()[0];
 
-        $dateNow=date('Y-m-d h:i:s');
+        $dateNow = date('Y-m-d H:i:s');
         $sql = "INSERT INTO tbl_order_returns (shop,order_shop_id, code_return,created_at) VALUES ('$orderShop->shop',$orderShopId, '$codeReturn','$dateNow')";
         $result = $this->db->query($sql);
+
+        if ($result) {
+            if ($orderShop->status == 'Đã Chuyển Kho Trả Một Phần') {
+                $data['status'] = 'Đã Trả Hàng Một Phần';
+            } elseif ($orderShop->status == 'Đã Chuyển Kho Trả Toàn Bộ') {
+                $data['status'] = 'Đã Trả Hàng Toàn Bộ';
+            }
+
+            // Update
+
+            $this->db->where('id', $orderShop->id);
+            $this->db->update('tblorders_shop', $data);
+
+            //them đơn trả về tblpickuppoint
+
+        }
         return $result;
     }
+    public function getCustomerByShop($orderShop){
+        $this->db->select('id');
+        $this->db->like('customer_shop_code', $orderShop, 'both');
+        $this->db->from('tblcustomers');
+        $customer = $this->db->get()->row();
+        return $customer->id;
+    }
+    public function updateOrderShopImport($codeReturn,$orderShopId){
+        //create tblreturn_branch
+        $this->db->where('id', $orderShopId);
+        $this->db->from('tblorders_shop');
+        $orderShop = $this->db->get()->result()[0];
+
+        $dateNow = date('Y-m-d H:i:s');
+        $sql = "INSERT INTO tblreturn_branch (shop,order_shop_id, code_return,created_at) VALUES ('$orderShop->shop',$orderShopId, '$codeReturn','$dateNow')";
+        $result = $this->db->query($sql);
+
+        //get order shop
+        $data=[];
+        $this->db->where('id', $orderShopId);
+        $this->db->from('tblorders_shop');
+        $timeNow = date('Y-m-d H:i:s');
+        $orderShop = $this->db->get()->row();
+        if($orderShop->status == "Đã Đối Soát Giao Hàng" || $orderShop->status == "Đã Chuyển Kho Trả Một Phần"|| $orderShop->status == "Đã Trả Hàng Một Phần"|| $orderShop->status == "Đã Giao Hàng Một Phần"){
+            $status = "Đã Chuyển Kho Trả Một Phần";
+        }else{
+            $status = "Đã Chuyển Kho Trả Toàn Bộ";
+        }
+
+        // Update
+
+        $sql = "UPDATE tblorders_shop SET status = '$status' , last_time_updated = '$timeNow' ";
+        if($orderShop->date_debits ==null){
+            $sql .= ", date_debits = '$timeNow'";
+        }
+        $sql .= "WHERE id = $orderShopId";
+        $this->db->query($sql);
+
+
+    }
+
     public function createShipper($orderReturn){
         $staffId=$this->session->userdata['staff_user_id'];
         foreach ($orderReturn as $value){
-            $date = date('Y-m-d',strtotime($value->created_at));
+            $date = date('Y-m-d H:i:s',strtotime($value->created_at));
             $array = explode(',',$value->warehouses);
             $district_filter = $array[count($array)-1];
             $commune_filter = $array[count($array)-3];
@@ -248,7 +381,7 @@ class Order_model extends App_Model
                    '$district_filter',
                    '$commune_filter',
                    '$address_filter',
-                   0,
+                   '$value->total',
                    '$value->shop',
                    0,
                    '$value->code_return'
@@ -267,6 +400,17 @@ class Order_model extends App_Model
 
         return $query;
     }
+    public function getOrderReturnBranch($codeReturn){
+
+        $sql = "
+        SELECT count(*) as total ,customer.customer_phone,customer.id as customer_id,  order_returns.code_return,order_returns.created_at,orders_shop.*   FROM `tblreturn_branch` as order_returns
+        LEFT JOIN tblorders_shop as orders_shop ON orders_shop.id= order_returns.order_shop_id
+        LEFT JOIN tblcustomers as customer ON customer.customer_shop_code= orders_shop.shop
+        WHERE order_returns.code_return = '$codeReturn' GROUP BY orders_shop.shop";
+        $query = $this->db->query($sql)->result();
+
+        return $query;
+    }
     public function getMaDon($codeReturn,$shop){
         $sql = "
         SELECT  order_returns.code_return,order_returns.created_at,order_returns.date_return,orders_shop.code_supership   FROM `tbl_order_returns` as order_returns
@@ -275,5 +419,30 @@ class Order_model extends App_Model
         $query = $this->db->query($sql)->result();
 
         return $query;
+    }
+    public function getMaDonReturnBranch($codeReturn,$shop){
+        $sql = "
+        SELECT  order_returns.code_return,order_returns.created_at,orders_shop.code_supership   FROM `tblreturn_branch` as order_returns
+        LEFT JOIN tblorders_shop as orders_shop ON orders_shop.id= order_returns.order_shop_id
+        WHERE order_returns.code_return = '$codeReturn' AND orders_shop.shop = '$shop'";
+        $query = $this->db->query($sql)->result();
+
+        return $query;
+    }
+    public function getAddressList(){
+        $this->db->from('address_list');
+        $query = $this->db->get()->result();
+
+        return $query;
+    }
+    public function addAddressList($result){
+        $this->db->where('id >',0 );
+        $this->db->delete('tbladdress_list');
+        foreach ($result as $data){
+            $this->db->insert('tbladdress_list', $data);
+
+        }
+
+
     }
 }
