@@ -875,7 +875,7 @@ class Api extends CI_Controller
                 $data_ghtk->order->value = $value;
 
                 // More value
-                $data_ghtk->order->hamlet = "Hải dương";
+                $data_ghtk->order->hamlet = "Khác";
                 // Warehouse
                 $data_ghtk->order->pick_address = $info_warehouse_send->nameAddress;
                 $data_ghtk->order->pick_province = $info_warehouse_send->province;
@@ -1483,7 +1483,7 @@ class Api extends CI_Controller
                     $data_ghtk->order->value = $value;
 
                     // More value
-                    $data_ghtk->order->hamlet = "Hải dương";
+                    $data_ghtk->order->hamlet = "Khác";
                     // Warehouse
                     $data_ghtk->order->pick_address = $info_warehouse_send->nameAddress;
                     $data_ghtk->order->pick_province = $info_warehouse_send->province;
@@ -1992,6 +1992,7 @@ class Api extends CI_Controller
     public function set_warehouse()
     {
         $id_default = $this->input->post('id_default');
+		$name = $this->input->post('name');
         $address_default = $this->input->post('address_default');
         $phone_default = $this->input->post('phone_default');
         $province_name = $this->input->post('province_name');
@@ -2002,6 +2003,7 @@ class Api extends CI_Controller
         $result = array('status' => false, 'error' => '');
 
         $data = array(
+			'name' => $name,
             'nameAddress' => $address_default,
             'phone' => $phone_default,
             'province' => $province_name,
@@ -2245,7 +2247,7 @@ class Api extends CI_Controller
                         $data_ghtk->order->value = $value;
 
                         // More value
-                        $data_ghtk->order->hamlet = "Hải dương";
+                        $data_ghtk->order->hamlet = "Khác";
 
                         // Warehouse
                         $data_ghtk->order->pick_address = $info_warehouse_send->nameAddress;
@@ -2624,7 +2626,7 @@ class Api extends CI_Controller
                                     $data_ghtk->order->use_return_address = 0;
                                     $data_ghtk->order->value = $value;
 
-                                    $data_ghtk->order->hamlet = "Hải dương";
+                                    $data_ghtk->order->hamlet = "Khác";
 
                                     // Warehouse
                                     $data_ghtk->order->pick_address = $info_warehouse_send->nameAddress;
@@ -3011,7 +3013,7 @@ class Api extends CI_Controller
                                     $data_ghtk->order->use_return_address = 0;
                                     $data_ghtk->order->value = $value;
 
-                                    $data_ghtk->order->hamlet = "Hải dương";
+                                    $data_ghtk->order->hamlet = "Khác";
                                     // Warehouse
                                     $data_ghtk->order->pick_address = $info_warehouse_send->nameAddress;
                                     $data_ghtk->order->pick_province = $info_warehouse_send->province;
@@ -3411,7 +3413,7 @@ class Api extends CI_Controller
                                     $data_ghtk->order->use_return_address = 0;
                                     $data_ghtk->order->value = $value;
 
-                                    $data_ghtk->order->hamlet = "Hải dương";
+                                    $data_ghtk->order->hamlet = "Khác";
                                     // Warehouse
                                     $data_ghtk->order->pick_address = $info_warehouse_send->nameAddress;
                                     $data_ghtk->order->pick_province = $info_warehouse_send->province;
@@ -3807,7 +3809,7 @@ class Api extends CI_Controller
                                     $data_ghtk->order->use_return_address = 0;
                                     $data_ghtk->order->value = $value;
 
-                                    $data_ghtk->order->hamlet = "Hải dương";
+                                    $data_ghtk->order->hamlet = "Khác";
                                     // Warehouse
                                     $data_ghtk->order->pick_address = $info_warehouse_send->nameAddress;
                                     $data_ghtk->order->pick_province = $info_warehouse_send->province;

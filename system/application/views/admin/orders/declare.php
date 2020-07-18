@@ -231,6 +231,7 @@
                                 <thead>
                                 <tr>
                                     <th>TT</th>
+									<th>Tên kho</th>
                                     <th>Địa chỉ</th>
                                     <th>Điện thoại</th>
                                     <th>Tỉnh/thành phố</th>
@@ -434,6 +435,12 @@
 
             <div class="modal-body">
                 <input type="hidden" name="id_warehouse_default" id="id_warehouse_default" value="0">
+				
+				<div class="form-group ">
+                    <label for="mass_default">Tên kho hàng</label>
+                    <input type="text" class="form-control" placeholder="Tên kho hàng" value="" id="name" name="name">
+                </div>
+				
                 <div class="form-group ">
                     <label for="mass_default">Địa chỉ kho</label>
                     <input type="text" class="form-control" placeholder="Địa chỉ kho" value="" id="address" name="address">
@@ -655,6 +662,7 @@
                     index++;
                     html += '<tr>';
                     html += '<td>'+ index+'</td>';
+					html += '<td>' + val.name + '</td>';
                     html += '<td>'+ val.nameAddress +'</td>';
                     html += '<td>'+ val.phone +'</td>';
                     html += '<td>'+ val.province +'</td>';
@@ -745,6 +753,7 @@
     });
 
     function setWareHouse() {
+		var name = $("#name").val();
         var address_default = $("#address").val();
         var phone_default = $("#phone_default").val();
         var is_default = 0;
@@ -761,7 +770,8 @@
                 province_name: province_name,
                 district_name: district_name,
                 commune_name: commune_name,
-                is_default:is_default
+                is_default:is_default,
+				name: name
             },
             method: "POST",
             beforeSend: function () {

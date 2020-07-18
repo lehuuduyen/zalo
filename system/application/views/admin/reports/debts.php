@@ -43,7 +43,7 @@
                                 <p>
                                     <a href="#" class="font-medium" onclick="init_report(this,'report_cod_sum'); return false;">
                                         <i class="fa fa-caret-down" aria-hidden="true"></i>
-                                        <?php echo _l('Công Nợ Đã Đối Soát'); ?>
+                                        <?php echo _l('Công Nợ Đã Đối Soát SUPERSHIP'); ?>
                                     </a>
                                 </p>
 
@@ -51,6 +51,12 @@
                                     <a href="#" class="font-medium" onclick="init_report(this,'debts_control'); return false;">
                                         <i class="fa fa-caret-down" aria-hidden="true"></i>
                                         <?php echo _l('Công Nợ Đợi Đối Soát'); ?>
+                                    </a>
+                                </p>
+                                <p>
+                                    <a href="#" class="font-medium" onclick="init_report(this,'debts_staff'); return false;">
+                                        <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                        <?php echo _l('Công Nợ Nhân Viên'); ?>
                                     </a>
                                 </p>
 
@@ -285,6 +291,7 @@
                     <?php $this->load->view('admin/reports/includes/debts/debts_all'); ?>
                     <?php $this->load->view('admin/reports/includes/debts/debts_control'); ?>
                     <?php $this->load->view('admin/reports/includes/debts/debts_cod_sum'); ?>
+                    <?php $this->load->view('admin/reports/includes/debts/debts_staff'); ?>
                 </div>
             </div>
         </div>

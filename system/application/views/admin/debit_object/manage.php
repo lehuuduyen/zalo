@@ -127,7 +127,7 @@
                                  <?php echo render_input('price','Số tiền điều chỉnh','','text',array('onkeyup'=>'formatNumBerKeyUp(this)')); ?>
                                  <?php $array_object=array(
                                          array('id'=>'','name'=>''),
-//                                         array('id'=>'tblstaff','name'=>'nhân viên'),
+                                        array('id'=>'tblstaff','name'=>'nhân viên'),
                                          array('id'=>'tblcustomers','name'=>'Khách hàng'),
 //                                         array('id'=>'tblsuppliers','name'=>'Nhà cung cấp'),
 //                                         array('id'=>'tblracks','name'=>'Lái xe'),
@@ -136,10 +136,11 @@
                                  );?>
                                 <div class="form-group">
                                     <label for="id_object" class="control-label">Đối tượng</label>
-                                    <select id="id_object" name="id_object" class="selectpicker" data-width="100%" data-none-selected-text="Không có gì được chọn" data-live-search="true" tabindex="-98">
+                                    <select id="id_object" onchange="changeIdObject(this)" name="id_object" class="selectpicker" data-width="100%" data-none-selected-text="Không có gì được chọn" data-live-search="true" tabindex="-98">
                                         <?php foreach ($array_object as $key=>$value){?>
                                             <option value="<?=$value['id']?>"><?=$value['name']?></option>
                                         <?php }?>
+                                        <option value="tbldebit_object">Đã đối soát</option>
                                     </select>
                                 </div>
                                  <?php echo render_select('staff_id', $staff, array('staffid', ['lastname', 'firstname']), 'Danh sách đối tượng');?>
@@ -186,6 +187,17 @@
             });
         });
     });
+    function changeIdObject(_this){
+        let value = $(_this).val();
+        if(value == "tbldebit_object"){
+            $("#staff_id").prop('disabled',true);
+            $("#staff_id").val('DDS');
+
+        }else{
+            $("#staff_id").prop('disabled',false);
+        }
+        // tbldebit_object
+    }
     function var_status(status,id)
     {
         dataString={id:id,status:status};

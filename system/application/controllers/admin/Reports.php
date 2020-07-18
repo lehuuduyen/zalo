@@ -217,6 +217,9 @@ class Reports extends AdminController
                 if ($dataPush['Old_data'][$i]['status'] == "Đã Chuyển Kho Trả Toàn Bộ") {
                     $dataPush['Old_data'][$i]['ps_in'] = 0;
                 }
+                if ($dataPush['Old_data'][$i]['status'] == "Đang Trả Hàng Toàn Bộ") {
+                    $dataPush['Old_data'][$i]['ps_in'] = 0;
+                }
             }
 
             $dataPush['data'] = $this->detail_debts_customer_calc($start_date, $start_end, $value['customer_shop_code'], $value['id']);
@@ -259,6 +262,9 @@ class Reports extends AdminController
                 }
 
                 if ($dataPush['data'][$i]['status'] == "Đã Chuyển Kho Trả Toàn Bộ") {
+                    $dataPush['data'][$i]['ps_in'] = 0;
+                }
+                if ($dataPush['data'][$i]['status'] == "Đang Trả Hàng Toàn Bộ") {
                     $dataPush['data'][$i]['ps_in'] = 0;
                 }
             }
@@ -389,16 +395,52 @@ class Reports extends AdminController
         $filter_yes = false;
 
         if ($id_customer == "") {
-            $sql = "SELECT shop 
-                    FROM tblorders_shop 
-                    JOIN tblcustomers ON tblcustomers.customer_shop_code = tblorders_shop.shop
-                    WHERE tblorders_shop.date_create >= ? GROUP BY shop ORDER BY date_create DESC";
-            $list_order_30_days = $this->db->query($sql, array(date('Y-m-d H:i:s', strtotime("-30 days"))))->result();
 
-            foreach ($list_order_30_days as $order_30_day){
-                $customerLoad[] = array('customer_shop_code' => $order_30_day->shop);
-            }
-            $filter_yes = true;
+        	$this->db->select('group_concat(DISTINCT tblcustomers.id) as arrayid');
+        	$this->db->where('DATE_FORMAT(tblorders_shop.date_create, "%Y-%m-%d") >= "'.date('Y-m-d', strtotime("-30 days")).'"');
+        	$this->db->join('tblcustomers', 'tblcustomers.customer_shop_code = tblorders_shop.shop');
+        	$arrayCode = $this->db->get('tblorders_shop')->row('arrayid');
+
+            // $sql = "SELECT shop 
+            //         FROM tblorders_shop 
+            //         JOIN tblcustomers ON tblcustomers.customer_shop_code = tblorders_shop.shop
+            //         WHERE DATE_FORMAT(tblorders_shop.date_create, '%Y-%m-%d') >= ? GROUP BY shop ORDER BY date_create DESC";
+            // $list_order_30_days = $this->db->query($sql, array(date('Y-m-d', strtotime("-30 days"))))->result();
+
+
+            // $arrayCode = explode(',', $arrayCode);
+            // $stringWhere = [];
+            // if(!empty($arrayCode)) {
+            // 	foreach($arrayCode as $key => $value) {
+            // 		$stringWhere[] = '(tblorders_shop.shop = "'.$value.'")';
+            // 	}
+            // }
+            // else {
+            // 	$stringWhere[] = '(tblorders_shop.shop = "0")';
+            // }
+
+            // $sql = "SELECT shop, tblcustomers.id
+            //         FROM tblorders_shop 
+            //         JOIN tblcustomers ON tblcustomers.customer_shop_code = tblorders_shop.shop
+            //         WHERE (".trim(implode("OR ", $stringWhere), "OR ").")  ORDER BY date_create DESC";
+            // $list_order_30_days = $this->db->query($sql, array(date('Y-m-d', strtotime("-30 days"))))->result();
+
+        	if(!empty($arrayCode)) {
+                $arrayCode = explode(',', $arrayCode);
+
+	            $this->db->where_in('id', $arrayCode);
+	            $customer = $this->db->get('tblcustomers')->result_array();
+                
+	            foreach ($customer as $key => $value) {
+                    $customerLoad[] = $value;
+	            }
+        	}
+
+
+            // foreach ($list_order_30_days as $order_30_day){
+            //     $customerLoad[] = array('customer_shop_code' => $order_30_day->shop, 'id' => $order_30_day->id);
+            // }
+            // $filter_yes = true;
         } else {
 			$customer = get_table_where('tblcustomers');
             foreach ($customer as $key => $value) {
@@ -467,6 +509,9 @@ class Reports extends AdminController
                 if ($dataPush['Old_data'][$i]['status'] == "Đã Chuyển Kho Trả Toàn Bộ") {
                     $dataPush['Old_data'][$i]['ps_in'] = 0;
                 }
+                if ($dataPush['Old_data'][$i]['status'] == "Đang Trả Hàng Toàn Bộ") {
+                    $dataPush['Old_data'][$i]['ps_in'] = 0;
+                }
             }
 
             $dataPush['data'] = $this->detail_debts_customer_calc($start_date, $start_end, $value['customer_shop_code'], $value['id']);
@@ -509,6 +554,9 @@ class Reports extends AdminController
                 }
 
                 if ($dataPush['data'][$i]['status'] == "Đã Chuyển Kho Trả Toàn Bộ") {
+                    $dataPush['data'][$i]['ps_in'] = 0;
+                }
+                if ($dataPush['data'][$i]['status'] == "Đang Trả Hàng Toàn Bộ") {
                     $dataPush['data'][$i]['ps_in'] = 0;
                 }
             }
@@ -873,6 +921,9 @@ class Reports extends AdminController
                 if ($dataPush['Old_data'][$i]['status'] == "Đã Chuyển Kho Trả Toàn Bộ") {
                     $dataPush['Old_data'][$i]['ps_in'] = 0;
                 }
+                if ($dataPush['Old_data'][$i]['status'] == "Đang Trả Hàng Toàn Bộ") {
+                    $dataPush['Old_data'][$i]['ps_in'] = 0;
+                }
             }
 
 
@@ -915,6 +966,9 @@ class Reports extends AdminController
                 }
 
                 if ($dataPush['data'][$i]['status'] == "Đã Chuyển Kho Trả Toàn Bộ") {
+                    $dataPush['data'][$i]['ps_in'] = 0;
+                }
+                if ($dataPush['data'][$i]['status'] == "Đang Trả Hàng Toàn Bộ") {
                     $dataPush['data'][$i]['ps_in'] = 0;
                 }
             }
@@ -2436,6 +2490,7 @@ class Reports extends AdminController
         $data['porters'] = get_table_where('tblporters');
         $data['clients'] = get_table_where('tblclients');
         $data['other_object'] = get_table_where('tblother_object');
+        $data['staff'] = get_table_where('tblstaff');
 
 //        $data['business'] = get_table_where('tblbusiness');
         $data['province'] = get_table_where('province');
@@ -4024,6 +4079,361 @@ class Reports extends AdminController
             die();
         }
     }
+
+
+
+
+
+
+    public function debts_staff_report()
+    {
+        $start_date = $this->input->post('date_start_staff');
+        $start_end = $this->input->post('date_end_staff');
+        $staff_active = $this->input->post('staff_active');
+        if ($start_date == "") {
+            $start_date = null;
+        }
+        if ($start_end == "") {
+            $start_end = null;
+        }
+        if (isset($start_end) && isset($start_date)) {
+            $start_date = to_sql_date($start_date);
+            $start_end = to_sql_date($start_end);
+        } elseif ((!isset($start_date)) && isset($start_end)) {
+            $start_end = to_sql_date($start_end);
+            $date = new DateTime($start_end);
+            date_sub($date, date_interval_create_from_date_string('30 days'));
+            $start_date = date_format($date, 'Y-m-d');
+        } elseif (isset($start_date) && !isset($start_end)) {
+            $start_date = to_sql_date($start_date);
+            $date = new DateTime($start_date);
+            $start_end = date("Y-m-d", strtotime("$date +30 day"));
+        } elseif (!isset($start_date) && !isset($start_end)) {
+            $start_end = date('Y-m-d');
+            $date = new DateTime($start_end);
+            ;
+            date_sub($date, date_interval_create_from_date_string('30 days'));
+            $start_date = date_format($date, 'Y-m-d');
+        }
+        if (!empty($start_date)) {
+            $date = new DateTime($start_date);
+            ;
+            date_sub($date, date_interval_create_from_date_string('1 days'));
+            $startdauky = date_format($date, 'Y-m-d'). ' ' . date('23:59:59');
+        }
+        $start_date = $start_date . ' 00:00:00';
+        $start_end = $start_end . ' ' . date('23:59:59');
+        if ($this->input->is_ajax_request()) {
+            $select = array(
+                'staffid',
+                '1',
+                '2',
+                '3',
+                '4'
+            );
+
+            $where = array();
+            if ($this->input->post('id_staff')) {
+                $where[] = "AND staffid = " . $this->input->post('id_staff');
+            }
+            if (!empty($this->input->post('staff_active'))) {
+                $where[] = "AND active = " . $this->input->post('staff_active');
+            }
+
+            $aColumns = $select;
+            $sIndexColumn = "staffid";
+            $sTable = 'tblstaff';
+            $join = array();
+            $footer_data = array(
+                'total' => 0,
+                'payment' => 0,
+                'left' => 0
+            );
+            foreach ($footer_data as $key => $total) {
+                $footer_data[$key] = _format_number($total);
+            }
+
+            $result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, array('staffid', 'lastname', 'firstname'));
+            $output = $result['output'];
+            $rResult = $result['rResult'];
+            $footer_data['total_amount'] = 0;
+            $array_total=array();
+            $array_total['money_debt']=0;
+            $array_total['money_tang']=0;
+            $array_total['money_giam']=0;
+            $array_total['money_total']=0;
+            foreach ($rResult as $key => $aRow) {
+                $row = array();
+                $end_debt_staff=round(getprice_staff($aRow['staffid'], null, $start_end));
+                if ($this->input->post('id_rows_staff')) {
+                    if ($this->input->post('id_rows_staff') == 1) {
+                        if ($end_debt_staff < 0) {
+                            continue;
+                        }
+                    } else {
+                        if ($end_debt_staff > 0) {
+                            continue;
+                        }
+                    }
+                }
+                // if ($end_debt_staff == 0) {
+                //     continue;
+                // }
+                for ($i = 0; $i < count($aColumns); $i++) {
+                    if (strpos($aColumns[$i], 'as') !== false && !isset($aRow[$aColumns[$i]])) {
+                        $_data = $aRow[strafter($aColumns[$i], 'as ')];
+                    } else {
+                        $_data = $aRow[$aColumns[$i]];
+                    }
+                    if ($aColumns[$i] == 'staffid') {
+                        $_data = $aRow['lastname']. ' ' . $aRow['firstname'];
+                    }
+                    if ($aColumns[$i] == '1') {
+                        $debt_dauky = getprice_staff($aRow['staffid'], null, $startdauky);
+                        $_data = number_format_data($debt_dauky);
+                        $array_total['money_debt'] += $debt_dauky;
+                    } elseif ($aColumns[$i] == '2') {
+                        $debt_giam = getprice_staff($aRow['staffid'], $start_date, $start_end, '-') * (-1);
+                        $_data = number_format_data($debt_giam);
+                        $array_total['money_giam'] += $debt_giam;
+                    } elseif ($aColumns[$i] == '3') {
+                        $debt_tang = getprice_staff($aRow['staffid'], $start_date, $start_end, '+');
+                        $_data = number_format_data($debt_tang);
+                        $array_total['money_tang'] += $debt_tang;
+                    } elseif ($aColumns[$i] == '4') {
+                        $_data = number_format_data($end_debt_staff);
+                        $array_total['money_total'] += $end_debt_staff;
+                    }
+
+                    $row[] = $_data;
+                }
+                $option = '<button  onclick="view_detail_staff(' . $aRow['staffid'] . ')" class="btn btn-default btn-icon"><i class="fa fa-eye"></i></button>';
+                $row[] = $option;
+                $output['aaData'][] = $row;
+            }
+
+            $currency_symbol = null;
+            $footer_data['total_amount'] = format_money($footer_data['total_amount'], $currency_symbol);
+            $output['sums'] = $footer_data;
+            foreach ($array_total as $key=>$value) {
+                $array_total[$key]=number_format_data($value);
+            }
+            $output['array_total'] = $array_total;
+            echo json_encode($output);
+            die();
+        }
+    }
+
+     public function detail_debts_staff()
+    {
+        $id_staff = $this->input->post('id_staff_detail');
+        if (is_numeric($id_staff)) {
+            $start = $this->input->post('start_detail_staff');
+            $end = $this->input->post('end_detail_staff');
+
+            if ($start == "") {
+                $start = null;
+            }
+            if ($end == "") {
+                $end = null;
+            }
+            if (isset($end) && isset($start)) {
+                $start = to_sql_date($start);
+                $end = to_sql_date($end);
+            } elseif ((!isset($start)) && isset($end)) {
+                $end = to_sql_date($end);
+                $date = new DateTime($end);
+                date_sub($date, date_interval_create_from_date_string('30 days'));
+                $start = date_format($date, 'Y-m-d');
+            } elseif (isset($start) && !isset($end)) {
+                $start = to_sql_date($start);
+                $date = new DateTime($start);
+                $end = date("Y-m-d", strtotime("$date +30 day"));
+            } elseif (!isset($start) && !isset($end)) {
+                $end = date('Y-m-d');
+                $date = new DateTime($end);
+                ;
+                date_sub($date, date_interval_create_from_date_string('30 days'));
+                $start = date_format($date, 'Y-m-d');
+            }
+            if (!empty($start)) {
+                $date = new DateTime($start);
+                ;
+                date_sub($date, date_interval_create_from_date_string('1 days'));
+                $startdauky = date_format($date, 'Y-m-d'). ' ' . date('23:59:59');
+            }
+            $start = $start . ' 00:00:00';
+            $end = $end . ' ' . date('23:59:59');
+            $output = array();
+            $output['aaData'] = array();
+            $footer_data = array(
+                'total' => 0,
+                'payment' => 0,
+                'left' => 0
+            );
+            foreach ($footer_data as $key => $total) {
+                $footer_data[$key] = _format_number($total);
+            }
+            $output['sums'] = $footer_data;
+            $row = array();
+            for ($i = 0; $i < 9; $i++) {
+                $row[] = '-';
+            }
+            $row[1] = 'Dư đầu kỳ';
+            $row[5] = number_format_data(getprice_staff($id_staff, null, $startdauky));
+            $output['aaData'][] = $row;
+
+
+            //quỷ------------------------------------------------------------------------------------
+            if ($start && $end) {
+                $this->db->where('date>=', $start);
+                $this->db->where('date<=', $end);
+            } elseif ($start == null && $end) {
+                $this->db->where('date<=', $end);
+            }
+            $cash_thu = $this->db->get_where('tblcash_book', array('id_object' => 'tblstaff', 'groups' => 16, 'staff_id' => $id_staff))->result_array();
+            foreach ($cash_thu as $key => $value) {
+                $row = array();
+                $row[0] = _dt($value['date']);
+                if ($value['type'] == 1) {
+                    $row[1] = 'Phiếu chi';
+                    $row[3] = number_format_data($value['price']);
+                    $row[4] = '-';
+                    $row[5] = 0;
+                    $row[6] = $value['note'];
+                } 
+                else {
+                    $row[1] = 'Phiếu thu';
+                    $row[3] = '-';
+                    $row[4] = number_format_data($value['price']);
+                    $row[5] = 0;
+                    $row[6] = $value['note'];
+                }
+                $row[2] = '<a target="_blank" href="' . admin_url('staff/redirect/cash_book/add_cash_book-_-' . $value['id'] . '-__-') . '">' . $value['code'] . '</a>';
+
+                $output['aaData'][] = $row;
+            }
+            //end quỹ-----------------------------------------------------------------------------------------------
+
+            //start xuất thành phẩm
+            if ($start && $end) {
+                $this->db->where('date_create>=', $start);
+                $this->db->where('date_create<=', $end);
+            } elseif ($start == null && $end) {
+                $this->db->where('date_create<=', $end);
+            }
+            $this->db->group_start();
+                $this->db->or_where('status', 'Đã Giao Hàng Toàn Bộ');
+                $this->db->or_where('status', 'Đã Giao Hàng Một Phần');
+                $this->db->or_where('status', 'Đã Đối Soát Giao Hàng');
+                $this->db->or_where('status', 'Đã Trả Hàng Một Phần');
+                $this->db->or_where('status', 'Đã Chuyển Kho Trả Một Phần');
+                $this->db->or_where('status', 'Đang Trả Hàng Một Phần');
+            $this->db->group_end();
+             $this->db->where('last_sman', $id_staff);
+            $shop = $this->db->get('tblorders_shop')->result_array();
+            foreach ($shop as $key => $value) {
+                $row = array();
+                $row[0] = _dt($value['date_create']);
+                $row[1] = 'Giao hàng';
+                $row[2] = $value['code_supership'];
+                $row[3]=  '-';
+                $row[4]=  number_format_data($value['collect']);
+                $row[5] = 0;
+                $row[6] = $value['status'];
+                $output['aaData'][] = $row;
+            }
+
+           
+            ///  //điều chỉnh công nợ-------------------------------------------------------------------------------------
+            if ($start && $end) {
+                $this->db->where('date>=', $start);
+                $this->db->where('date<=', $end);
+            } elseif ($start == null && $end) {
+                $this->db->where('date<=', $end);
+            }
+            $this->db->where('id_object', 'tblstaff');
+            $this->db->where('status', '2');
+            $debit_object = $this->db->get_where('tbldebit_object', array('staff_id' => $id_staff))->result_array();
+            foreach ($debit_object as $key => $value) {
+                $row = array();
+                $row[0] = _dt($value['date']);
+                $row[1] = 'Điều chỉnh công nợ';
+                $row[2] = '<a target="_blank" href="' . admin_url('staff/redirect/debit_object/add_debit_object-_-' . $value['id'] . '-__-') . '">' . $value['code'] . '</a>';
+
+                $row[3] = $value['price'] < 0 ? (number_format_data($value['price'] * (-1))) : '-';
+                $row[4] = $value['price'] > 0 ? (number_format_data($value['price'])) : '-';
+                $row[5] = 0;
+                $row[6] = $value['note'];
+                $output['aaData'][] = $row;
+            }
+
+            // echo "<pre>";
+            // var_dump($output['aaData']);die();
+            //điều chỉnh công nợ--------------------------------------------------------------------------------
+
+            for ($i = 0; $i < count($output['aaData']); $i++) {
+                for ($j = $i; $j < count($output['aaData']); $j++) {
+                    if ($this->input->post('order')[0]['dir'] == 'desc') {
+                        if (strtotime(to_sql_date($output['aaData'][$i][0], true)) > strtotime(to_sql_date($output['aaData'][$j][0], true))) {
+                            $tam = $output['aaData'][$j];
+                            $output['aaData'][$j] = $output['aaData'][$i];
+                            $output['aaData'][$i] = $tam;
+                        }
+                    } else {
+                        if (strtotime(to_sql_date($output['aaData'][$i][0], true)) < strtotime(to_sql_date($output['aaData'][$j][0], true))) {
+                            $tam = $output['aaData'][$j];
+                            $output['aaData'][$j] = $output['aaData'][$i];
+                            $output['aaData'][$i] = $tam;
+                        }
+                    }
+                }
+            }
+            if ($this->input->post('order')[0]['dir'] == 'desc') {
+                $debit = getprice_staff($id_staff, null, $startdauky);
+                foreach ($output['aaData'] as $key => $value) {
+                    $output['aaData'][$key][0] = _d(to_sql_date($value[0], true));
+                    if ($value[3] != '-') {
+                        $debit -= number_format_data($value[3], false);
+                        $output['aaData'][$key][5] = number_format_data($debit);
+                    }
+                    if ($value[4] != '-') {
+                        $debit += number_format_data($value[4], false);
+                        $output['aaData'][$key][5] = number_format_data($debit);
+                    }
+                }
+            } else {
+                $debit = getprice_staff($id_staff, null, $startdauky);
+                for ($i = count($output['aaData']) - 1; $i >= 0; $i--) {
+                    $output['aaData'][$i][0] = _d(to_sql_date($output['aaData'][$i][0], true));
+                    if ($output['aaData'][$i][3] != '-') {
+                        $debit -= number_format_data($output['aaData'][$i][3], false);
+                        $output['aaData'][$i][5] = number_format_data($debit);
+                    }
+                    if ($output['aaData'][$i][4] != '-') {
+                        $debit += number_format_data($output['aaData'][$i][4], false);
+                        $output['aaData'][$i][5] = number_format_data($debit);
+                    }
+                }
+            }
+            $output['draw'] = 0;
+            $output['iTotalRecords'] = count($output['aaData']);
+            $output['iTotalDisplayRecords'] = count($output['aaData']);
+            $staff = $this->db->get_where('tblstaff', array('staffid' => $id_staff))->row();
+            $output['fullname'] = $staff->lastname.$staff->firstname;
+            echo json_encode($output);
+            die();
+        }
+    }
+
+
+
+
+
+
+
+
+
 
 
 

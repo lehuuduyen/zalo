@@ -85,8 +85,9 @@ class Create_order_bestinc extends AdminController
         $data['list_status_order'] = $this->db->get('tblstatus_order')->result();
 
 
-        // warehouse_send
-        $data['warehouse_send_list'] = $this->db->get('tbl_warehouse_send')->row();
+        // Get warehouse
+        $this->db->order_by('is_default','DESC');
+        $data['list_warehouse'] = $this->db->get('tbl_warehouse_send')->result();
 
         $this->load->view('admin/create_order/index_bestinc', $data);
 

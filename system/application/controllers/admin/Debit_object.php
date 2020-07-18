@@ -188,7 +188,7 @@ class Debit_object extends AdminController
         {
             if($table=='tblstaff')
             {
-                $this->db->select('staffid as id,fullname as name');
+                $this->db->select('staffid as id,CONCAT(lastname, firstname) as name');
             }
             if($table=='tblsuppliers')
             {

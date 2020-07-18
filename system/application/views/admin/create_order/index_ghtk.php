@@ -639,7 +639,14 @@ $id_default = ($default_data) ? $default_data->id : '';
 
                         <div class="col-md-5">
                             <!-- Chọn Khách Hang -->
-                            <div id="repo_customer_cover" class="form-group">
+                            <div id="repo_customer-select" class="form-group">
+								<label for="repo_customer">Chọn Kho:</label>
+                                <select class="form-control" id="repo_customer" name="repo_customer">
+                                    <?php foreach ($list_warehouse as $warehouse){//83 Nguyễn Văn Trang , Gia Lộc Hải Dương, Thị trấn Gia Lộc, Huyện Gia Lộc, Tỉnh Hải Dương?>
+                                        <option data-code="<?= $warehouse->id?>" value="<?= $warehouse->nameAddress.', '.$warehouse->commune.', '.$warehouse->district.', '.$warehouse->province?>"><?= empty($warehouse->name) ? $warehouse->nameAddress.', '.$warehouse->commune.', '.$warehouse->district.', '.$warehouse->province:$warehouse->name?></option>
+                                    <?php }?>
+
+                                </select>
 
                             </div>
                         </div>
@@ -2336,6 +2343,8 @@ $id_default = ($default_data) ? $default_data->id : '';
                 var data = {};
                 var repo_customer = $('#repo_customer').val().split(",");
 
+				var warehouse_id = $('#repo_customer').find(":selected").attr('data-code');
+
                 if (parseINT($('#total_money').val()) >= 3000000 && !$('#value_order').val()) {
                     alert('Đơn hàng này phải tính phí bảo hiểm. Vui lòng nhập trị giá. ');
                     return false;
@@ -2343,6 +2352,7 @@ $id_default = ($default_data) ? $default_data->id : '';
 
                 data.customer_id = $('#create_order_ob #customer_id').val();
 
+				data.warehouse_id = warehouse_id;
 
                 data.pickup_address = repo_customer.slice(0, repo_customer.length - 2).toString().trim();
 

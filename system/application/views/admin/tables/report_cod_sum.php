@@ -13,9 +13,10 @@ if($this->ci->input->post('date_start_code_sum')) {
 
     $where_cash_debt = ['AND groups = 14'];
 
-    $where_object_debt = [];
+    $where_object_debt = ['AND status = 2 AND id_object = "tbldebit_object"'];
 
     $where_debt = [];
+    $where_object = [];
 
 
 
@@ -23,12 +24,21 @@ if($this->ci->input->post('date_start_code_sum')) {
 
     $where_object_debt[] =  'AND DATE_FORMAT(date,"%Y-%m-%d") < "'.to_sql_date($dateStart).'"';
 
+    $where_object[] =  'AND DATE_FORMAT(date,"%Y-%m-%d") < "'.to_sql_date($dateStart).'"';
+
     $where_debt[] =  'AND DATE_FORMAT(control_date,"%Y-%m-%d") < "'.to_sql_date($dateStart).'"';
 
     $where_debt[] =  'AND control_date is not null';
-//    $where_debt[] =  'AND tblorders_shop.shop = (select tblcustomers.customer_shop_code from tblcustomers where tblcustomers.customer_shop_code = tblorders_shop.shop)';
+
+
+    $where_debt[] =  'AND tblorders_shop.DVVC = "SPS"';
+
+
     $where_debt[] =  'AND tblorders_shop.is_hd_branch = 1';
+
     $where_debt[] =  'AND tblorders_shop.status != "Hủy"';
+
+
 
     if(!empty($where_cash_debt))
     {
@@ -42,6 +52,11 @@ if($this->ci->input->post('date_start_code_sum')) {
         $where_object_debt = trim(implode(' ',$where_object_debt), 'AND');
         $where_object_debt = 'where '.$where_object_debt;
     }
+    if(!empty($where_object))
+    {
+        $where_object = trim(implode(' ',$where_object), 'AND');
+        $where_object = 'where '.$where_object;
+    }
 
     if(!empty($where_debt))
     {
@@ -52,6 +67,18 @@ if($this->ci->input->post('date_start_code_sum')) {
 
     $DataDebt = $this->ci->db->query('
         SELECT
+            mass as shop,
+            date as date,
+            code as code,
+            note as note,
+            if (price >= 0, price, 0) as pstang,
+            if (price < 0, (price * -1), 0) as psgiam,
+            id as id,
+            0 as debt
+        FROM tbldebit_object '.$where_object_debt.'
+        UNION
+        SELECT
+            id_bill as shop,
             date as date,
             code as code,
             note as note,
@@ -62,6 +89,7 @@ if($this->ci->input->post('date_start_code_sum')) {
         FROM tblcash_book '.$where_cash_debt.' 
             UNION
         SELECT
+            shop as shop,
             control_date as date,
             code_supership as code,
             status as note,
@@ -73,10 +101,13 @@ if($this->ci->input->post('date_start_code_sum')) {
                 status = "Đang Chuyển Kho Trả" ||
                 status = "Đã Đối Soát Trả Hàng" ||
                 status = "Đã Chuyển Kho Trả" ||
+                status = "Đã Chuyển Kho Trả Toàn Bộ" ||
+                status = "Đang Trả Hàng Toàn Bộ" ||
                 status = "Đã Trả Hàng" ||
+                status = "Đã Trả Hàng Toàn Bộ" ||
                 status = "Hoãn Trả Hàng"
                ), 0, collect)) as pstang,
-            (if( (type != "Nội Tỉnh" && (control_date != null ||  status = "Không Giao Được" || status = "Xác Nhận Hoàn" ||status = "Đang Trả Hàng" ||status = "Đang Chuyển Kho Trả" ||status = "Đã Đối Soát Trả Hàng" ||status = "Đã Chuyển Kho Trả") ), ((IFNULL(pay_transport, 0) + IFNULL(insurance, 0) + IFNULL(pay_refund, 0) - IFNULL(sale, 0)) * 1), (IFNULL(pay_transport, 0) + IFNULL(insurance, 0) + IFNULL(pay_refund, 0) - IFNULL(sale, 0)))) as psgiam,
+            (if( (type != "Nội Tỉnh" && (control_date != null ||  status = "Không Giao Được" || status = "Xác Nhận Hoàn" ||status = "Đang Trả Hàng" ||status = "Đang Chuyển Kho Trả" ||status = "Đã Đối Soát Trả Hàng" ||status = "Đã Chuyển Kho Trả"||status = "Đã Chuyển Kho Trả Toàn Bộ"||status = "Đang Trả Hàng Toàn Bộ") ), ((IFNULL(pay_transport, 0) + IFNULL(insurance, 0) + IFNULL(pay_refund, 0) - IFNULL(sale, 0)) * 1), (IFNULL(pay_transport, 0) + IFNULL(insurance, 0) + IFNULL(pay_refund, 0) - IFNULL(sale, 0)))) as psgiam,
             id,
             0 as debt
         FROM tblorders_shop '.$where_debt.' order by date asc
@@ -86,6 +117,8 @@ if($this->ci->input->post('date_start_code_sum')) {
         $debt -= $value['psgiam'];
     }
 }
+
+
 
 //(if( (type != "Nội Tỉnh" && (control_date != null ||  status = "Không Giao Được" || status = "Xác Nhận Hoàn" ||status = "Đang Trả Hàng" ||status = "Đang Chuyển Kho Trả" ||status = "Đã Đối Soát Trả Hàng" ||status = "Đã Chuyển Kho Trả") ), ((IFNULL(pay_transport, 0) + IFNULL(insurance, 0) + IFNULL(pay_refund, 0) - IFNULL(sale, 0)) * 1), (IFNULL(pay_transport, 0) + IFNULL(insurance, 0) + IFNULL(pay_refund, 0) - IFNULL(sale, 0)))) as psgiam,
 
@@ -103,38 +136,56 @@ $start = $this->ci->input->post('start');
 $length = $this->ci->input->post('length');
 
 $where = [];
+$where_object_new = ['AND id_object = "tbldebit_object"  AND status = 2'];
 $where_cash = ['AND groups = 14'];
 //$where_order = ['AND tblorders_shop.shop = (select tblcustomers.customer_shop_code from tblcustomers where tblcustomers.customer_shop_code = tblorders_shop.shop)'];
 $where_order = ['AND tblorders_shop.is_hd_branch = 1'];
+
 $where_order[] =  'AND control_date is not null';
+
 $where_order[] =  'AND tblorders_shop.status != "Hủy"';
+
+$where_order[] =  'AND tblorders_shop.DVVC = "SPS"';
+
 if($this->ci->input->post('date_start_code_sum'))
 {
     $dateStart = $this->ci->input->post('date_start_code_sum');
+
     $where[] =  'AND DATE_FORMAT(date,"%Y-%m-%d") >= "'.to_sql_date($dateStart).'"';
+
     $where_cash[] =  'AND DATE_FORMAT(date,"%Y-%m-%d") >= "'.to_sql_date($dateStart).'"';
+
     $where_order[] =  'AND DATE_FORMAT(control_date,"%Y-%m-%d") >= "'.to_sql_date($dateStart).'"';
+
+    $where_object_new[] =  'AND DATE_FORMAT(date,"%Y-%m-%d") >= "'.to_sql_date($dateStart).'"';
+
 }
 if($this->ci->input->post('date_end_code_sum'))
 {
     $dateEnd = $this->ci->input->post('date_end_code_sum');
-    $where[] =  'AND DATE_FORMAT(date,"%Y-%m-%d") <= "'.to_sql_date($dateEnd).'"';
-    $where_cash[] =  'AND DATE_FORMAT(date,"%Y-%m-%d") <= "'.to_sql_date($dateEnd).'"';
-    $where_order[] =  'AND DATE_FORMAT(control_date,"%Y-%m-%d") <= "'.to_sql_date($dateEnd).'"';
-}
 
+    $where[] =  'AND DATE_FORMAT(date,"%Y-%m-%d") <= "'.to_sql_date($dateEnd).'"';
+
+    $where_cash[] =  'AND DATE_FORMAT(date,"%Y-%m-%d") <= "'.to_sql_date($dateEnd).'"';
+
+    $where_order[] =  'AND DATE_FORMAT(control_date,"%Y-%m-%d") <= "'.to_sql_date($dateEnd).'"';
+
+    $where_object_new[] =  'AND DATE_FORMAT(date,"%Y-%m-%d") <= "'.to_sql_date($dateEnd).'"';
+
+}
 
 $new_where = trim(implode(' ',$where), 'AND');
 
-
 $new_where_cash = trim(implode(' ',$where_cash), 'AND');
 
+$new_where_object = trim(implode(' ',$where_object_new), 'AND');
 
 $new_where_order = trim(implode(' ',$where_order), 'AND');
 
 if(!empty($new_where))
 {
     $new_where = 'where '.$new_where;
+    $new_where_object = $new_where ." AND status = 2 ".'AND id_object = "tbldebit_object"';
 }
 if(!empty($new_where_cash))
 {
@@ -146,8 +197,22 @@ if(!empty($new_where_order))
     $new_where_order = 'where '.$new_where_order;
 }
 
+
+
 $All_data = $this->ci->db->query('
     SELECT
+        mass as shop,
+        date as date,
+        code as code,
+        note as note,
+        if (price >= 0, price, 0) as pstang,
+        if (price < 0, (price * -1), 0) as psgiam,
+        id as id,
+        0 as debt
+    FROM tbldebit_object '.$new_where_object.'
+        UNION
+    SELECT
+        id_bill as shop,
         date as date,
         code as code,
         note as note,
@@ -158,10 +223,11 @@ $All_data = $this->ci->db->query('
     FROM tblcash_book '.$new_where_cash.' 
         UNION
     SELECT
+        shop as shop,
         control_date as date,
         code_supership as code,
         status as note,
-        (if((
+       (if((
                 control_date != null ||
                 status = "Không Giao Được" ||
                 status = "Xác Nhận Hoàn" ||
@@ -169,18 +235,34 @@ $All_data = $this->ci->db->query('
                 status = "Đang Chuyển Kho Trả" ||
                 status = "Đã Đối Soát Trả Hàng" ||
                 status = "Đã Chuyển Kho Trả" ||
+                status = "Đã Chuyển Kho Trả Toàn Bộ" ||
+                status = "Đang Trả Hàng Toàn Bộ" ||
                 status = "Đã Trả Hàng" ||
+                status = "Đã Trả Hàng Toàn Bộ" ||
                 status = "Hoãn Trả Hàng"
-           ),0,collect)) as pstang,
-        (if( (type != "Nội Tỉnh" && (control_date != null ||  status = "Không Giao Được" || status = "Xác Nhận Hoàn" ||status = "Đang Trả Hàng" ||status = "Đang Chuyển Kho Trả" ||status = "Đã Đối Soát Trả Hàng" ||status = "Đã Chuyển Kho Trả") ), ((IFNULL(pay_transport, 0) + IFNULL(insurance, 0) + IFNULL(pay_refund, 0) - IFNULL(sale, 0)) * 1), (IFNULL(pay_transport, 0) + IFNULL(insurance, 0) + IFNULL(pay_refund, 0) - IFNULL(sale, 0)))) as psgiam,
+               ), 0, collect)) as pstang,
+        (if( (type != "Nội Tỉnh" && (control_date != null ||  status = "Không Giao Được" || status = "Xác Nhận Hoàn" ||status = "Đang Trả Hàng" ||status = "Đang Chuyển Kho Trả" ||status = "Đã Đối Soát Trả Hàng" ||status = "Đã Chuyển Kho Trả"||status = "Đã Chuyển Kho Trả Toàn Bộ"||status = "Đang Trả Hàng Toàn Bộ") ), ((IFNULL(pay_transport, 0) + IFNULL(insurance, 0) + IFNULL(pay_refund, 0) - IFNULL(sale, 0)) * 1), (IFNULL(pay_transport, 0) + IFNULL(insurance, 0) + IFNULL(pay_refund, 0) - IFNULL(sale, 0)))) as psgiam,
         id,
         0 as debt
     FROM tblorders_shop '.$new_where_order.' order by date desc
 ')->result_array();
 
+
 // lấy giới hạn khách hàng và liên hệ
 $limit_data = $this->ci->db->query('
+ SELECT 
+        mass as shop,
+        date as date,
+        code as code,
+        note as note,
+        if (price >= 0, price, 0) as pstang,
+        if (price < 0, (price * -1), 0) as psgiam,
+        id as id,
+        0 as debt
+    FROM tbldebit_object '.$new_where_object.'
+        UNION
     SELECT
+        id_bill as shop,
         date as date,
         code as code,
         note as note,
@@ -191,6 +273,7 @@ $limit_data = $this->ci->db->query('
     FROM tblcash_book '.$new_where_cash.'
         UNION
     SELECT
+        shop as shop,
         control_date as date,
         code_supership as code,
         status as note,
@@ -202,13 +285,16 @@ $limit_data = $this->ci->db->query('
                 status = "Đang Chuyển Kho Trả" ||
                 status = "Đã Đối Soát Trả Hàng" ||
                 status = "Đã Chuyển Kho Trả" ||
+                status = "Đã Chuyển Kho Trả Toàn Bộ" ||
+                status = "Đang Trả Hàng Toàn Bộ" ||
                 status = "Đã Trả Hàng" ||
+                status = "Đã Trả Hàng Toàn Bộ" ||
                 status = "Hoãn Trả Hàng"
-           ),0,collect)) as pstang,
-        (if( (type != "Nội Tỉnh" && (control_date != null ||  status = "Không Giao Được" || status = "Xác Nhận Hoàn" ||status = "Đang Trả Hàng" ||status = "Đang Chuyển Kho Trả" ||status = "Đã Đối Soát Trả Hàng" ||status = "Đã Chuyển Kho Trả") ), ((IFNULL(pay_transport, 0) + IFNULL(insurance, 0) + IFNULL(pay_refund, 0) - IFNULL(sale, 0)) * 1), (IFNULL(pay_transport, 0) + IFNULL(insurance, 0) + IFNULL(pay_refund, 0) - IFNULL(sale, 0)))) as psgiam,
+               ), 0, collect)) as pstang,
+        (if( (type != "Nội Tỉnh" && (control_date != null ||  status = "Không Giao Được" || status = "Xác Nhận Hoàn" ||status = "Đang Trả Hàng" ||status = "Đang Chuyển Kho Trả" ||status = "Đã Đối Soát Trả Hàng" ||status = "Đã Chuyển Kho Trả"||status = "Đã Chuyển Kho Trả Toàn Bộ"||status = "Đang Trả Hàng Toàn Bộ") ), ((IFNULL(pay_transport, 0) + IFNULL(insurance, 0) + IFNULL(pay_refund, 0) - IFNULL(sale, 0)) * 1), (IFNULL(pay_transport, 0) + IFNULL(insurance, 0) + IFNULL(pay_refund, 0) - IFNULL(sale, 0)))) as psgiam,
         id,
         0 as debt
-    FROM tblorders_shop '.$new_where_order.' order by date desc '.(!empty($length) && $length >=0 ? ('limit '.($start).','.($length) ) : '').'
+    FROM tblorders_shop '.$new_where_order.' order by date desc '.(isset($length) && $length >=0 ? ('limit '.($start).','.($length) ) : '').'
 ')->result_array();
 
 
@@ -218,7 +304,19 @@ $countAll = count($All_data);
 if($length >= 0 && (($start + $length) <  $countAll))
 {
     $limit_data_last = $this->ci->db->query('
+        SELECT 
+        mass as shop,
+        date as date,
+        code as code,
+        note as note,
+        if (price >= 0, price, 0) as pstang,
+        if (price < 0, (price * -1), 0) as psgiam,
+        id as id,
+        0 as debt
+        FROM tbldebit_object '.$new_where_object.'
+            UNION
         SELECT
+            id_bill as shop,
             date as date,
             code as code,
             note as note,
@@ -229,6 +327,7 @@ if($length >= 0 && (($start + $length) <  $countAll))
         FROM tblcash_book '.$new_where_cash.'
             UNION
         SELECT
+            shop as shop,
             control_date as date,
             code_supership as code,
             status as note,
@@ -240,10 +339,13 @@ if($length >= 0 && (($start + $length) <  $countAll))
                 status = "Đang Chuyển Kho Trả" ||
                 status = "Đã Đối Soát Trả Hàng" ||
                 status = "Đã Chuyển Kho Trả" ||
+                status = "Đã Chuyển Kho Trả Toàn Bộ" ||
+                status = "Đang Trả Hàng Toàn Bộ" ||
                 status = "Đã Trả Hàng" ||
+                status = "Đã Trả Hàng Toàn Bộ" ||
                 status = "Hoãn Trả Hàng"
-            ),0,collect)) as pstang,
-            (if( (type != "Nội Tỉnh" && (control_date != null ||  status = "Không Giao Được" || status = "Xác Nhận Hoàn" ||status = "Đang Trả Hàng" ||status = "Đang Chuyển Kho Trả" ||status = "Đã Đối Soát Trả Hàng" ||status = "Đã Chuyển Kho Trả") ), ((IFNULL(pay_transport, 0) + IFNULL(insurance, 0) + IFNULL(pay_refund, 0) - IFNULL(sale, 0)) * 1), (IFNULL(pay_transport, 0) + IFNULL(insurance, 0) + IFNULL(pay_refund, 0) - IFNULL(sale, 0)))) as psgiam,
+               ), 0, collect)) as pstang,
+            (if( (type != "Nội Tỉnh" && (control_date != null ||  status = "Không Giao Được" || status = "Xác Nhận Hoàn" ||status = "Đang Trả Hàng" ||status = "Đang Chuyển Kho Trả" ||status = "Đã Đối Soát Trả Hàng" ||status = "Đã Chuyển Kho Trả"||status = "Đã Chuyển Kho Trả Toàn Bộ"||status = "Đang Trả Hàng Toàn Bộ") ), ((IFNULL(pay_transport, 0) + IFNULL(insurance, 0) + IFNULL(pay_refund, 0) - IFNULL(sale, 0)) * 1), (IFNULL(pay_transport, 0) + IFNULL(insurance, 0) + IFNULL(pay_refund, 0) - IFNULL(sale, 0)))) as psgiam,
             id,
             0 as debt
         FROM tblorders_shop '.$new_where_order.' order by date desc limit '.($start + $length).','.$countAll.'
@@ -295,6 +397,7 @@ foreach ($rResult as $key => $aRow) {
     $row = [];
     $row[] = _dt($aRow['date']);
     $row[] = $aRow['code'];
+    $row[] = $aRow['shop'];
     $row[] = $aRow['note'];
     $row[] = number_format_data($aRow['pstang']);
     $row[] = number_format_data($aRow['psgiam']);

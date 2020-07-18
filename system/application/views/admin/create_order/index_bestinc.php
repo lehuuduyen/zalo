@@ -387,16 +387,6 @@ $username = ($default_data) ? $default_data->username : '';
 $password = ($default_data) ? base64_decode($default_data->password) : '';
 $id_default = ($default_data) ? $default_data->id : '';
 $code_default = ($default_data) ? $default_data->code : '';
-
-// warehouse
-$id_warehouse = ($warehouse_send_list) ? $warehouse_send_list->id : '';
-$nameAddress = ($warehouse_send_list) ? $warehouse_send_list->nameAddress : '';
-$phone_default = ($warehouse_send_list) ? $warehouse_send_list->phone : '';
-$province_default = ($warehouse_send_list) ? $warehouse_send_list->province : '';
-$district_default = ($warehouse_send_list) ? $warehouse_send_list->district : '';
-$commune_default = ($warehouse_send_list) ? $warehouse_send_list->commune : '';
-
-
 ?>
 <div id="wrapper">
     <div class="overlay-dark">
@@ -645,7 +635,14 @@ $commune_default = ($warehouse_send_list) ? $warehouse_send_list->commune : '';
 
                         <div class="col-md-5">
                             <!-- Chọn Khách Hang -->
-                            <div id="repo_customer_cover" class="form-group">
+                            <div id="repo_customer-select" class="form-group">
+								<label for="repo_customer">Chọn Kho:</label>
+                                <select class="form-control" id="repo_customer" name="repo_customer">
+                                    <?php foreach ($list_warehouse as $warehouse){//83 Nguyễn Văn Trang , Gia Lộc Hải Dương, Thị trấn Gia Lộc, Huyện Gia Lộc, Tỉnh Hải Dương?>
+                                        <option data-code="<?= $warehouse->id?>" value="<?= $warehouse->nameAddress.', '.$warehouse->commune.', '.$warehouse->district.', '.$warehouse->province?>"><?= empty($warehouse->name) ? $warehouse->nameAddress.', '.$warehouse->commune.', '.$warehouse->district.', '.$warehouse->province:$warehouse->name?></option>
+                                    <?php }?>
+
+                                </select>
 
                             </div>
                         </div>
@@ -2079,10 +2076,10 @@ $commune_default = ($warehouse_send_list) ? $warehouse_send_list->commune : '';
     // Warehouser
     var data_districts_default = '';
     var data_commue_default = '';
-    var district_name = '<?= ($warehouse_send_list) ? $warehouse_send_list->district : ''?>';
-    var province_name = '<?= ($warehouse_send_list) ? $warehouse_send_list->province : ''?>';
-    var commune_name = '<?= ($warehouse_send_list) ? $warehouse_send_list->commune : ''?>';
-    var id_default = '<?= ($warehouse_send_list) ? $warehouse_send_list->id : ''?>';
+    var district_name = '';
+    var province_name = '';
+    var commune_name = '';
+    var id_default = '';
 
 
 
@@ -2321,7 +2318,7 @@ $commune_default = ($warehouse_send_list) ? $warehouse_send_list->commune : '';
                 data.voucher = $("#voucher").val();
 
 
-                data.id_default = id_default;
+                data.id_default = $("#repo_customer").find(":selected").attr('data-code');
 
 
                 $('.overlay-dark').show();

@@ -36,6 +36,7 @@
    "id_suppliers_detail": '[name="id_suppliers_detail"]',
    "id_porter_detail": '[name="id_porter_detail"]',
    "id_rack_detail": '[name="id_rack_detail"]',
+   "id_staff_detail": '[name="id_staff_detail"]',
    "id_object_detail": '[name="id_object_detail"]',
    "id_client_detail": '[name="id_client_detail"]',
    "staff_id_detail": '[name="staff_id_detail"]',
@@ -46,6 +47,7 @@
    'id_supplier_borrrowing': '[name="id_supplier_borrrowing"]',
    'id_porter': '[name="id_porter"]',
    'id_racks': '[name="id_racks"]',
+   'id_staff': '[name="id_staff"]',
    'id_other_object': '[name="id_other_object"]',
    'date_start_supplier': '[name="date_start_supplier"]',
    'date_end_supplier': '[name="date_end_supplier"]',
@@ -55,6 +57,8 @@
    'date_end_porters': '[name="date_end_porters"]',
    'date_start_racks': '[name="date_start_racks"]',
    'date_end_racks': '[name="date_end_racks"]',
+   'date_start_staff': '[name="date_start_staff"]',
+   'date_end_staff': '[name="date_end_staff"]',
    'date_start_personal': '[name="date_start_personal"]',
    'date_end_personal': '[name="date_end_personal"]',
    'date_start_borrrowing': '[name="date_start_borrrowing"]',
@@ -62,11 +66,17 @@
    'start_detail_client': '[name="start_detail_client"]',
    'end_detail_client': '[name="end_detail_client"]',
    'date_start_client': '[name="date_start_client"]',
-   'date_end_client': '[name="date_end_client"]',
+   'date_end_client': '[name="date_end_client"]', 
+   'staff_active': '[name="staff_active"]:checked', 
+
+     'start_detail_staff': '[name="start_detail_staff"]',
+   'end_detail_staff': '[name="end_detail_staff"]',
+
    'id_rows_supplier': '[name="id_rows_supplier"]',
    'id_rows_porters': '[name="id_rows_porters"]',
    'id_rows_customer': '[name="id_rows_customer"]',
    'id_rows_racks': '[name="id_rows_racks"]',
+   'id_rows_staff': '[name="id_rows_staff"]',
    'id_rows_personal': '[name="id_rows_personal"]',
    'id_rows_supplier_borrrowing': '[name="id_rows_supplier_borrrowing"]',
    'id_rows_client': '[name="id_rows_client"]',
@@ -192,6 +202,20 @@
 
 
 
+  // start cong nợ khách hàng
+  $('#date_start_staff,#start_detail_staff').on('change',function(e) {
+      var date=$(this).val();
+      $('#date_start_staff').val(date);
+      $('#start_detail_staff').val(date);
+  })
+  $('#date_end_staff,#end_detail_staff').on('change',function(e) {
+      var date=$(this).val();
+      $('#date_end_staff').val(date);
+      $('#end_detail_staff').val(date);
+  })
+  //end công nợ khách hàng
+
+
 
 
 
@@ -237,6 +261,10 @@
           if($('#detail_customer').hasClass('in'))
           {
               $('.table-debts_customer_detail').DataTable().ajax.reload();
+          }
+          if($('#detail_staff').hasClass('in'))
+          {
+              $('.table-debts_staff_detail').DataTable().ajax.reload();
           }
       });
   });
@@ -295,6 +323,8 @@
       $('#debts_customer').addClass('hide');
       $('#debts_control').addClass('hide');
       $('#report_cod_sum').addClass('hide');
+
+      $('#debts_staff').addClass('hide');
       $('select[name="months-report"]').selectpicker('val', '');
            // Clear custom date picker
        report_to.val('');
@@ -334,6 +364,9 @@
        if (type == 'report_cod_sum') {
          $('#report_cod_sum').removeClass('hide');
        }
+       if (type == 'debts_staff') {
+         $('#debts_staff').removeClass('hide');
+       }
       gen_reports();
   }
   // Main generate report function
@@ -366,6 +399,9 @@
      if (!$('#report_cod_sum').hasClass('hide')) {
          debts_report_cod_sum();
          $('#report-time').addClass('hide');
+     }
+     if (!$('#debts_staff').hasClass('hide')) {
+
      }
   }
 
@@ -420,6 +456,10 @@ function load_table_customer(obj) {
  {
      debts_rack_report();
  }
+  function load_table_staff()
+ {
+     debts_staff_report();
+ }
 
   function load_table_client()
   {
@@ -449,6 +489,12 @@ function load_table_customer(obj) {
           $('.table-debts_rack').DataTable().ajax.reload();
       }
       initDataTable('.table-debts_rack', admin_url + 'reports/debts_rack_report', false, false, fnServerParams, [0, 'ASC']);
+  }
+  function debts_staff_report() {
+      if ($.fn.DataTable.isDataTable('.table-debts_staff')) {
+          $('.table-debts_staff').DataTable().ajax.reload();
+      }
+      initDataTable('.table-debts_staff', admin_url + 'reports/debts_staff_report', false, false, fnServerParams, [0, 'ASC']);
   }
   function debts_personal_report() {
       if ($.fn.DataTable.isDataTable('.table-debts_personal')) {
@@ -547,6 +593,13 @@ function debts_report_cod_sum() {
      $.each(array_total,function(i,v){
          $('.'+i).html('<b class="text-danger">'+v+'</b>');
      })
+ });
+
+
+ $('.table-debts_detail_staff').on('draw.dt', function() {
+     var invoiceReportsTable = $(this).DataTable();
+     var fullname = invoiceReportsTable.ajax.json().fullname;
+     $('#fullname_staff').text(fullname);
  });
  $('.table-debts_all_supplier').on('draw.dt', function() {
      var invoiceReportsTable = $(this).DataTable();
@@ -657,6 +710,13 @@ function debts_report_cod_sum() {
       var rack = invoiceReportsTable.ajax.json().rack;
       $('.title_debits_rack').html('Chi tiết công nợ lái xe '+rack);
   })
+
+  function view_detail_staff(id_staff) {
+      $('#id_staff_detail').val(id_staff);
+      initDataTable('.table-debts_detail_staff', admin_url + 'reports/detail_debts_staff', false, [1,2,3,4,5], fnServerParams, [0, 'ASC']);
+      $('.table-debts_detail_staff').DataTable().ajax.reload();
+      $('#detail_staff').modal('show');
+  }
 
   function view_detail_clients(id_client) {
       $('#id_client_detail').val(id_client);
@@ -783,6 +843,7 @@ function debts_report_cod_sum() {
 
 
 
+
  $.each(fnServerParams_debt_client, function(filterIndex, filterItem){
      $(filterItem).on('change', function(){
          if($('.table-debts_all_client').hasClass('dataTable'))
@@ -878,6 +939,8 @@ function debts_report_cod_sum() {
         });
         $('#debt_rack_modal').modal('show');
     }
+
+
     function view_update_other_object(id)
     {
         $.get(admin_url + 'reports/update_other_object/'+id, {}).done(function(response) {

@@ -546,7 +546,7 @@
                                 <div class="col-md-3">
                                 </div>
                             </div>
-                        <div class="col-md-12" style="height: 77px;">
+                            <div class="col-md-12" style="height: 77px;">
                                 <div class="col-md-3">
                                     <li class="menu-item-bookcash">
                                         <a onclick="add_cash_book('','15')" aria-expanded="false">
@@ -555,7 +555,13 @@
                                     </li>
                                 </div>
                                 <div class="col-md-3"></div>
-                                <div class="col-md-3"></div>
+                                 <div class="col-md-3">
+                                    <li class="menu-item-bookcash">
+                                        <a onclick="add_cash_book('','16')" aria-expanded="false">
+                                            <i class="fa fa-users"></i> SMAN NỘI BỘ
+                                        </a>
+                                    </li>
+                                </div>
                                 <div class="col-md-3"></div>
                             </div>
 
@@ -948,7 +954,7 @@ var paymode_not_active = <?=!empty($list_not_payactive) ? json_encode($list_not_
                 $('#id_object option[value="tblracks"]').removeClass('hide');
                 $('#id_object').val('tblracks').selectpicker('refresh').trigger('change');
             }
-            if(group_id=='3')
+            if(group_id=='3' || group_id=='16')
             {
                 $('#id_object option').attr('class','hide');
                 $('#id_object option[value="tblstaff"]').removeClass('hide');
@@ -1071,7 +1077,7 @@ var paymode_not_active = <?=!empty($list_not_payactive) ? json_encode($list_not_
                         $('#id_object option[value="tblstaff"]').removeClass('hide');
                         $('#id_object option[value="tblcustomers"]').removeClass('hide');
                 }
-                if(obj.groups=='3')
+                if(obj.groups=='3' || obj.groups=='16')
                 {
                     $('#id_object option').attr('class','hide');
                     $('#id_object option[value="tblstaff"]').removeClass('hide');

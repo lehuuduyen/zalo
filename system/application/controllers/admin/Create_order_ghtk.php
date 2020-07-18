@@ -319,14 +319,13 @@ class Create_order_ghtk extends AdminController
     }
 
 
-    public function api_create_order_ghtk($data, $token, $id, $customer_shop_name)
+    public function api_create_order_ghtk($data, $token, $id, $customer_shop_name, $warehouse_id)
 
     {
 
         unset($data['pickup_commune']);
-
 		// Get info warehouse send
-        $this->db->where('is_default', true);
+        $this->db->where('id', $warehouse_id);
         $info_warehouse_send = $this->db->get('tbl_warehouse_send')->row();
 
 
@@ -373,11 +372,11 @@ class Create_order_ghtk extends AdminController
 
         $data_ghtk->order->pick_name = $customer_shop_name;
 
-        $data_ghtk->order->pick_address = $data['pickup_address'];
+        // $data_ghtk->order->pick_address = $data['pickup_address'];
 
-        $data_ghtk->order->pick_province = $data['pickup_province'];
+        // $data_ghtk->order->pick_province = $data['pickup_province'];
 
-        $data_ghtk->order->pick_district = $data['pickup_district'];
+        // $data_ghtk->order->pick_district = $data['pickup_district'];
 
         $data_ghtk->order->pick_tel = $info_warehouse_send->phone;
 
@@ -403,7 +402,7 @@ class Create_order_ghtk extends AdminController
 
         $data_ghtk->order->use_return_address = 0;
 		$data_ghtk->order->value = $value;
-			$data_ghtk->order->hamlet = "Hải dương";
+			$data_ghtk->order->hamlet = "Khác";
 
 		// Warehouse
         $data_ghtk->order->pick_address = $info_warehouse_send->nameAddress;
@@ -464,7 +463,7 @@ class Create_order_ghtk extends AdminController
 
         $token_ghtk = $_POST['token_ghtk'];
 
-        $address_id = $_POST['address_id'];
+        // $address_id = $_POST['address_id'];
 
         $shop = $this->input->post('shop');
 
@@ -549,8 +548,8 @@ class Create_order_ghtk extends AdminController
             $this->db->insert('tblorders_shop', $data);
 
             $id_order_shop = $this->db->insert_id();
-
-            // unset($_POST['region_id']);
+			$warehouse_id = $_POST['warehouse_id'];
+            unset($_POST['warehouse_id']);
 
             $_POST['user_created'] = get_staff_user_id();
 
@@ -571,7 +570,7 @@ class Create_order_ghtk extends AdminController
 				$this->db->where('customer_shop_code', $shop);
 				$info_customer = $this->db->get('tblcustomers')->row();
 
-                $curl_status = $this->api_create_order_ghtk($_POST, $token_ghtk, $codeNew, $info_customer->customer_shop_code);
+                $curl_status = $this->api_create_order_ghtk($_POST, $token_ghtk, $codeNew, $info_customer->customer_shop_code, $warehouse_id);
 
                 $codeArr = explode('.', json_decode($curl_status)->order->label);
 
@@ -909,6 +908,9 @@ class Create_order_ghtk extends AdminController
         $this->db->where('dvvc','GHTK');
         $data['list_status_order'] = $this->db->get('tblstatus_order')->result();
 
+		// Get warehouse
+        $this->db->order_by('is_default','DESC');
+        $data['list_warehouse'] = $this->db->get('tbl_warehouse_send')->result();
 
         $this->load->view('admin/create_order/index_ghtk', $data);
 
