@@ -37,12 +37,16 @@ $aColumns     = array(
 );
 $sIndexColumn = "id";
 $sTable       = 'tbl_create_order';
-$where        = array("AND dvvc = 'GHTK'");
+$_POST['date_end_customer'] = date('Y-m-d 23:59:59', strtotime(str_replace('/', '-', $_POST['date_end_customer'])));
+$_POST['date_start_customer'] = date('Y-m-d 00:00:00', strtotime(str_replace('/', '-', $_POST['date_start_customer'])));
+
+$string_filter = "AND dvvc = 'GHTK' AND created <= '" . $_POST['date_end_customer'] . "'" . " AND created >= '" . $_POST['date_start_customer'] . "'" . " ";
 
 $join         = $join = [
   'LEFT JOIN '.db_prefix().'customers ON '.db_prefix().'customers.	id='.db_prefix().'_create_order.customer_id',
   'LEFT JOIN '.db_prefix().'staff ON '.db_prefix().'staff.		staffid='.db_prefix().'_create_order.user_created',
 ];
+$where = [$string_filter];
 
 $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, array());
 $output       = $result['output'];

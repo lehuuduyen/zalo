@@ -209,6 +209,9 @@ class Create_order_viettel extends AdminController
         $id = $this->db->insert_id();
 
         if ($id) {
+			
+			$codeNew = CODE_VTP . randerCode(2) . code(6);
+			
             $provinces = $this->_get_administrative('https://partner.viettelpost.vn/v2/categories/listProvinceById?provinceId=-1');
             //SENDER_PROVINCE
             $str_city = str_replace(array('tỉnh', 'thành phố'), '', mb_strtolower($_POST['pickup_province']));
@@ -332,7 +335,7 @@ class Create_order_viettel extends AdminController
                 die();
             }
             $resultData = $result['data'];
-            $code = 'SPSVTP.' . $resultData['ORDER_NUMBER'];
+            $code = $codeNew . '.' . $resultData['ORDER_NUMBER'];
             $today = date('Y-m-d H:i:s');
 
             $dataUpdateCreate = array(
@@ -447,41 +450,11 @@ class Create_order_viettel extends AdminController
 
     public function get_province()
     {
-        $curl = curl_init();
-        curl_setopt_array($curl, [
-            CURLOPT_URL => 'https://api.mysupership.vn/v1/partner/areas/province',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_HTTPHEADER => [
-                'Accept: */*',
-            ],
+        $this->db->select('province_id as code,province as name')->distinct();
+        $this->db->from('tbladdress_list');
+        $purchases = $this->db->get()->result();
 
-        ]);
-
-        $response = curl_exec($curl);
-
-        $err = curl_error($curl);
-
-        curl_close($curl);
-
-        if ($err) {
-            echo 'cURL Error #:' . $err;
-        } else {
-            if ($this->input->is_ajax_request()) {
-
-                echo json_encode(json_decode($response)->results);
-
-            }
-
-            $result = json_decode($response)->results;
-
-            return $result;
-
-        }
+       return $purchases;
 
     }
 
@@ -489,60 +462,14 @@ class Create_order_viettel extends AdminController
 
     {
 
-        $curl = curl_init();
+        $this->db->select('district_id as code,district as name')->distinct();
+        $this->db->from('tbladdress_list');
+        $this->db->where('province_id', $code);
 
+        $purchases = $this->db->get()->result();
 
-        curl_setopt_array($curl, [
+        echo json_encode($purchases);
 
-            CURLOPT_URL => 'https://api.mysupership.vn/v1/partner/areas/district?province=' . $code,
-
-            CURLOPT_RETURNTRANSFER => true,
-
-            CURLOPT_ENCODING => '',
-
-            CURLOPT_MAXREDIRS => 10,
-
-            CURLOPT_TIMEOUT => 30,
-
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-
-            CURLOPT_CUSTOMREQUEST => 'GET',
-
-            CURLOPT_HTTPHEADER => [
-
-                'Accept: */*',
-
-            ],
-
-        ]);
-
-
-        $response = curl_exec($curl);
-
-        $err = curl_error($curl);
-
-        curl_close($curl);
-
-
-        if ($err) {
-
-        } else {
-
-            $result = json_decode($response)->results;
-
-
-            if ($this->input->is_ajax_request()) {
-
-                echo json_encode($result);
-
-                die();
-
-            }
-
-
-            return $result;
-
-        }
 
     }
 

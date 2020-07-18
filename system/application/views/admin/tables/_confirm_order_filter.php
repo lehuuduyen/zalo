@@ -30,12 +30,13 @@ $aColumns = array(
     'user_created',
     db_prefix() . 'staff.firstname',
     'status_cancel',
-    'the_fee_bearer'
+    'the_fee_bearer',
+	'transport'
 );
 $sIndexColumn = "id";
 $sTable = 'tbl_create_order';
-$_POST['date_end_customer'] = date('Y-m-d', strtotime(str_replace('/', '-', $_POST['date_end_customer'])));
-$_POST['date_start_customer'] = date('Y-m-d', strtotime(str_replace('/', '-', $_POST['date_start_customer'])));
+$_POST['date_end_customer'] = date('Y-m-d', strtotime(str_replace('/', '-', $_POST['date_end_customer']))) ." 23:59:00";
+$_POST['date_start_customer'] = date('Y-m-d', strtotime(str_replace('/', '-', $_POST['date_start_customer']))) ." 00:00:00";
 
 $string_filter = "AND dvvc IS NULL AND status_cancel != '1' AND created <= '" . $_POST['date_end_customer'] . "'" . " AND created >= '" . $_POST['date_start_customer'] . "'" . " ";
 if ($_POST['id_customer'] != '') {
@@ -66,6 +67,7 @@ $j = 0;
 
 
 foreach ($rResult as $aRow) {
+	$transport = $aRow['transport'];
     $row = array();
     $j++;
     for ($i = 0; $i < count($aColumns); $i++) {
@@ -129,7 +131,7 @@ foreach ($rResult as $aRow) {
         <i class="fa fa-remove"></i>
         </a>';
 
-        $icon_print = '<a href="javascript:;" class="btn btn-primary btn-icon" onclick="fnConfirm_Order(' . $aRow['id'] . ',\'' . $aRow['required_code'] . '\')"><i class="fa fa-check"></i></a>';
+        $icon_print = '<a href="javascript:;" class="btn btn-primary btn-icon" onclick="fnConfirm_Order(' . $aRow['id'] . ',\'' . $aRow['required_code'] . '\','.$aRow['weight'].',\''.$transport.'\','.$aRow['customer_id'].'"><i class="fa fa-check"></i></a>';
 
 
         $row[] = $icon_delete . $icon_print . '</div>';
@@ -151,5 +153,6 @@ foreach ($rResult as $aRow) {
 
         }
     }
+	$row[29] = $row[30];
     $output['aaData'][] = $row;
 }

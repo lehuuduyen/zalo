@@ -42,7 +42,7 @@
 
     </div>
     <div class="col-md-6" style="width: 100%;" >
-        <div style="padding: 5px 0px;text-align: center;font-size:20px"><b>DANH SÁCH HÀNG HOÀN SHOP</b></div>
+        <div style="padding: 5px 0px;text-align: center;font-size:20px"><b>DANH SÁCH HÀNG TRẢ SHOP</b></div>
         <div style="text-align: center;">(Phiếu số: <?=$data[0]->code_return?>)</div>
         <div>Ngày tạo: <?=date('d/m/Y',strtotime($data[0]->created_at))?></div>
     </div>

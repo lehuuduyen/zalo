@@ -1,4 +1,5 @@
 <script>
+
     //Check Date For Mobile
     function InitDate(data) {
         if (data[16] === 'Đơn Hàng') {
@@ -271,7 +272,7 @@
                     <p class="righ-row ${CheckColor(datalist[i])}">
                       ${InitPS(datalist[i])}
                     </p>
-                    ${required_code}
+                    <div>${required_code}</div>
                   </div>
 
                   ${CheckStatus(datalist[i][5], datalist[i][2], datalist[i][16])}
@@ -428,8 +429,10 @@
     }
 
     function fnDetail(code_supship, id, dvvc, device) {
+        let domainTracking = '<?= base_url('app/tracking')?>';
+
         $.ajax({
-            url: '<?= base_url('app/tracking')?>',
+            url: domainTracking,
             data: {code: code_supship, id: id, dvvc: dvvc},
             success: function (data) {
                 var result = JSON.parse(data);
@@ -482,36 +485,140 @@
                         else
                             html += '<h3>Hành trình</h3>';
                         html += '<div style="overflow-y: scroll;height: 290px;">';
-                        $.each(journeys, function (index, value) {
+                        $.each(journeys.sort(compareValues('time','desc')), function (index, value) {
                             i++;
-                            html += '<div class="row">';
-                            html += '   <div class="col-xs-7"><b>' + value.note + '</b></div>';
-                            html += '   <div class="col-xs-1"></div>';
-                            html += '   <div class="col-xs-4" style="float: right; width: 34.333333%;">' + value.time.split('T')[0].split('-')[2] + '-' + value.time.split('T')[0].split('-')[1] + ' ' + value.time.split('T')[1].split(':')[0] + ':' + value.time.split('T')[1].split(':')[1] + '</div>';
-                            html += '</div>';
-                            html += '<hr>';
+                            if(typeof value.status !='undefined'){
+                                if(checkDeleteSPS(value.note)){
+                                    html += '<div class="row">';
+                                    html += '   <div  class="col-xs-7"><b>' + value.note + '</b> <p style="font-size:12px">' + value.district + ' - ' + value.province + '</p></div>';
+                                    html += '   <div class="col-xs-1"></div>';
+                                    html += '   <div class="col-xs-4" style="float: right; width: 34.333333%;">' + value.time.split('T')[0].split('-')[2] + '-' + value.time.split('T')[0].split('-')[1] + ' ' + value.time.split('T')[1].split(':')[0] + ':' + value.time.split('T')[1].split(':')[1] + '</div>';
+                                    html += '</div>';
+                                    html += '<hr>';
+
+                                }
+
+                            }
+                            else{
+                                html += '<div class="row">';
+                                html += '   <div  class="col-xs-7"><b>Ghi chú</b> <p style="font-size:12px">' + value.note + '</p></div>';
+                                html += '   <div class="col-xs-1"></div>';
+                                html += '   <div class="col-xs-4" style="float: right; width: 34.333333%;">' + value.time.split('T')[0].split('-')[2] + '-' + value.time.split('T')[0].split('-')[1] + ' ' + value.time.split('T')[1].split(':')[0] + ':' + value.time.split('T')[1].split(':')[1] + '</div>';
+                                html += '</div>';
+                                html += '<hr>';
+
+                            }
+
                         })
                         html += '</div>';
+                        html += '       </div>';
+                        if (device == 1)
+                            html += '           <a style="width: 100%;background: #a73a3a" type="button" class="btn btn-danger" href="tel:' + result.phone + '">Liên hệ hỗ trợ</a>';
+                        else
+                            html += '           <a style="width: 100%;background: #a73a3a" type="button" class="btn btn-danger" href="javascript:void(0)">Hotline: ' + formatPhoneNumber(result.phone) + '</a>';
+                        html += '   </div>';
+                        html += '</div>';
+
+                        $("#info-order").html(html);
+
+                        $("#info-order").modal('show');
+                    }
+                        if (dvvc == 'GHTK') {
+                            domainTracking = '/khachhang/app/ghtk_tracking'
+                            $.ajax({
+                                url: domainTracking,
+                                data: {code: info_order.code_ghtk, dvvc: dvvc},
+                                success: function (data2) {
+                                    var result2 = JSON.parse(data2);
+                                    var journeys2 = result2.journeys;
+                                    var i = 0;
+                                    if (device == 1)
+                                        html += '<h3 style="margin-top: 35%">Hành trình</h3>';
+                                    else
+                                        html += '<h3>Hành trình</h3>';
+                                    html += '<div style="overflow-y: scroll;height: 290px;">';
+                                    $.each(journeys2, function (index, value) {
+                                        i++;
+                                        reason=''
+                                        if(value.status_id==8||value.status_id==12){
+
+                                        }else{
+                                            if(value.status_id ==10){
+                                                reason= value.reason
+                                            }
+                                            html += '<div class="row">';
+                                            html += '   <div  class="col-xs-7"><b>' + value.status_change + '</b> <p style="font-size:12px">' + reason + '</p></div>';
+                                            html += '   <div class="col-xs-1"></div>';
+                                            html += '   <div class="col-xs-4" style="float: right; width: 34.333333%;">' + value.action_time.split('T')[0].split('-')[2] + '-' + value.action_time.split('T')[0].split('-')[1] + ' ' + value.action_time.split('T')[1].split(':')[0] + ':' + value.action_time.split('T')[1].split(':')[1] + '</div>';
+                                            html += '</div>';
+                                            html += '<hr>';
+                                        }
+
+
+                                    })
+                                    html += '</div>';
+                                    html += '       </div>';
+                                    if (device == 1)
+                                        html += '           <a style="width: 100%;background: #a73a3a" type="button" class="btn btn-danger" href="tel:' + result.phone + '">Liên hệ hỗ trợ</a>';
+                                    else
+                                        html += '           <a style="width: 100%;background: #a73a3a" type="button" class="btn btn-danger" href="javascript:void(0)">Hotline: ' + formatPhoneNumber(result.phone) + '</a>';
+                                    html += '   </div>';
+                                    html += '</div>';
+
+                                    $("#info-order").html(html);
+
+                                    $("#info-order").modal('show');
+                                }
+                            })
+                        }
+
                     }
 
-                    html += '       </div>';
-                    if (device == 1)
-                        html += '           <a style="width: 100%;background: #a73a3a" type="button" class="btn btn-danger" href="tel:' + result.phone + '">Liên hệ hỗ trợ</a>';
-                    else
-                        html += '           <a style="width: 100%;background: #a73a3a" type="button" class="btn btn-danger" href="javascript:void(0)">Hotline: ' + formatPhoneNumber(result.phone) + '</a>';
-                    html += '   </div>';
-                    html += '</div>';
-
-                    $("#info-order").html(html);
-
-                    $("#info-order").modal('show');
                 }
 
-            }
+
         });
     }
+    function checkDeleteSPS(note) {
+        switch (note) {
+            case "Duyệt Đơn hàng":
+                return false;
+            case "Đang Nhập Kho":
+                return false;
+            case "Đã Lấy hàng":
+                return false;
+            case "Đang Lấy hàng":
+                return false;
+        }
+        return true
+    }
+    // hàm cho sắp xếp động
+    function compareValues(key, order='asc') {
+        return function(a, b) {
+            if(!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
+                // không tồn tại tính chất trên cả hai object
+                return 0;
+            }
 
-    function fnFilter_list(device = 0) {
+            const varA = (typeof a[key] === 'string') ?
+                a[key].toUpperCase() : a[key];
+            const varB = (typeof b[key] === 'string') ?
+                b[key].toUpperCase() : b[key];
+
+            let comparison = 0;
+            if (varA > varB) {
+                comparison = 1;
+            } else if (varA < varB) {
+                comparison = -1;
+            }
+            return (
+                (order == 'desc') ? (comparison * -1) : comparison
+            );
+        };
+    }
+
+
+    function fnFilter_listTab2(device = 0) {
         var province = $("#status-tab2").val();
         var date_start_customer_order = $("#date_start_customer_order_tab2").val();
         var date_end_customer_order = $("#date_end_customer_order_tab2").val();
@@ -528,9 +635,10 @@
                 code_order:code_order_tab2
             },
             beforeSend: function () {
-
+                $("#overlay").fadeIn(300);
             },
             success: function (data) {
+                $("#overlay").fadeOut(300);
                 var result = JSON.parse(data);
                 // alert_float('success',response.message);
                 if (result.status == true && result.error == '') {
@@ -567,11 +675,12 @@
                         html += '       <div class="row-3 border-row">';
                         html += value.receiver + ' - ' + value.phone + ' - ' + value.city + ' - ' + value.district;
                         html += '       </div>';
-                        html += '   </div>';
-                        html += '       <div class="row-3 border-row">';
-                        html += value.note;
+                        html += '       <div class="row-3 border-row"> ';
+                        html +=             value.note;
                         html += '       </div>';
-                        html += `<div class="row-3 border-row"> <i class='fa fa-eye' ></i> <a href="#">Hành trình</a> </div>`;
+                        html += '   </div>';
+
+                        html += `<div class="left-width"> <i class='fa fa-eye' ></i> <span style="color:deepskyblue">Hành trình</a> </div>`;
                         html += '   <div class="clear-fix"></div>';
                         html += '</li>';
 
@@ -584,7 +693,9 @@
             }
         });
     }
-
+    $('#limit_geted').on('change', function() {
+        fnFilter_listTab2(1)
+    });
     var isMobile = <?php echo $this->isAppMobile === true ? 'true' : 'false'?>;
 
     function initOrderManager(pages = 0) {
@@ -738,12 +849,13 @@
 
         var city = JSON.parse($("#data-city").val());
         var regions = JSON.parse($("#data-regions").val());
-
-        let html_list_status = "<option><option>"
-        html_list_status += list_status.map(function (value, index) {
-            return `<option value="${value}">${value}</option>`
-        }).join('');
+        let html_list_status = ""
+        for (let [key, value] of Object.entries(list_status)) {
+            html_list_status +=`<option value="${key}">${key}</option>`
+        }
         $("#kh-status").html(html_list_status)
+        console.log(html_list_status)
+        $("#status-tab2").html(html_list_status)
 
         let html_city = "<option><option>"
         html_city += city.map(function (value, index) {
@@ -774,7 +886,8 @@
         });
         $("#kh-status").select2({
             placeholder: "Vui Lòng Chọn Tình Trạng",
-            allowClear: true
+            allowClear: true,
+
         });
         $("#is_hd_branch").select2({
             placeholder: "Vui Lòng Chọn Chi Nhánh",
@@ -814,6 +927,8 @@
     }
 
     let loadDatatables = (link) => {
+        var list_status = JSON.parse($("#data-list-status").val());
+
         var table = $('#kh-order').DataTable({
             "ajax": link,
             "columnDefs": [
@@ -830,7 +945,8 @@
                     "targets": 1,
                     "data": null,
                     "render": function (data, type, row, meta) {
-                        let backgroundStatus = getColorStatus(row.status)
+                        let backgroundStatus = "#"+list_status[row.status]
+                        console.log(backgroundStatus)
 
                         let mkh = "";
                         if (row.code_orders != null && row.code_orders != "") {
@@ -842,7 +958,7 @@
                         }
 
                         return `
-                                <div style="width: 100%" class="mb-5"><label class="label label-orange label-xs tooltips" style="color:white;background-color:${backgroundStatus}" >&emsp;&emsp;${row.status}  &emsp;&emsp;</label></div>
+                                <div style="width: 100%" class="mb-5"><label class="label label-orange label-xs tooltips" style="color:white;background-color:${backgroundStatus}" >${row.status}  &emsp;&emsp;</label></div>
                                 <p style="color:red"> ${row.code_supership} </p>
                                 ${requestCode}
 
@@ -884,7 +1000,7 @@
 
 
                         return `
-                                <div style="width: 100%" class="mb-5"><label class="label label-orange label-xs tooltips" data-original-title="Được tạo bằng API">&emsp;&emsp;${row.city}&emsp;&emsp;</label>&emsp;</div>
+                                <div style="width: 100%" class="mb-5"><label class="label label-orange label-xs tooltips" data-original-title="Được tạo bằng API">${row.city}&emsp;&emsp;</label>&emsp;</div>
                                 <p>${row.receiver}</p>
                                 <p style="color:red">${row.phone}</p>
                                 <p>${address}</p>`;
@@ -1136,5 +1252,119 @@
             }
         });
     }
+    function openModalError(){
+        $("#modal-order-error").modal();
+        $('#table-order-error').dataTable().fnDestroy();
+
+        $customerId = $('#id_customer').val();
+        loadDatatablesError($customerId)
+    }
+    let loadDatatablesError = ($customerId) => {
+
+        var table = $('#table-order-error').DataTable({
+            "ajax": '/khachhang/order/getlisttab4error/'+$customerId,
+            "columnDefs": [
+              
+                {
+                    "width": "5%",
+                    "targets": 0,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        return row.date_create;
+                    }
+                },
+                {
+                    "width": "20%",
+                    "targets": 1,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        let backgroundStatus =getColorStatus(row.status)
+                        let dvvc = "";
+                        if (row.DVVC != "") {
+                            dvvc = `<p>ĐVVC: ${row.DVVC}</p>`
+                        }
+                        let mkh = "";
+                        if (row.soc != null && row.soc != "") {
+                            mkh = `<p>Mã Đơn KH : <span style="color:green">${row.soc}</span></p>`
+                        }
+
+
+                        return `
+                                <div style="width: 100%" class="mb-5"><label class="label label-orange label-xs tooltips" style="color:red;" >&emsp;&emsp;${row.required_code} &emsp;&emsp;</label></div>
+                                ${mkh}
+                                <p>Ngày tạo : ${moment(row.created).format('DD-MM-YYYY HH:mm:SS')}</p>`;
+                    }
+                },
+                {
+                    "width": "20%",
+                    "targets": 2,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        let phi = `<p>Phí DV: <span style="color:red">${formatCurrency(row.hd_fee)}</span></p>`;
+                        if (row.hd_fee == null) {
+                            phi = `<p>Phí DV: <span style="color:red">${formatCurrency(row.hd_fee_stam)}</span></p>`
+                        }
+                        if (row.is_hd_branch == 0) {
+                            phi = `<p>Phí DV: <span style="color:red">${formatCurrency(row.pay_transport)}</span></p>`
+                        }
+                        let mass = '';
+                        if(row.weight != "" && row.weight != null){
+                            mass = row.weight
+                        }
+
+                        return `
+                                <p>SP: ${row.product}</p>
+                                <p>Khối lượng: <span style="color:red">${mass}</span></p>
+                                <p>Thu Hộ: <span style="color:red">${formatCurrency(row.amount)}</span></p>
+                                <p>Phí DV: <span style="color:red">${formatCurrency(row.supership_value)}</span> </p>
+                                `;
+                    }
+                },
+                {
+                    "width": "20%",
+                    "targets": 3,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        let address = `${(row.address) ? row.address + ", " : ""} ${(row.commune) ? row.commune + ", " : ""} ${(row.district) ? row.district + ", " : ""}  ${(row.province) ? row.province : ""} `;
+
+
+                        return `
+                                <div style="width: 100%" class="mb-5"><label class="label label-orange label-xs tooltips" data-original-title="Được tạo bằng API">&emsp;&emsp;${(row.province)?row.province:""}&emsp;&emsp;</label>&emsp;</div>
+                                <p>${row.name}</p>
+                                <p style="color:red">${row.phone}</p>
+                                <p>${address}</p>`;
+                    }
+                },
+                {
+                    "width": "25%",
+                    "targets": 4,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        return `
+                                <p style="color:#557f38"><strong>Ghi Chú Giao Hàng:</strong></p>
+                                <p>${(row.note) ? row.note : ""}</p>
+                                 </div>`;
+                    }
+                }
+
+            ],
+            "drawCallback": function (settings) {
+            },
+            "order": [[0, 'DESC']],
+            searching: false,
+            info: false,
+            lengthChange: false, // Will Disabled Record number per page
+            processing: true,
+
+
+        });
+        table.on('order.dt search.dt', function () {
+            table.column(0, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
+                cell.innerHTML = `<div style="text-align: center">${i + 1}</div>`;
+            });
+
+        }).draw();
+        $('#modal-order-error table').removeClass('dataTable')
+    };
 
 </script>

@@ -409,6 +409,10 @@ $id_default = ($default_data) ? $default_data->id : '';
                                 <a style="margin-right:10px;" href="javascript:;"
                                    class="open-modal-default-value btn btn-info pull-left display-block">Khai Báo</a>
 
+								<a style="margin-right:10px;" href="javascript:;"
+                                   class="open-modal-declare btn btn-info pull-left display-block">Khai Báo Trạng Thái
+                                    Đơn Hàng</a>
+
                                 <a style="margin-right:10px;" href="javascript:;"
                                    class="btn btn-info pull-left display-block" id="import-customers">Import Excel</a>
                             </div>
@@ -533,6 +537,39 @@ $id_default = ($default_data) ? $default_data->id : '';
                             _l('options'),//30
                         ), 'create_order'); ?>
 
+
+						<b style="font-size: 20px">Danh Sách Trạng Thái</b>
+                        <table class="table dataTable no-footer">
+                            <thead>
+                            <tr>
+                                <th style="text-align: center">TT</th>
+                                <th style="text-align: center">Trạng thái gốc</th>
+                                <th style="text-align: center">Trạng thái chuyển đổi</th>
+                                <th style="text-align: center">Tính nợ theo ngày đối soát</th>
+                                <th style="text-align: center">Tính nợ theo ngày giao hàng</th>
+                                <th style="text-align: center">Hành động</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php $index = 0;
+                            foreach ($list_status_order as $status_order) {
+                                $index++; ?>
+                                <tr>
+                                    <td style="text-align: center"><?= $index ?></td>
+                                    <td style="text-align: center"><?= $status_order->status_ghtk ?></td>
+                                    <td style="text-align: center"><?= $status_order->status_change ?></td>
+                                    <td style="text-align: center"><?= (empty($status_order->status_debit)) ? 'Không tính nợ' : 'Có tính nợ' ?></td>
+                                    <td style="text-align: center"><?= (empty($status_order->group_debits)) ? 'Không tính nợ' : 'Có tính nợ' ?></td>
+                                    <td style="text-align: center">
+                                        <a href="javascript:void(0)" onclick="fnEdit(<?= $status_order->id ?>)">Sửa</a>
+                                        |
+                                        <a href="<?= base_url('admin/create_order_ghtk/delete_status/' . $status_order->id) ?>">Xóa</a>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+
+                            </tbody>
+                        </table>
 
                     </div>
                 </div>
@@ -822,7 +859,7 @@ $id_default = ($default_data) ? $default_data->id : '';
 
                         <div class="cover-checked col-md-3">
                             <label for="barter" class="container-checkbox">Đổi/Lấy Hàng Về
-                                <input type="checkbox" id="barter" name="barter">
+                                <input type="checkbox" id="barter" onclick="calc()" name="barter">
                                 <span class="checkmark"></span>
                             </label>
                         </div>
@@ -888,7 +925,10 @@ $id_default = ($default_data) ? $default_data->id : '';
                         </div>
                     </div>
 
-
+                    <div style="float: right;margin: 18px 18px 0px;">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo _l('close'); ?></button>
+                        <a href="javascript:;" class="btn btn-primary submit_customer_policy"><?php echo _l('confirm'); ?></a>
+                    </div>
                     <div class="col-md-12">
 
 
@@ -958,10 +998,7 @@ $id_default = ($default_data) ? $default_data->id : '';
 
 
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo _l('close'); ?></button>
-                <a href="javascript:;" class="btn btn-primary submit_customer_policy"><?php echo _l('confirm'); ?></a>
-            </div>
+
         </div><!-- /.modal-content -->
         <?php echo form_close(); ?>
     </div><!-- /.modal-dialog -->
@@ -1377,6 +1414,8 @@ $id_default = ($default_data) ? $default_data->id : '';
                     <?php //echo $this->security->get_csrf_token_name();?><!--" value="-->
                     <?php //echo $this->security->get_csrf_hash();?><!--">-->
                     <input type="file" id="file" name="file">
+                    <div class="success-import" style="color: green"></div>
+                    <div class="error-import" style="color: red"></div>
                 </div>
 
                 <div class="modal-footer">
@@ -1435,6 +1474,64 @@ $id_default = ($default_data) ? $default_data->id : '';
     </div>
 </div>
 
+
+<div class="modal fade" id="default_declare" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="width:80%;margin:auto;margin-top:50px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title"><?php echo "Khai Báo Trạng Thái Đơn Hàng"; ?></h4>
+            </div>
+
+            <div class="modal-body">
+                <input type="hidden" name="id_default" value="<?php echo $id_default ?>">
+                <div class="form-group ">
+                    <label for="mass_default">Trạng Thái Của SPS</label>
+                    <input type="text" class="form-control" placeholder="Trạng Thái Của SPS" id="status_ghtk"
+                           name="status_ghtk" value="<?= set_value('status_ghtk') ?>">
+                    <a href="#" target="_blank">Tra mã của SPS</a>
+                </div>
+                <div class="form-group ">
+                    <label for="volume_default">Trạng thái chuyển đổi</label>
+                    <input type="text" class="form-control" placeholder="Trạng thái chuyển đổi" id="status_change"
+                           name="status_change" value="<?= set_value('status_change') ?>">
+                </div>
+
+                <div class="form-group ">
+                    <label for="volume_default">Tính nợ theo ngày đối soát</label>
+                    <select class="form-control" id="status_debit" name="status_debit">
+                        <option value="">-- Chọn trạng thái --</option>
+                        <option value="0">Không tính</option>
+                        <option value="1">Có tính</option>
+                    </select>
+                </div>
+
+                <div class="form-group ">
+                    <label for="volume_default">Tính nợ theo ngày giao hàng</label>
+                    <select class="form-control" id="group_debits" name="group_debits">
+                        <option value="">-- Chọn trạng thái --</option>
+                        <option value="0">Không tính</option>
+                        <option value="1">Có tính</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <input type="hidden" id="active" value="0">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo _l('close'); ?></button>
+                <button type="submit" class="btn btn-primary"
+                        onclick="fnChangeStatus()"><?php echo _l('confirm'); ?></button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div>
+
+</div>
+
+
+
+
 <?php init_tail(); ?>
 
 <script src="/system/assets/plugins/select2/index.js"></script>
@@ -1458,10 +1555,22 @@ $id_default = ($default_data) ? $default_data->id : '';
             processData: false,
             data: form_data,
             type: 'post',
+			beforeSend: function(){
+                $("#btn-import_excel").html('<i class="fa fa-refresh fa-spin"></i>');
+            },
             success: function (response) {
+				$("#btn-import_excel").html('Xác nhận');
                 if (response.status == '200') {
                     alert('Thêm file thành công');
-                    $('#modal_import_excel_customers').modal('hide');
+                    let messError = response.error.map(function (val,key) {
+                        return val
+                    }).join(',');
+                    if(response.error.length >0){
+                        $('.error-import').html(
+                            'Số dòng thất bại: '+ messError
+                        )
+                    }
+                    $('.success-import').html('Số dòng thành công: '+response.success)
                 } else {
                     alert('Thêm file thất bại');
                 }
@@ -1469,6 +1578,58 @@ $id_default = ($default_data) ? $default_data->id : '';
         });
     });
 
+
+
+    function fnChangeStatus() {
+        var status_ghtk = $("#status_ghtk").val();
+        var status_change = $("#status_change").val();
+        var status_change = $("#status_change").val();
+        var active = $("#active").val();
+
+        var status_debit = $("#status_debit").find(':selected').val();
+        var group_debits = $("#group_debits").find(':selected').val();
+
+        if (status_ghtk == "") {
+            alert('Bạn chưa nhập trạng thái của Viettel Post!');
+            $("#status_ghtk").focus();
+            return false;
+        }
+
+        if (status_change == "") {
+            alert('Bạn chưa nhập trạng thái chuyển đổi!');
+            $("#status_change").focus();
+            return false;
+        }
+        $('.search-item').show();
+        $.ajax({
+            url: '<?= base_url('add_status')?>',
+            method: "POST",
+            data: {
+                status_ghtk: status_ghtk,
+                status_change: status_change,
+                status_debit: status_debit,
+                active: active,
+                group_debits:group_debits,
+                dvvc: 'SPS'
+            },
+            success: function (data) {
+                var result = JSON.parse(data);
+                $('.search-item').hide();
+                if (result.status == true && result.error == '') {
+                    alert(result.message);
+                    $("#default_declare").modal('hide');
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 3000);
+                }
+            }
+        });
+
+    }
+
+	$('.open-modal-declare').click(function () {
+        $('#default_declare').modal('show');
+    });
 
     $('.print-order').click(function () {
         $('#success-order').modal('hide');
@@ -2539,7 +2700,7 @@ $id_default = ($default_data) ? $default_data->id : '';
         dataSaveLocal.customer_id = id;
         dataSaveLocal.search_text = text;
         dataSaveLocal.config = $(this).attr('data-config');
-        ;
+
         $.ajax({
             url: '/system/admin/create_order/check_customer_policy_exits/' + id,
             method: 'GET',
@@ -2570,7 +2731,6 @@ $id_default = ($default_data) ? $default_data->id : '';
                     $('#customer_id').val(id);
                     $('#pickup_phone').val(phone);
                     $('.disable-view').show();
-                    $('#loader-repo').show();
 
                     $.ajax({
                         url: '/system/admin/pick_up_points/curlGetRepo',
@@ -2578,7 +2738,6 @@ $id_default = ($default_data) ? $default_data->id : '';
                         data: {token},
                         success: function (data) {
                             $('.disable-view').hide();
-                            $('#loader-repo').hide();
 
                             data = JSON.parse(data);
 
@@ -2822,6 +2981,39 @@ $id_default = ($default_data) ? $default_data->id : '';
     $(document).on('change', '#area_hd', function () {
         area_hd = JSON.parse($(this).val()).name;
     });
+
+	function calc() {
+        if (document.getElementById('barter').checked)
+        {
+            document.getElementById('note').value = document.getElementById('note').value + "\nCó Hàng Đổi Trả. Ship Lấy Hàng Về Giúp Shop"
+        } else {
+            textOld =  document.getElementById('note').value
+            document.getElementById('note').value = textOld.replace("\nCó Hàng Đổi Trả. Ship Lấy Hàng Về Giúp Shop", "");
+
+        }
+    }
+
+	function fnEdit(id) {
+        $.ajax({
+            url: '<?= base_url('api/getStatus')?>',
+            data: {id: id},
+            method: "post",
+            success: function (data) {
+                var result = JSON.parse(data);
+                if (result.status == true && result.error == "") {
+                    $("#status_ghtk").val(result.info.status_ghtk);
+                    $("#status_change").val(result.info.status_change);
+                    $("#status_debit").val(result.info.status_debit);
+                    $("#group_debits").val(result.info.group_debits);
+                    $("#active").val(result.info.id);
+                    $("#default_declare").modal('show');
+                } else {
+                    alert('Xảy ra lỗi.');
+                }
+            }
+        });
+    }
+
 </script>
 
 </body>

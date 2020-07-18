@@ -514,13 +514,10 @@ $id_default = ($default_data) ? $default_data->id : '';
         alert_float('success', 'Cập nhật thành công.');
     }
     fnSearchOrder();
+	
     function fnSearchOrder() {
         var p = $("#p").val();
-        // if (p == "") {
-        //     alert('Bạn cần nhập mã đơn hàng cần tìm!');
-        //     $("#p").focus();
-        //     return false;
-        // }
+
         $('#listOrderHistory').html('');
         var date_start = $('#date_start').val();
         var date_end = $('#date_end').val();
@@ -561,8 +558,10 @@ $id_default = ($default_data) ? $default_data->id : '';
                     html += '           <option value="">-- Chọn trạng thái --</option>';
                     html += '           <option value="Hủy">Hủy</option>';
                     html += '           <option value="Đã Đối Soát Giao Hàng">Đã Đối Soát Giao Hàng</option>';
-                    html += '           <option value="Đã Trả Hàng">Đã Trả Hàng</option>';
+                    html += '           <option value="Đã Trả Hàng Toàn Bộ">Đã Trả Hàng Toàn Bộ</option>';
                     html += '           <option value="Đã Trả Hàng Một Phần">Đã Trả Hàng Một Phần</option>';
+                    html += '           <option value="Đã Chuyển Kho Trả Toàn Bộ">Đã Chuyển Kho Trả Toàn Bộ</option>';
+                    html += '           <option value="Đã Chuyển Kho Trả Một Phần">Đã Chuyển Kho Trả Một Phần</option>';
                     html += '       </select>';
                     html += '   </td>';
 

@@ -16,10 +16,12 @@ class Create_order_model extends CI_Model {
             $this->db->where("shop IN ($sub_query)");
         }
         if(!empty($params['startDate'])){
-            $this->db->where('date_create >=' , date('Y-m-d',strtotime(str_replace('-', '-', to_sql_date($params['startDate'])))));
+            // $this->db->where('date_create >=' , date('Y-m-d',strtotime(str_replace('-', '-', to_sql_date($params['startDate'])))));
+            $this->db->where('DATE_FORMAT(date_create, "%Y-%m-%d") >="'.to_sql_date($params['startDate']).'"');
         }
         if(!empty($params['endDate'])){
-            $this->db->where('date_create <=' , date('Y-m-d',strtotime(str_replace('-', '-', to_sql_date($params['endDate'])))));
+             $this->db->where('DATE_FORMAT(date_create, "%Y-%m-%d") <="'.to_sql_date($params['endDate']).'"');
+            // $this->db->where('date_create <=' , date('Y-m-d',strtotime(str_replace('-', '-', to_sql_date($params['endDate'])))));
         }
         $this->db->where("status NOT LIKE 'Hủy'");
         $this->db->order_by('id', 'DESC');

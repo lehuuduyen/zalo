@@ -533,7 +533,7 @@ $id_default = ($default_data) ? $default_data->id : '';
 
 <div class="modal fade" id="modal-choose-dvvc" tabindex="-1" role="dialog" style="left: 35%;top: 10%;">
     <div class="modal-dialog">
-        <div class="modal-content" style="text-align: center; height: 450px; width: 474px">
+        <div class="modal-content" id="modal-content" class="modal-content" style="text-align: center; height: 450px; width: 474px">
             <div class="modal-body" style="text-align: center;">
                 <p class="circle-check"><i class="fa fa-home" aria-hidden="true"></i></p>
                 <p class="code-order-show" id="titleCode"></p>
@@ -556,6 +556,7 @@ $id_default = ($default_data) ? $default_data->id : '';
                 <input type="text" class="form-control" id="mass_fake" name="mass_fake" value="">
                 <br>
                 <div id="boxtranspot"></div>
+				<div id="boxwarehouse"></div>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
                 <button type="button" id="btnUpdate" data-id="" data-code="" data-transport="" class="btn btn-success"
                         onclick="fnCreateOrder()">Tạo mới
@@ -2300,13 +2301,14 @@ $id_default = ($default_data) ? $default_data->id : '';
     });
 
 
-    function fnConfirm_Order(id, code, mass, tranport) {
+    function fnConfirm_Order(id, code, mass, tranport, idCustomer) {
         $("#titleCode").html('Chọn đơn vị vận chuyển cho đơn hàng có mã <b>' + code + '</b>');
         $("#mass").val(mass).select();
 
         $("#btnUpdate").attr('data-id', id);
         $("#btnUpdate").attr('data-code', code);
-		$("#btnUpdate").attr('data-transport', tranport);
+        $("#btnUpdate").attr('data-transport', tranport);
+        $("#btnUpdate").attr('data-customer', idCustomer);
         $("#btnUpdate").attr('onclick', 'fnCreateOrder()');
         $("#boxmass").show();
         $("#modal-choose-dvvc").modal('show');
@@ -2316,6 +2318,7 @@ $id_default = ($default_data) ? $default_data->id : '';
     function fnCreateOrder() {
         var transpot = 0;
         var dvvc = $("#dvvc").find(":selected").val();
+        var warehouse = $("#warehouse").find(":selected").val();
         var id = $("#btnUpdate").attr('data-id');
         var code = $("#btnUpdate").attr('data-code');
         var mass = $("#mass").val();
@@ -2333,7 +2336,15 @@ $id_default = ($default_data) ? $default_data->id : '';
 
         $.ajax({
             url: '<?= base_url('api/comfirm_order')?>',
-            data: {id: id, code: code, dvvc: dvvc, mass: mass, mass_fake: mass_fake, transpot: transpot},
+            data: {
+                id: id,
+                code: code,
+                dvvc: dvvc,
+                mass: mass,
+                mass_fake: mass_fake,
+                transpot: transpot,
+                warehouse: warehouse
+            },
             method: "POST",
             beforeSend: function () {
                 $("#btnUpdate").html('<i class="fa fa-spin fa-refresh"></i>');
@@ -2352,9 +2363,9 @@ $id_default = ($default_data) ? $default_data->id : '';
                         url = '/system/admin/create_order_ghtk/print_data_order/' + JSON.parse(data).id + '?print=true';
                     } else if (dvvc === 'VTP') {
                         url = '/system/admin/create_order_ghtk/print_data_order/' + JSON.parse(data).id + '?print=true&dv=VTP';
-                    }else if(dvvc === 'VNC'){
+                    } else if (dvvc === 'VNC') {
                         url = '/system/admin/create_order_ghtk/print_data_order/' + JSON.parse(data).id + '?print=true&dv=VNC';
-                    }else if(dvvc === 'NB'){
+                    } else if (dvvc === 'NB') {
                         url = '/system/admin/create_order_ghtk/print_data_order/' + JSON.parse(data).id + '?print=true&dv=NB';
                     }
 
@@ -2366,16 +2377,17 @@ $id_default = ($default_data) ? $default_data->id : '';
                     }, 5000);
                 } else if (result.status === false && result.error === 'Error') {
                     alert_float('danger', 'Đơn hàng không tồn tại.');
-                }else if(result.status === false && result.error === 'noAddress_id'){
-					$("#title").html(result.code);
-					$("#shop_id").val(result.id);
-					$("#shop_code").val(result.code);
-					$("#modal-address").modal("show");
-				}
+                } else if (result.status === false && result.error === 'noAddress_id') {
+                    $("#title").html(result.code);
+                    $("#shop_id").val(result.id);
+                    $("#shop_code").val(result.code);
+                    $("#modal-address").modal("show");
+                }
             }
         });
 
     }
+
 
 	function fnUpdateShop() {
         var id = $("#shop_id").val();
@@ -2527,10 +2539,33 @@ $id_default = ($default_data) ? $default_data->id : '';
         }
         $("#mass_fake").val(mass_fake_ghtk);
         if (dvvc === 'SPS') {
+            var idCustomer = $("#btnUpdate").attr('data-customer');
+
+            $.ajax({
+                url: '<?= base_url('api/getWarehouseConfirm')?>',
+                data: {dv: 0, idCustomer: idCustomer, obj: 0},
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    var result = JSON.parse(data);
+                    var listResult = result.list_result;
+                    var html = "";
+                    var html = "<lable>Chọn kho</lable>";
+                    html += "<select class='form-control' name='warehouse' id='warehouse'>";
+                    $.each(listResult, function (index, value) {
+                        html += '   <option value="' + value.formatted_address + '">' + value.formatted_address + '</option>';
+                    });
+                    html += '</select><br/>';
+                    $("#boxwarehouse").html(html);
+                }
+            });
+
             $("#mass_fake").val(mass_fake);
+
         } else if (dvvc === 'VTP') {
             $("#mass_fake").val(mass_fake_vpost);
-        }else if(dvvc === 'VNC'){
+        } else if (dvvc === 'VNC') {
             $("#mass_fake").val(mass_fake_vnc);
         }
         $("#boxtranspot").html("");
@@ -2538,24 +2573,51 @@ $id_default = ($default_data) ? $default_data->id : '';
             var transport = $("#btnUpdate").attr('data-transport');
             var html = "<lable>Phương Thức Vận Chuyển</lable>";
             html += "<select class='form-control' name='transpot' id='transspot'>";
-            if(transport === 'road'){
+            if (transport === 'road') {
                 html += "   <option value='1' selected>Tiết Kiệm</option>";
-            }else{
+            } else {
                 html += "   <option value='1'>Tiết Kiệm</option>";
             }
 
-            if(transport === 'fly'){
+            if (transport === 'fly') {
                 html += "   <option value='2' selected>Tốc Hành</option>";
-            }else{
+            } else {
                 html += "   <option value='2'>Tốc Hành</option>";
             }
             html += "</select><br>";
 
             $("#boxtranspot").html(html);
+
+            $.ajax({
+                url: '<?= base_url('api/getWarehouseConfirm')?>',
+                data: {dv: 1, obj: 0},
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+
+                    var result = JSON.parse(data);
+                    var listResult = result.list_result;
+                    var htmlWarehouse = "";
+                    var htmlWarehouse = "<lable>Chọn kho</lable>";
+                    htmlWarehouse += "<select class='form-control' name='warehouse' id='warehouse'>";
+                    $.each(listResult, function (index, value) {
+                        if (value.name === "") {
+                            htmlWarehouse += '   <option value="' + value.id + '">' + value.address + '</option>';
+                        } else {
+                            htmlWarehouse += '   <option value="' + value.id + '">' + value.name + '</option>';
+                        }
+                    });
+                    htmlWarehouse += '</select><br/>';
+                    $("#boxwarehouse").html(htmlWarehouse);
+                }
+            });
+            $("#modal-content").css('height', '550px');
         }
         var textmass = document.getElementById("mass");
         textmass.select();
     }
+
 
 
     function fnCheckAll(obj = 0) {

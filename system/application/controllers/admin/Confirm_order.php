@@ -727,13 +727,7 @@ class Confirm_order extends AdminController
     public function index()
 
     {
-//        $json = '{
-//    "status": "Error",
-//    "errors": {
-//        "message": "\u0110\u01a1n H\u00e0ng \u0111\u00e3 t\u1ed3n t\u1ea1i trong h\u1ec7 th\u1ed1ng SuperShip."
-//    }
-//} ';
-//pre(json_decode($json));
+
         if ($this->input->is_ajax_request()) {
 
             if ($_POST['enable_filter']) {
@@ -770,8 +764,13 @@ class Confirm_order extends AdminController
 
         $this->db->select('tbl_default_mass_volume_vpost.mass_fake as mass_fake_vpost');
         $default_data3 = $query = $this->db->get('tbl_default_mass_volume_vpost')->result();
+
+        $this->db->select('tbl_default_mass_volume_vnc.mass_fake as mass_fake_vnc');
+        $default_data4 = $query = $this->db->get('tbl_default_mass_volume_vnc')->result();
+
         $default_data[0]->mass_fake_ghtk = $default_data2[0]->mass_fake_ghtk;
         $default_data[0]->mass_fake_vpost = $default_data3[0]->mass_fake_vpost;
+        $default_data[0]->mass_fake_vnc = $default_data4[0]->mass_fake_vnc;
 
         $this->db->select('*');
 
@@ -1363,13 +1362,13 @@ class Confirm_order extends AdminController
 
             }
 
-            if(isset($_GET['dv']) && in_array($_GET['dv'], array('VTP'))){
-                $data['dv'] = true;
+            if(isset($_GET['dv']) && in_array($_GET['dv'], array('VTP','VNC'))){
+                $data['dv'] = $_GET['dv'];
             }
 
         }
 
-        $sql = 'SELECT `tblorders_shop`.*, `tbl_create_order`.`name`,  `tbl_create_order`.`province`, `tbl_create_order`.`required_code`
+        $sql = 'SELECT `tblorders_shop`.*, `tbl_create_order`.`name`,`tbl_create_order`.`soc`,  `tbl_create_order`.`province`, `tbl_create_order`.`required_code`
 
                 FROM `tbl_create_order`
 

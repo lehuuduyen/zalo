@@ -201,3 +201,20 @@ define('APP_MODULES_PATH', FCPATH . 'modules/');
  * Helper libraries path
  */
 define('LIBSPATH', APPPATH . 'libraries/');
+
+/**
+ * URL API VNC
+*/
+if(in_array($_SERVER['HTTP_HOST'], array('spshd.test.lediun.com'))){
+    define('URL_VNC','http://api.v3.vncpost.com/');
+    define('URL_VNC_TRACKING','https://pt.v.vncpost.com/');
+}else{
+    define('URL_VNC','http://u.api.vncpost.com/');
+    define('URL_VNC_TRACKING','https://pt.vncpost.com/');
+}
+/**
+ * CODE DEFAULT
+*/
+define('CODE_GHTK', 'GH');
+define('CODE_VTP', 'VT');
+define('CODE_VNC', 'VNC');

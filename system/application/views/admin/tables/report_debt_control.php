@@ -33,6 +33,7 @@ if($this->ci->input->post('date_start_control'))
 
     $DataDebt = $this->ci->db->query('
         SELECT
+            shop,
             date_debits,
             code_supership,
             status as note,
@@ -89,6 +90,7 @@ if(!empty($new_where_order))
 
 $All_data = $this->ci->db->query('
     SELECT
+        shop,
         date_debits,
         code_supership,
         status as note,
@@ -102,6 +104,7 @@ $All_data = $this->ci->db->query('
 // lấy giới hạn khách hàng và liên hệ
 $limit_data = $this->ci->db->query('
     SELECT
+        shop,
         date_debits,
         code_supership,
         status as note,
@@ -120,6 +123,7 @@ if($length >= 0 && (($start + $length) <  $countAll))
 {
     $limit_data_last = $this->ci->db->query('
         SELECT
+            shop,
             date_debits,
             code_supership,
             status as note,
@@ -176,6 +180,7 @@ foreach ($rResult as $key => $aRow) {
     $row = [];
     $row[] = _dt($aRow['date_debits']);
     $row[] = $aRow['code_supership'];
+    $row[] = $aRow['shop'];
     $row[] = $aRow['note'];
     $row[] = number_format_data($aRow['pstang']);
     $row[] = number_format_data($aRow['psgiam']);

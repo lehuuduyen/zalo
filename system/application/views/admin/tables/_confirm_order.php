@@ -30,7 +30,7 @@ $aColumns = array(
     'user_created',
     db_prefix() . 'staff.firstname',
     'status_cancel',
-    'the_fee_bearer',
+    'the_fee_bearer','transport'
 );
 $sIndexColumn = "id";
 $sTable = 'tbl_create_order';
@@ -50,6 +50,7 @@ $j = 0;
 
 
 foreach ($rResult as $aRow) {
+	$transport = $aRow['transport'];
     $row = array();
     $j++;
     for ($i = 0; $i < count($aColumns); $i++) {
@@ -111,7 +112,7 @@ foreach ($rResult as $aRow) {
 
         $icon_delete = '<a href="/system/admin/confirm_order/delete/' . $aRow['id'] . '" class="btn btn-danger delete-reminder-custom btn-icon"><i class="fa fa-remove"></i></a>';
 
-        $icon_print = '<a href="javascript:;" class="btn btn-primary btn-icon" onclick="fnConfirm_Order(' . $aRow['id'] . ',\'' . $aRow['required_code'] . '\','.$aRow['weight'].')"><i class="fa fa-check"></i></a>';
+        $icon_print = '<a href="javascript:;" class="btn btn-primary btn-icon" onclick="fnConfirm_Order(' . $aRow['id'] . ',\'' . $aRow['required_code'] . '\','.$aRow['weight'].',\''.$transport.'\','.$aRow['customer_id'].')"><i class="fa fa-check"></i></a>';
 
         $row[] = $icon_delete . $icon_print . '</div>';
 
@@ -134,7 +135,7 @@ foreach ($rResult as $aRow) {
 
         }
     }
-
+$row[29] = $row[30];
 
     $output['aaData'][] = $row;
 }

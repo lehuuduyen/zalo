@@ -5,6 +5,10 @@
     #create_order_ob .control-label, #create_order_ob label {
         margin-bottom: 0;
     }
+    #create_order_ob .error {
+        display: none !important;
+    }
+
     .mb-10{
         margin-bottom: 10px;
     }
@@ -481,21 +485,37 @@
     }
 
 
-    .kh-tab4 table thead th:last-child {
+    .kh-tab4 .table1 thead th:last-child {
         width: 30% !important;
     }
-    .kh-tab4 table thead th:nth-last-child(-n+2) {
+    .kh-tab4 .table1 thead th:nth-last-child(-n+2) {
         width: 40%  !important;
     }
 
-    .kh-tab4 table tbody .sorting_1 {
+    .kh-tab4 .table1 tbody .sorting_1 {
+        width: 200px !important;
+    }
+
+    .kh-tab4 .table1 tbody .sorting_1 {
         width: 200px !important;
     }
 
 
+    .kh-tab4 .table2 thead th:last-child {
+        width: 35% !important;
+    }
+    .kh-tab4 .table2 thead th:nth-last-child(-n+2) {
+        width: 40%  !important;
+    }
+    .kh-tab4 .table2 thead th:first-child {
+        width: 5%  !important;
+    }
 
-    .kh-tab4 table tbody .sorting_1 {
-        width: 200px !important;
+    .kh-tab4 .table2 thead th:nth-last-child(-n+3) {
+        width: 20%  !important;
+    }
+    .kh-tab4 .table2 thead th:nth-last-child(-n+4) {
+        width: 23.75%  !important;
     }
     .kh-tab4 .dataTables_length label {
         font-size: 15px;
@@ -650,8 +670,7 @@
 
                         </div>
                     </div>
-                    <div class=" col-md-12 mb-10">
-
+                    <div class="col-md-12 " style="margin-bottom: 20px" >
                         <button class="btn btn-sm btn-primary button-red mr-2" onclick="clickSearchTab4()"
                                 style="width: 15%;">Tìm Kiếm
                         </button>
@@ -664,14 +683,23 @@
                         <button class="btn btn-sm btn-primary button-red mr-2" onclick="clickSearchTab4()"
                                 style="width: 10%;float: right">In S9
                         </button>
-
                     </div>
+                    <div class="col-md-12">
+                    <ul  class="nav nav-pills col-md-12">
+                        <li class="active" >
+                            <a   href="#1a" data-toggle="tab">Danh Sách Đơn Hàng</a>
+                        </li>
+                        <li ><a  href="#2a" data-toggle="tab">Danh Sách Đơn Hàng Lỗi</a>
+                        </li>
+                    </ul>
+                    </div>
+
                 </div>
+                <div class="tab-content clearfix">
+                <div  class="tab-pane active" id="1a">
 
-                <div class="">
-
-                    <div class="col-md-12" id="table-order-wrapper">
-                        <table id="example" class="table table-bordered table-striped"
+                    <div  style="margin: 20px 0px" class="col-md-12" id="table-order-wrapper">
+                        <table id="example" class="table table1 table-bordered table-striped"
                                style="border-collapse: collapse;width:100%;font-family: " Times New Roman
                         ", Times, serif !important;font-size: 12px !important;">
                         <thead >
@@ -687,6 +715,29 @@
 
                         </table>
                     </div>
+                </div>
+
+
+
+                <div  class="tab-pane " id="2a">
+
+                    <div class="col-md-12" id="table-order-wrapper" style="margin: 20px 0px">
+                        <table id="example-error" class="table table2 table-bordered table-striped"
+                               style="border-collapse: collapse;width:100%;font-family: " Times New Roman
+                        ", Times, serif !important;font-size: 12px !important;">
+                        <thead >
+                        <tr>
+                            <th style="width: 5%" >STT</th>
+                            <th style="width: 10%">ĐƠN HÀNG</th>
+                            <th style="width: 10%">GÓI HÀNG</th>
+                            <th style="width: 40%">NGƯỜI NHẬN</th>
+                            <th style="width: 35%">NỘI DUNG</th>
+                        </tr>
+                        </thead>
+
+                        </table>
+                    </div>
+                </div>
                 </div>
 
             </div>
@@ -723,6 +774,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
     <?php }?>

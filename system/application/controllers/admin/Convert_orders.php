@@ -16,8 +16,13 @@ class Convert_orders extends AdminController
 
         $this->db->select('tbl_default_mass_volume_vpost.mass_fake as mass_fake_vpost');
         $default_data3 = $query = $this->db->get('tbl_default_mass_volume_vpost')->result();
+
+        $this->db->select('tbl_default_mass_volume_vnc.mass_fake as mass_fake_vnc');
+        $default_data4 = $query = $this->db->get('tbl_default_mass_volume_vnc')->result();
+
         $default_data[0]->mass_fake_ghtk = $default_data2[0]->mass_fake_ghtk;
         $default_data[0]->mass_fake_vpost = $default_data3[0]->mass_fake_vpost;
+        $default_data[0]->mass_fake_vnc = $default_data4[0]->mass_fake_vnc;
 
         if ($default_data) {
             $data['default_data'] = $default_data[0];

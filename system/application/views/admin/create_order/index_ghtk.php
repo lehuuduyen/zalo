@@ -385,8 +385,9 @@ $mass_fake = ($default_data) ? number_format($default_data->mass_fake) : '';
 $volume = ($default_data) ? number_format($default_data->volume_default) : '';
 $token_ghtk = ($default_data) ? $default_data->token_ghtk : '';
 $address_id = ($default_data) ? $default_data->address_id : '';
-$code_default = ($default_data) ? $default_data->code : '';
+$domain_webhook = ($default_data) ? $default_data->domain_webhook : '';
 $id_default = ($default_data) ? $default_data->id : '';
+$code_default = ($default_data) ? $default_data->code : '';
 ?>
 <script>
     var token_ghtk = "<?php echo $default_data->token_ghtk; ?>";
@@ -638,9 +639,8 @@ $id_default = ($default_data) ? $default_data->id : '';
 
 
                         <div class="col-md-5">
-                            <!-- Chọn Khách Hang -->
                             <div id="repo_customer-select" class="form-group">
-								<label for="repo_customer">Chọn Kho:</label>
+                                <label for="repo_customer">Chọn Kho:</label>
                                 <select class="form-control" id="repo_customer" name="repo_customer">
                                     <?php foreach ($list_warehouse as $warehouse){//83 Nguyễn Văn Trang , Gia Lộc Hải Dương, Thị trấn Gia Lộc, Huyện Gia Lộc, Tỉnh Hải Dương?>
                                         <option data-code="<?= $warehouse->id?>" value="<?= $warehouse->nameAddress.', '.$warehouse->commune.', '.$warehouse->district.', '.$warehouse->province?>"><?= empty($warehouse->name) ? $warehouse->nameAddress.', '.$warehouse->commune.', '.$warehouse->district.', '.$warehouse->province:$warehouse->name?></option>
@@ -1399,6 +1399,12 @@ $id_default = ($default_data) ? $default_data->id : '';
                     <!-- <span style="color:#03a9f4;">Token .</span> -->
                 </div>
 				
+                <div class="form-group ">
+                    <label for="token_ghtk">Domain Hành Trình </label>
+                    <input type="text" class="form-control" placeholder="Cập Nhật Domain Giao Hành Trình" id="domain_webhook"
+                           name="domain_webhook" value="<?php echo $domain_webhook ?>">
+                    <!-- <span style="color:#03a9f4;">Token .</span> -->
+                </div>
             </div>
 
             <div class="modal-footer">
@@ -2343,7 +2349,8 @@ $id_default = ($default_data) ? $default_data->id : '';
                 var data = {};
                 var repo_customer = $('#repo_customer').val().split(",");
 
-				var warehouse_id = $('#repo_customer').find(":selected").attr('data-code');
+                var warehouse_id = $('#repo_customer').find(":selected").attr('data-code');
+
 
                 if (parseINT($('#total_money').val()) >= 3000000 && !$('#value_order').val()) {
                     alert('Đơn hàng này phải tính phí bảo hiểm. Vui lòng nhập trị giá. ');
@@ -2352,7 +2359,7 @@ $id_default = ($default_data) ? $default_data->id : '';
 
                 data.customer_id = $('#create_order_ob #customer_id').val();
 
-				data.warehouse_id = warehouse_id;
+                data.warehouse_id = warehouse_id;
 
                 data.pickup_address = repo_customer.slice(0, repo_customer.length - 2).toString().trim();
 

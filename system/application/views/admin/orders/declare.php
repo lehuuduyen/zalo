@@ -231,7 +231,7 @@
                                 <thead>
                                 <tr>
                                     <th>TT</th>
-									<th>Tên kho</th>
+                                    <th>Tên kho</th>
                                     <th>Địa chỉ</th>
                                     <th>Điện thoại</th>
                                     <th>Tỉnh/thành phố</th>
@@ -423,7 +423,6 @@
 </div>
 
 
-
 <div class="modal fade" id="default_warehouse" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document" style="width:80%;margin:auto;margin-top:50px;">
         <div class="modal-content">
@@ -435,20 +434,22 @@
 
             <div class="modal-body">
                 <input type="hidden" name="id_warehouse_default" id="id_warehouse_default" value="0">
-				
-				<div class="form-group ">
+
+                <div class="form-group ">
                     <label for="mass_default">Tên kho hàng</label>
-                    <input type="text" class="form-control" placeholder="Tên kho hàng" value="" id="name" name="name">
+                    <input type="text" class="form-control" placeholder="Tên kho hàng" value="" id="nameWarehouse" name="nameWarehouse">
                 </div>
-				
+
                 <div class="form-group ">
                     <label for="mass_default">Địa chỉ kho</label>
-                    <input type="text" class="form-control" placeholder="Địa chỉ kho" value="" id="address" name="address">
+                    <input type="text" class="form-control" placeholder="Địa chỉ kho" value="" id="address"
+                           name="address">
                 </div>
 
                 <div class="form-group ">
                     <label for="volume_default">Điện Thoại</label>
-                    <input type="text" class="form-control" name="phone_default" placeholder="Điện Thoại" id="phone_default">
+                    <input type="text" class="form-control" name="phone_default" placeholder="Điện Thoại"
+                           id="phone_default">
                 </div>
 
                 <div class="form-group ">
@@ -463,12 +464,7 @@
                 </div>
                 <div class="form-group ">
                     <label for="type_customer">Chọn Quận Huyện/Thành Phố:</label>
-                    <select class="form-control" id="district_default" name="district_default">
-
-                        <?php foreach ($district_hd as $key => $value): ?>
-                            <option value='<?php echo json_encode($value) ?>'><?php echo $value->name ?></option>
-                        <?php endforeach; ?>
-                    </select>
+                    <select class="form-control" id="district_default" name="district_default"></select>
                 </div>
                 <div class="form-group ">
                     <label for="type_customer">Chọn Phường Xã:</label>
@@ -492,7 +488,8 @@
             <div class="modal-footer">
                 <input type="hidden" id="active" value="0">
                 <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo _l('close'); ?></button>
-                <button type="button" class="btn btn-primary" onclick="setWareHouse()"><?php echo _l('confirm'); ?></button>
+                <button type="button" class="btn btn-primary"
+                        onclick="setWareHouse()"><?php echo _l('confirm'); ?></button>
             </div>
         </div><!-- /.modal-content -->
     </div>
@@ -544,6 +541,7 @@
 
     $(document).on('change', '#district_default', function () {
         var index = $(this).val();
+        console.log(index);
         if (index > -1) {
             var val = data_districts_default[index];
             district_name = val.name;
@@ -661,19 +659,20 @@
                 $.each(listData, function (key, val) {
                     index++;
                     html += '<tr>';
-                    html += '<td>'+ index+'</td>';
-					html += '<td>' + val.name + '</td>';
-                    html += '<td>'+ val.nameAddress +'</td>';
-                    html += '<td>'+ val.phone +'</td>';
-                    html += '<td>'+ val.province +'</td>';
-                    html += '<td>'+ val.district +'</td>';
-                    html += '<td>'+ val.commune +'</td>';
-                    if(val.is_default === "1")
+                    html += '<td>' + index + '</td>';
+                    html += '<td>' + val.name + '</td>';
+                    html += '<td>' + val.nameAddress + '</td>';
+                    html += '<td>' + val.phone + '</td>';
+                    html += '<td>' + val.province + '</td>';
+                    html += '<td>' + val.district + '</td>';
+                    html += '<td>' + val.commune + '</td>';
+                    if (val.is_default === "1")
                         html += '<td><i class="fa fa-check"></i></td>';
                     else
                         html += '<td></td>';
                     html += '<td>';
-                    html += '   <button class="btn btn-danger" onclick="fnDeleteWarehouse('+ val.id +')">Xóa</button>';
+                    html += '   <button class="btn btn-info" onclick="fnEditWarehouse(' + val.id + ')">Sửa</button>';
+                    html += '   <button class="btn btn-danger" onclick="fnDeleteWarehouse(' + val.id + ')">Xóa</button>';
                     html += '</td>';
                     html += '</tr>';
                 })
@@ -686,7 +685,7 @@
 
         var p = JSON.parse($("#province_default").find(":selected").val());
 
-        if(p){
+        if (p) {
             $('.disable-view').show();
             $('#loader-repo2').show();
             $.ajax({
@@ -706,12 +705,12 @@
                     var i = 0;
 
                     html += '<option  value="null">Chọn Quận Huyện/Thành Phố</option>';
-                    $.each(data, function(index, value){
-                        if(value.name === district_name){
-                            html += '<option selected value="'+ i +'">'+ value.name +'</option>';
+                    $.each(data, function (index, value) {
+                        if (value.name === district_name) {
+                            html += '<option selected value="' + i + '">' + value.name + '</option>';
                             val_district = value;
-                        }else{
-                            html += '<option value="'+ i +'">'+ value.name +'</option>';
+                        } else {
+                            html += '<option value="' + i + '">' + value.name + '</option>';
                         }
                     });
                     $('#district_default').append(html);
@@ -728,11 +727,11 @@
                             data_commue_default = data;
                             $('#area_hd_default').empty();
                             var html = '<option  value="null">Chọn Phường Xã</option>';
-                            $.each(data, function(index, value){
-                                if(value.name === commune_name){
-                                    html += '<option selected value="'+ i +'">'+ value.name +'</option>';
-                                }else{
-                                    html += '<option value="'+ i +'">'+ value.name +'</option>';
+                            $.each(data, function (index, value) {
+                                if (value.name === commune_name) {
+                                    html += '<option selected value="' + i + '">' + value.name + '</option>';
+                                } else {
+                                    html += '<option value="' + i + '">' + value.name + '</option>';
                                 }
                             });
                             $('#area_hd_default').append(html);
@@ -753,11 +752,11 @@
     });
 
     function setWareHouse() {
-		var name = $("#name").val();
+        var name = $("#nameWarehouse").val();
         var address_default = $("#address").val();
         var phone_default = $("#phone_default").val();
         var is_default = 0;
-        if($('#is_default').is(":checked"))
+        if ($('#is_default').is(":checked"))
             is_default = $('#is_default').val();
 
         var id_default = $("#id_warehouse_default").val();
@@ -770,8 +769,8 @@
                 province_name: province_name,
                 district_name: district_name,
                 commune_name: commune_name,
-                is_default:is_default,
-				name: name
+                is_default: is_default,
+                name: name
             },
             method: "POST",
             beforeSend: function () {
@@ -781,6 +780,15 @@
                 var result = JSON.parse(data);
                 if (result.status === true && result.error === '') {
                     alert(result.message);
+                    $("#nameWarehouse").val("");
+                    $("#address").val("");
+                    $("#phone_default").val("");
+                    $("#id_warehouse_default").val(0);
+
+                    $("#district_default").html("");
+                    $("#area_hd_default").html("");
+                    window.location.reload();
+
                 }
             }
         });
@@ -790,6 +798,75 @@
     function fnDeleteWarehouse(id) {
         window.location.href = '/system/admin/declare_controller/delete/' + id + '?t=warehouse';
     }
+
+    function fnEditWarehouse(id) {
+        $.ajax({
+            url: '<?= base_url('api/get_warehouse')?>',
+            method: "POST",
+            data: {id: id},
+            success: function (data) {
+                var result = JSON.parse(data);
+                if (result.status === true && result.error === '') {
+                    var info = result.info;
+
+                    province_name = info.province;
+                    district_name = info.district;
+                    commune_name = info.commune;
+
+                    data_commue_default = info.area_list;
+                    data_districts_default = info.district_list;
+
+                    $("#id_warehouse_default").val(id);
+                    $("#nameWarehouse").val(info.name);
+                    $("#address").val(info.nameAddress);
+                    $("#phone_default").val(info.phone);
+
+                    // Tỉnh thành
+                    var html_province = "<option value='null'>Chọn Tỉnh/Thành</option>";
+                    $.each(info.province_list, function (index, value) {
+                        if (value.code == info.codeProvince) {
+                            html_province += "<option selected value='{\"code\":\"" + value.code + "\",\"name\":\"" + value.name + "\"}'>" + value.name + "</option>";
+                        } else
+                            html_province += "<option value='{\"code\":\"" + value.code + "\",\"name\":\"" + value.name + "\"}'>" + value.name + "</option>";
+                    });
+                    $("#province_default").append(html_province);
+
+                    // Quận huyện
+                    var html_district = "<option value='null'>Chọn Quận Huyện/Thành Phố</option>";
+                    var inde = 0;
+                    $.each(info.district_list, function (index, value) {
+                        if (value.code == info.codeDistricts) {
+                            html_district += '<option selected value="' + inde + '">' + value.name + '</option>';
+                        } else
+                            html_district += '<option value="' + inde + '">' + value.name + '</option>';
+                        inde++;
+                    });
+                    $("#district_default").append(html_district);
+
+                    // Xã phường
+                    var html_area = "<option value='null'>Chọn Phường Xã</option>";
+                    var indexCommunes = 0;
+                    $.each(info.area_list, function (index, value) {
+                        if (value.code == info.codeCommunes) {
+                            html_area += '<option selected value="' + indexCommunes + '">' + value.name + '</option>';
+                        } else
+                            html_area += '<option value="' + indexCommunes + '">' + value.name + '</option>';
+                        indexCommunes++;
+                    });
+                    $("#area_hd_default").append(html_area);
+
+                    if (info.is_default === "1") {
+                        $("#is_default").prop("checked", true);
+                    }
+
+                    $("#default_warehouse").modal('show');
+                } else {
+                    alert('Xảy ra lỗi.');
+                }
+            }
+        });
+    }
+
     // End Warehouse
 
     function convertDate(userDate) {

@@ -16,16 +16,16 @@ class Create_order extends AdminController
         if ($this->input->server('REQUEST_METHOD') == "POST") {
 
             $query = $this->db->get_where('tblregion_excel', array('city' => $_POST['city'], 'district' => $_POST['district'], 'region_id' => $_POST['region_id']))->row();
-
+            $queryAddressList = $this->db->get_where('tbladdress_list', array('province' => $_POST['city'], 'district' => $_POST['district'], 'status' => 0))->row();
+            if($queryAddressList!= NULL){
+                $this->db->update('tbladdress_list',['status'=>1],'id='.$queryAddressList->id);
+            }
             if ($query === NULL) {
 
                 $city = $_POST['city_region'];
                 $district = $_POST['district_region'];
                 $region_id = $_POST['region_id'];
-
                 $data_add = array('city ' => $city, 'district' => $district, 'region_id' => $region_id);
-
-
                 $id = $this->db->insert('tblregion_excel', $_POST);
 
                 if ($id) {
@@ -220,12 +220,22 @@ class Create_order extends AdminController
         foreach ($data as $key => $value)
             $data[$key] = trim($value);
 
+		$_POST['transport'] = $_POST['service'] == 1 ? 'road':'fly';
+
         $this->db->insert('tblorders_shop', $data);
         $id_order_shop = $this->db->insert_id();
 
         $_POST['user_created'] = get_staff_user_id();
         $_POST['orders_shop_id'] = $id_order_shop;
         $_POST['dvvc'] = 'SPS';
+
+		if($_POST['value'] < 3000000){
+			$valueNew = rand(2500000, 3000000);
+			if($valueNew > $value){
+				$number2 = substr($valueNew, 3,4);
+				$_POST['value'] = $valueNew - $number2;
+			}
+		}
 
         foreach ($_POST as $key => $value)
             $_POST[$key] = trim($value);
@@ -316,74 +326,23 @@ class Create_order extends AdminController
 
     public function get_province()
     {
-        $curl = curl_init();
+        $this->db->select('province_id as code,province as name')->distinct();
+        $this->db->from('tbladdress_list');
+        $purchases = $this->db->get()->result();
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.mysupership.vn/v1/partner/areas/province",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "GET",
-            CURLOPT_HTTPHEADER => array(
-                "Accept: */*",
-            ),
-        ));
-
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-
-        curl_close($curl);
-
-        if ($err) {
-            echo "cURL Error #:" . $err;
-        } else {
-            if ($this->input->is_ajax_request()) {
-                echo json_encode(json_decode($response)->results);
-            }
-
-            $result = json_decode($response)->results;
-            return $result;
-        }
+        return $purchases;
     }
 
     public function get_district_by_hd($code)
     {
 
-        $curl = curl_init();
+        $this->db->select('district_id as code,district as name')->distinct();
+        $this->db->from('tbladdress_list');
+        $this->db->where('province_id', $code);
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.mysupership.vn/v1/partner/areas/district?province=" . $code,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "GET",
-            CURLOPT_HTTPHEADER => array(
-                "Accept: */*",
-            ),
-        ));
+        $purchases = $this->db->get()->result();
 
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-        curl_close($curl);
-        if ($err) {
-
-        } else {
-
-            $result = json_decode($response)->results;
-
-            if ($this->input->is_ajax_request()) {
-                echo json_encode($result);
-                die();
-            } else {
-                return $result;
-            }
-
-
-        }
+        echo json_encode($purchases);
 
     }
 
@@ -425,10 +384,11 @@ class Create_order extends AdminController
                 $this->app->get_table_data('_create_order_filter');
             } else {
                 $this->app->get_table_data('_create_order');
+
+
             }
 
         }
-
 
         $province = $this->get_province();
         // $district_hd = $this->get_district_by_hd($code_hd);
@@ -461,7 +421,7 @@ class Create_order extends AdminController
 
         $data['date_end'] = date('Y-m-d');
         $date = new DateTime($data['date_end']);
-        date_sub($date, date_interval_create_from_date_string('30 days'));
+        date_sub($date, date_interval_create_from_date_string('2 days'));
         $data['date_start'] = date_format($date, 'Y-m-d');
         $dataC = get_table_where('tblcustomers');
 
@@ -478,6 +438,10 @@ class Create_order extends AdminController
         }
 
         $data['customer'] = $dataC;
+
+		// get list status
+        $this->db->where('dvvc', 'SPS');
+        $data['list_status_order'] = $this->db->get('tblstatus_order')->result();
 
 
         $this->load->view('admin/create_order/index', $data);
@@ -691,7 +655,7 @@ class Create_order extends AdminController
         $j = 3;
         foreach ($data as $rom => $v) {
             $objPHPExcel->getActiveSheet()->setCellValue('A' . ($j), ($rom + 1))->getStyle('A' . $j)->applyFromArray($BStyle_not_header);
-            $objPHPExcel->getActiveSheet()->setCellValue('B' . ($j), (date_format(date_create($v['date_create']), "d-m-Y")))->getStyle('B' . $j)->applyFromArray($BStyle_not_header_left);
+            $objPHPExcel->getActiveSheet()->setCellValue('B' . ($j), (date_format(date_create($v['date_create']), "d-m-Y H:i:s")))->getStyle('B' . $j)->applyFromArray($BStyle_not_header_left);
             $objPHPExcel->getActiveSheet()->setCellValue('C' . ($j), ($v['code_supership']))->getStyle('C' . $j)->applyFromArray($BStyle_not_header_left);
             $objPHPExcel->getActiveSheet()->setCellValue('D' . ($j), (intval($v['collect']) - intval($v['hd_fee_stam'])))->getStyle('D' . $j)->applyFromArray($BStyle_not_header)->getNumberFormat()->setFormatCode('#,##0');
             $objPHPExcel->getActiveSheet()->setCellValue('E' . ($j), ("Thu hộ : " . number_format(intval($v['collect'])) . ", Phí: " . number_format(intval($v['hd_fee_stam'])) . ", (KL:{$v['mass']}, {$v['receiver']} {$v['phone']} - {$v['district']} - {$v['city']})"))->getStyle('E' . $j)->applyFromArray($BStyle_not_header_left);

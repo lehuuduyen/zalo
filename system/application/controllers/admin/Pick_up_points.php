@@ -446,9 +446,24 @@ class Pick_up_points extends AdminController {
       echo "cURL Error #:" . $err;
       die();
     } else {
+		$results = json_decode($response,true)['results'];
+        $data_warehouse = $data_warehouses = array();
+        foreach ($results as $result){
+            if($result['status'] == 1){
+                array_push($data_warehouse, $result);
+            }
+        }
 
-      echo json_encode(json_decode($response)->results);
-      die();
+        foreach ($data_warehouse as $warehouse){
+            if($warehouse['primary'] == 1){
+                $data_warehouses[0] = $warehouse;
+            }else{
+                $data_warehouses[] = $warehouse;
+            }
+        }
+
+        echo json_encode($data_warehouses);
+        die();
     }
 
   }

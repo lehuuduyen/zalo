@@ -163,7 +163,7 @@
                         <div class="col-md-12 no-padding mb-5">
                             <div class="col-sm-3 control-label ">Trạng Thái</div>
                             <div class="col-sm-9 " style="display: flex">
-                                <select id="kh-status" name="status">
+                                <select id="kh-status" multiple="multiple" name="status">
                                     <option></option>
 
 

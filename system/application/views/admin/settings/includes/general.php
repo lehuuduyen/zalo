@@ -75,5 +75,8 @@
 		<?php echo render_input('settings[allowed_files]','settings_allowed_upload_file_types',get_option('allowed_files')); ?>
 		<hr />
 		<?php echo render_input('settings[warehouse_send]','Điều kiện kho khai báo',get_option('warehouse_send')); ?>
+
+		<hr />
+		<?php echo render_input('settings[email_admin]','Email thông báo tool',get_option('email_admin')); ?>
 	</div>
 </div>

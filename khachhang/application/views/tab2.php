@@ -6,6 +6,37 @@
     input::-webkit-input-placeholder {
         font-size: 12px !important;
     }
+    #overlay{
+        position: fixed;
+        top: 0;
+        z-index: 100;
+        width: 100%;
+        height:100%;
+        display: none;
+        background: rgba(0,0,0,0.6);
+    }
+    .cv-spinner {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px #ddd solid;
+        border-top: 4px #2e93e6 solid;
+        border-radius: 50%;
+        animation: sp-anime 0.8s infinite linear;
+    }
+    @keyframes sp-anime {
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+    .is-hide{
+        display:none;
+    }
 
 </style>
 
@@ -35,23 +66,8 @@
         <div class="col-md-6 col-xs-6">
             <div class="form-group">
                 <label for="province">Trạng thái</label>
-                <select data-live-search="true" class="form-control selectpicker" id="status-tab2"
-                        name="status-tab2">
-                    <option value="null">Chọn Trạng thái</option>
-                    <option value="Hủy">Hủy</option>
-                    <option value="Đã Đối Soát Giao Hàng">Đã đối soát giao hàng</option>
-                    <option value="Đã Trả Hàng">Đã trả hàng</option>
-                    <option value="Đã Nhập Kho">Đã Nhập Kho</option>
-                    <option value="Chờ Lấy Hàng">Chờ Lấy Hàng</option>
-                    <option value="Đã Lấy Hàng">Đã Lấy Hàng</option>
-                    <option value="Đã Giao Hàng Toàn Bộ">Đã Giao Hàng Toàn Bộ</option>
-                    <option value="Đã Chuyển Kho Giao">Đã Chuyển Kho Giao</option>
-                    <option value="Đang Chuyển Kho Giao">Đang Chuyển Kho Giao</option>
-                    <option value="Đã Giao Hàng Một Phần">Đã Giao Hàng Một Phần</option>
-                    <option value="Đang Vận Chuyển">Đang Vận Chuyển</option>
-                    <option value="Hoãn Giao Hàng">Hoãn Giao Hàng</option>
-                    <option value="Đang Giao Hàng">Đang Giao Hàng</option>
-                </select>
+                <select data-live-search="true" class="form-control selectpicker" multiple id="status-tab2"
+                        name="status-tab2"></select>
             </div>
 
 
@@ -66,14 +82,18 @@
         </div>
 
         <div class="col-md-4 col-xs-12" style="margin-bottom: 2%">
-            <button class="btn btn-info mtop25" type="button" onclick="fnFilter_list(<?= (!empty($isAppMobile)) ? $isAppMobile : 0 ?>)">Lọc danh sách</button>
+            <button class="btn btn-info mtop25" type="button" onclick="fnFilter_listTab2(<?= (!empty($isAppMobile)) ? $isAppMobile : 0 ?>)">Lọc danh sách</button>
 <!--            <button class="btn btn-success mtop25" type="button" onclick="exportExcelMobile()">Xuất ra excel</button>-->
         </div>
         <div class="clearfix"></div>
     </div>
 
 </div>
-
+<div id="overlay">
+    <div class="cv-spinner">
+        <span class="spinner"></span>
+    </div>
+</div>
 <div id="debts_customer" class="">
 
     <div class="">

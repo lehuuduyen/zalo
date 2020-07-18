@@ -6,6 +6,7 @@
 <html>
 <head>
 
+    <meta name="referrer" content="no-referrer" />
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -29,6 +30,12 @@
 
 
     <style>
+        .tien-dich-vu{
+            color:red
+        }
+        .has-error-select {
+            border:1px solid red !important;
+        }
         .loading-page {
             position: fixed;
             top: 0;
@@ -74,19 +81,21 @@
         }
 
         #limit_geted {
-
             position: absolute;
             top: 0;
             right: 10px;
             margin: 0;
             border: 1px solid #fff;
             color: #fff;
-            margin-top: 6px;
+            /* margin-top: 6px; */
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 0 10px;
             display: none;
+            font-size: 20px;
+            height: 100%;
+            width: 150px;
         }
 
         #limit_geted label {
@@ -130,6 +139,7 @@ $user = json_decode(json_encode(json_decode($this->input->cookie('logged_in'))),
 <input type="hidden" id="data-date-to" value='<?=$date_to?>'>
 <input type="hidden" id="data-city" value='<?=$city?>'>
 <input type="hidden" id="data-regions" value='<?=$regions?>'>
+<input type="hidden" id="domain-tracking" value='<?=$domain_tracking?>'>
 <?php $is_mobile = $this->isAppMobile; ?>
 
 

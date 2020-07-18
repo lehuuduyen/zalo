@@ -9,6 +9,38 @@ class Order extends CI_Controller
         parent::__construct();
 //        $this->load->model('dashboard_model');
     }
+    public function tracking()
+    {
+        $code = htmlspecialchars($this->input->get('code'));
+        $dvvc = htmlspecialchars($this->input->get('dvvc'));
+
+
+        if($dvvc == 'GHTK'){
+            $code_ghtk=$code;
+            $sql = "
+        SELECT webhook.*,status_order.status_change  FROM `tblwebhook_gh` as webhook
+        LEFT JOIN tblstatus_order as status_order ON status_order.status_ghtk= webhook.status_id
+        WHERE webhook.`label_id` = '$code_ghtk'  group by webhook.action_time ORDER BY webhook.action_time DESC";
+            $dataGHTK = $this->db->query($sql)->result();
+        }
+
+
+            $logged_in = json_decode(json_encode(json_decode($this->input->cookie('logged_in'))), true);
+
+            $this->db->select('tblstaff.phonenumber');
+            $this->db->where('id', $logged_in['id']);
+            $this->db->join('tblstaff', 'tblstaff.staffid = tblcustomers.customer_monitoring', 'left');
+            $this->db->from('tblcustomers');
+
+            $data = $this->db->get()->result();
+
+            if ($dvvc == 'GHTK'){
+                $result = array('status' => true, 'error' => '', 'journeys' => $dataGHTK, 'phone' => $data[0]->phonenumber,);
+
+            }
+            echo json_encode($result);
+
+    }
     public function getListTab4()
     {
         $jsonData = $_GET['jsonData'];

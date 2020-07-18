@@ -541,7 +541,8 @@ $id_default = ($default_data) ? $default_data->id : '';
                                 <th style="text-align: center">TT</th>
                                 <th style="text-align: center">Trạng thái gốc</th>
                                 <th style="text-align: center">Trạng thái chuyển đổi</th>
-                                <th style="text-align: center">Trạng thái tính nợ</th>
+                                <th style="text-align: center">Tính nợ theo ngày đối soát</th>
+                                <th style="text-align: center">Tính nợ theo ngày giao hàng</th>
                                 <th style="text-align: center">Hành động</th>
                             </tr>
                             </thead>
@@ -554,6 +555,7 @@ $id_default = ($default_data) ? $default_data->id : '';
                                     <td style="text-align: center"><?= $status_order->status_ghtk ?></td>
                                     <td style="text-align: center"><?= $status_order->status_change ?></td>
                                     <td style="text-align: center"><?= (empty($status_order->status_debit)) ? 'Không tính nợ' : 'Có tính nợ' ?></td>
+                                    <td style="text-align: center"><?= (empty($status_order->group_debits)) ? 'Không tính nợ' : 'Có tính nợ' ?></td>
                                     <td style="text-align: center">
                                         <a href="javascript:void(0)" onclick="fnEdit(<?= $status_order->id ?>)">Sửa</a>
                                         |
@@ -588,7 +590,8 @@ $id_default = ($default_data) ? $default_data->id : '';
                         <div class="col-md-5">
                             <div class="form-group" style="position:relative">
                                 <label for="customer_phone_zalo">Chọn Khách Hàng</label>
-                                <input autocomplete="off" placeholder="Chọn Khách Hàng" onkeyup="enterViettel(event)" class="form-control"
+                                <input autocomplete="off" placeholder="Chọn Khách Hàng" onkeyup="enterViettel(event)"
+                                       class="form-control"
                                        id="search_customer" type="text" name="search_customer"
                                        value="<?php echo set_value('search_customer'); ?>">
                                 <i class="fa fa-search search-icon" aria-hidden="true"></i>
@@ -621,7 +624,7 @@ $id_default = ($default_data) ? $default_data->id : '';
 
                         <div class="col-md-2">
                             <div class="form-group mb0">
-                                <input name="customer_local"  id="customer_local" type="checkbox" value="">
+                                <input name="customer_local" id="customer_local" type="checkbox" value="">
                                 <label for="customer_local" style="padding-left:5px;font-weight:bold;font-size:15px;">
                                     Khách hàng vừa nhập
                                 </label>
@@ -649,7 +652,8 @@ $id_default = ($default_data) ? $default_data->id : '';
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="product">Sản Phẩm</label>
-                                <input type="text" onkeyup="enterViettel(event)" class="form-control" placeholder="Sản Phẩm" id="product"
+                                <input type="text" onkeyup="enterViettel(event)" class="form-control"
+                                       placeholder="Sản Phẩm" id="product"
                                        name="product"></textarea>
                             </div>
                         </div>
@@ -657,14 +661,16 @@ $id_default = ($default_data) ? $default_data->id : '';
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="phone">Điện Thoại</label>
-                                <input type="text" onkeyup="enterViettel(event)" class="form-control" placeholder="Điện Thoại" id="ap" name="ap"
+                                <input type="text" onkeyup="enterViettel(event)" class="form-control"
+                                       placeholder="Điện Thoại" id="ap" name="ap"
                                        onblur="autoCompleteInfoUser(this)"/>
                                 <a class="add-more-phone" href="#"><i class="fa fa-plus" aria-hidden="true"></i></a>
                             </div>
                             <!-- Phone -->
                             <div class="form-group phone-more" style="display:none">
                                 <label for="phone_more">Điện Thoại Phụ </label>
-                                <input onkeyup="enterViettel(event)" type="text" class="form-control" placeholder="Điện Thoại Phụ" id="phone_more"
+                                <input onkeyup="enterViettel(event)" type="text" class="form-control"
+                                       placeholder="Điện Thoại Phụ" id="phone_more"
                                        name="phone_more"/>
                             </div>
                             <!-- Phone More-->
@@ -673,7 +679,8 @@ $id_default = ($default_data) ? $default_data->id : '';
                         <div class="col-md-3">
                             <div class="form-group ">
                                 <label for="f">Họ Và Tên </label>
-                                <input type="text" onkeyup="enterViettel(event)" class="form-control" placeholder="Họ Và Tên" id="f" name="f"/>
+                                <input type="text" onkeyup="enterViettel(event)" class="form-control"
+                                       placeholder="Họ Và Tên" id="f" name="f"/>
                             </div>
                             <!-- Họ Và Tên-->
                         </div>
@@ -681,7 +688,8 @@ $id_default = ($default_data) ? $default_data->id : '';
                         <div class="col-md-3">
                             <div class="form-group ">
                                 <label for="a">Địa Chỉ </label>
-                                <input type="text" onkeyup="enterViettel(event)" class="form-control" placeholder="Địa Chỉ" id="a" name="a"
+                                <input type="text" onkeyup="enterViettel(event)" class="form-control"
+                                       placeholder="Địa Chỉ" id="a" name="a"
                                        autocomplete="off"/>
                             </div>
                             <!-- Địa Chỉ-->
@@ -752,7 +760,8 @@ $id_default = ($default_data) ? $default_data->id : '';
                         <div class="col-md-2">
                             <div class="form-group ">
                                 <label for="mass">Khối Lượng Thực [gr] </label>
-                                <input style="color:red;font-weight:bold;" onkeyup="formatNumBerKeyUp(this);enterViettel(event)" type="text"
+                                <input style="color:red;font-weight:bold;"
+                                       onkeyup="formatNumBerKeyUp(this);enterViettel(event)" type="text"
                                        class="form-control" placeholder="Khối Lượng" id="mass" name="mass"
                                        value="<?php echo $mass ?>"/>
                                 <span style="color:#03a9f4;">Đơn vị tính gram (gr).</span>
@@ -762,7 +771,8 @@ $id_default = ($default_data) ? $default_data->id : '';
                         <div class="col-md-2">
                             <div class="form-group ">
                                 <label for="mass">Khối Lượng Ảo [gr] </label>
-                                <input style="color:red;font-weight:bold;" onkeyup="formatNumBerKeyUp(this);enterViettel(event)" type="text"
+                                <input style="color:red;font-weight:bold;"
+                                       onkeyup="formatNumBerKeyUp(this);enterViettel(event)" type="text"
                                        class="form-control" placeholder="Khối Lượng" id="mass_fake" name="mass_fake"
                                        value="<?php echo $mass_fake ?>"/>
                                 <span style="color:#03a9f4;">Đơn vị tính gram (gr).</span>
@@ -772,7 +782,8 @@ $id_default = ($default_data) ? $default_data->id : '';
                         <div class="col-md-2">
                             <div class="form-group ">
                                 <label for="volume">Thể Tích [Cm³] </label>
-                                <input style="color:red;font-weight:bold;" onkeyup="formatNumBerKeyUp(this);enterViettel(event)" type="text"
+                                <input style="color:red;font-weight:bold;"
+                                       onkeyup="formatNumBerKeyUp(this);enterViettel(event)" type="text"
                                        class="form-control" placeholder="Thể Tích" id="volume" name="volume"
                                        value="<?php echo $volume ?>"/>
                                 <span style="color:#03a9f4;">Đơn vị tính gram (Cm³).</span>
@@ -782,7 +793,8 @@ $id_default = ($default_data) ? $default_data->id : '';
                         <div class="col-md-2">
                             <div class="form-group ">
                                 <label for="value_order">Trị Giá [₫]</label>
-                                <input onkeyup="formatNumBerKeyUp(this);enterViettel(event)" type="text" class="form-control"
+                                <input onkeyup="formatNumBerKeyUp(this);enterViettel(event)" type="text"
+                                       class="form-control"
                                        placeholder="Trị Giá" id="value_order" name="value_order"/>
                                 <span style="color:transparent;">test</span>
                             </div>
@@ -791,7 +803,8 @@ $id_default = ($default_data) ? $default_data->id : '';
                         <div class="col-md-2">
                             <div class="form-group ">
                                 <label for="value_order">Phụ Phí [₫]</label>
-                                <input onkeyup="formatNumBerKeyUp(this);enterViettel(event)" type="text" class="form-control"
+                                <input onkeyup="formatNumBerKeyUp(this);enterViettel(event)" type="text"
+                                       class="form-control"
                                        placeholder="Phụ Phí" id="price" name="price"/>
                                 <span style="color:transparent;">test</span>
                             </div>
@@ -800,7 +813,8 @@ $id_default = ($default_data) ? $default_data->id : '';
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="supership_value">Tiền Dịch Vụ Supership [₫]</label>
-                                <input onkeyup="formatNumBerKeyUp(this);enterViettel(event)" type="text" class="form-control"
+                                <input onkeyup="formatNumBerKeyUp(this);enterViettel(event)" type="text"
+                                       class="form-control"
                                        placeholder="Tiền Dịch Vụ Supership" id="supership_value" name="supership_value"
                                        disabled/>
                                 <span style="color:transparent;">test</span>
@@ -832,7 +846,8 @@ $id_default = ($default_data) ? $default_data->id : '';
                         <div class="col-md-2">
                             <div class="form-group ">
                                 <label for="cod">Tiền Hàng [₫]</label>
-                                <input onkeyup="formatNumBerKeyUp(this);enterViettel(event)" type="text" class="form-control"
+                                <input onkeyup="formatNumBerKeyUp(this);enterViettel(event)" type="text"
+                                       class="form-control"
                                        placeholder="Tiền Hàng" id="cod" name="cod"/>
                             </div>
                         </div>
@@ -841,14 +856,15 @@ $id_default = ($default_data) ? $default_data->id : '';
                             <div class="form-group ">
                                 <label for="total_money">Thu Hộ</label>
 
-                                <input onkeyup="formatNumBerKeyUp(this);enterViettel(event)" type="text" class="form-control"
+                                <input onkeyup="formatNumBerKeyUp(this);enterViettel(event)" type="text"
+                                       class="form-control"
                                        placeholder="Thu Hộ" id="total_money" name="total_money"/>
                             </div>
                         </div>
 
                         <div class="cover-checked col-md-3">
                             <label for="barter" class="container-checkbox">Đổi/Lấy Hàng Về
-                                <input type="checkbox" id="barter" name="barter">
+                                <input type="checkbox" id="barter" onclick="calc()" name="barter">
                                 <span class="checkmark"></span>
                             </label>
                         </div>
@@ -907,7 +923,12 @@ $id_default = ($default_data) ? $default_data->id : '';
                                 Viettel Post</h2>
                         </div>
                     </div>
-
+                    <div style="float: right;margin: 18px 18px 0px;">
+                        <button type="button" class="btn btn-default"
+                                data-dismiss="modal"><?php echo _l('close'); ?></button>
+                        <a href="javascript:;"
+                           class="btn btn-primary submit_customer_policy"><?php echo _l('confirm'); ?></a>
+                    </div>
 
                     <div class="col-md-12">
 
@@ -962,7 +983,8 @@ $id_default = ($default_data) ? $default_data->id : '';
                             <div class="col-md-2">
                                 <div class="form-group ">
                                     <label for="code_order">Mã Đơn Của Shop</label>
-                                    <input type="text" onkeyup="enterViettel(event)" class="form-control" placeholder="Mã Đơn Của Shop" id="soc"
+                                    <input type="text" onkeyup="enterViettel(event)" class="form-control"
+                                           placeholder="Mã Đơn Của Shop" id="soc"
                                            name="soc"/>
                                 </div>
                             </div>
@@ -971,7 +993,8 @@ $id_default = ($default_data) ? $default_data->id : '';
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="config">Mã giảm giá:</label>
-                                    <input type="text" onkeyup="enterViettel(event)" class="form-control" placeholder="Nhập mã giảm giá"
+                                    <input type="text" onkeyup="enterViettel(event)" class="form-control"
+                                           placeholder="Nhập mã giảm giá"
                                            name="voucher" id="voucher"/>
                                 </div>
                             </div>
@@ -980,10 +1003,7 @@ $id_default = ($default_data) ? $default_data->id : '';
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo _l('close'); ?></button>
-                <a href="javascript:;" class="btn btn-primary submit_customer_policy"><?php echo _l('confirm'); ?></a>
-            </div>
+
         </div><!-- /.modal-content -->
         <?php echo form_close(); ?>
     </div><!-- /.modal-dialog -->
@@ -1490,8 +1510,17 @@ $id_default = ($default_data) ? $default_data->id : '';
                 </div>
 
                 <div class="form-group ">
-                    <label for="volume_default">Trạng thái tính nợ</label>
+                    <label for="volume_default">Tính nợ theo ngày đối soát</label>
                     <select class="form-control" id="status_debit" name="status_debit">
+                        <option value="">-- Chọn trạng thái --</option>
+                        <option value="0">Không tính</option>
+                        <option value="1">Có tính</option>
+                    </select>
+                </div>
+
+                <div class="form-group ">
+                    <label for="volume_default">Tính nợ theo ngày giao hàng</label>
+                    <select class="form-control" id="group_debits" name="group_debits">
                         <option value="">-- Chọn trạng thái --</option>
                         <option value="0">Không tính</option>
                         <option value="1">Có tính</option>
@@ -1805,11 +1834,13 @@ $id_default = ($default_data) ? $default_data->id : '';
     $('.submit_customer_policy').click(function () {
         $('#create_order_ob').submit();
     });
+
     function enterViettel(event) {
         if (event.keyCode === 13) {
             $('#create_order_ob').submit();
         }
     }
+
     var check_disable_super = true;
 
     $(document).on('change', '#check_disable_super', function () {
@@ -2564,7 +2595,6 @@ $id_default = ($default_data) ? $default_data->id : '';
                     $('#customer_id').val(id);
                     $('#pickup_phone').val(phone);
                     $('.disable-view').show();
-                    $('#loader-repo').show();
 
                     $.ajax({
                         url: '/system/admin/pick_up_points/curlGetRepo',
@@ -2572,7 +2602,6 @@ $id_default = ($default_data) ? $default_data->id : '';
                         data: {token},
                         success: function (data) {
                             $('.disable-view').hide();
-                            $('#loader-repo').hide();
 
                             data = JSON.parse(data);
 
@@ -2824,6 +2853,7 @@ $id_default = ($default_data) ? $default_data->id : '';
         var active = $("#active").val();
 
         var status_debit = $("#status_debit").find(':selected').val();
+        var group_debits = $("#group_debits").find(':selected').val();
 
         if (status_ghtk == "") {
             alert('Bạn chưa nhập trạng thái của Viettel Post!');
@@ -2844,6 +2874,7 @@ $id_default = ($default_data) ? $default_data->id : '';
                 status_ghtk: status_ghtk,
                 status_change: status_change,
                 status_debit: status_debit,
+                group_debits: group_debits,
                 active: active,
                 dvvc: 'VTP'
             },
@@ -2874,6 +2905,7 @@ $id_default = ($default_data) ? $default_data->id : '';
                     $("#status_change").val(result.info.status_change);
                     $("#status_debit").val(result.info.status_debit);
                     $("#active").val(result.info.id);
+                    $("#group_debits").val(result.info.group_debits);
                     $("#default_declare").modal('show');
                 } else {
                     alert('Xảy ra lỗi.');
@@ -2908,6 +2940,17 @@ $id_default = ($default_data) ? $default_data->id : '';
             }
         });
     }
+
+    function calc() {
+        if (document.getElementById('barter').checked) {
+            document.getElementById('note').value = document.getElementById('note').value + "\nCó Hàng Đổi Trả. Ship Lấy Hàng Về Giúp Shop"
+        } else {
+            textOld = document.getElementById('note').value
+            document.getElementById('note').value = textOld.replace("\nCó Hàng Đổi Trả. Ship Lấy Hàng Về Giúp Shop", "");
+
+        }
+    }
+
 </script>
 
 </body>

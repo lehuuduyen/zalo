@@ -32,6 +32,8 @@ class Cron extends App_Controller
                 $this->db->where('name','time_turn_zalo');
                 $this->db->update('tbloptions', array('value' => 0));
 
+                $this->send_tb();
+
                 $data_string = "<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' xmlns:tem='http://tempuri.org/' xmlns:SendSMS='http://183.91.2.4:6543/mp/brandname' xmlns:web='http://183.91.2.4:6543/mp/brandname?wsdl'>
                                         <soapenv:Header></soapenv:Header>
                                         <soapenv:Body>
@@ -165,4 +167,30 @@ class Cron extends App_Controller
         $rendererOptions = array('horizontalPosition' => 'center', 'verticalPosition' => 'middle');
         Zend_Barcode::render('code128', 'image', $barcodeOptions, $rendererOptions);
     }
+
+    public function send_tb()
+    {
+        do_action('before_send_test_smtp_email');
+        $this->email->initialize();
+        $this->email->set_newline("\r\n");
+        $this->email->from(get_option('smtp_email'), get_option('companyname'));
+        $this->email->to(get_option('email_admin'));
+        // $this->email->to('lechicong.fososoft@gmail.com');
+        $this->email->subject('Thông báo');
+        $this->email->message('Supership lỗi');
+        if($this->email->send())
+        {
+        	echo 'true';
+        }
+        else{
+        	var_dump($this->email->print_debugger());
+        }
+        // if ($this->email->send()) {
+        //     set_alert('success', 'Seems like your SMTP settings is set correctly. Check your email now.');
+        // } else {
+        //     set_debug_alert('<h1>Your SMTP settings are not set correctly here is the debug log.</h1><br />' . $this->email->print_debugger());
+        // }
+    }
+
+
 }

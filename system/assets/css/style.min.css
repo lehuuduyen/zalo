@@ -1436,7 +1436,6 @@ a.notification-top {
     top: 63px;
     -webkit-transition: all .5s ease 0s;
     transition: all .5s ease 0s;
-    overflow:hidden;
 }
 #menu a .menu-text {
   /* display:none; */

@@ -1854,27 +1854,44 @@ public function action_imports_items()
                 $objWorksheet = $objPHPExcel->setActiveSheetIndex(0);
                 $highestRow = $objWorksheet->getHighestRow();
                 $data = array();
+                $listArrayError = array();
                 $date = date('Y-m-d H:i:s');
                 for ($row = 2; $row <= $highestRow; ++$row)
                 {
-                    if(!empty($objWorksheet->getCellByColumnAndRow(0, $row)->getValue()) && !empty($objWorksheet->getCellByColumnAndRow(1, $row)->getValue())){
-                        array_push($data, array(
-                            'phone' => $objWorksheet->getCellByColumnAndRow(0, $row)->getValue(),
-                            'receiver' => $objWorksheet->getCellByColumnAndRow(1, $row)->getValue(),
-                            'address' => $objWorksheet->getCellByColumnAndRow(2, $row)->getValue(),
-                            'ward' => $objWorksheet->getCellByColumnAndRow(3, $row)->getValue(),
-                            'district' => $objWorksheet->getCellByColumnAndRow(4, $row)->getValue(),
-                            'city' => $objWorksheet->getCellByColumnAndRow(5, $row)->getValue(),
-                            'created_date' => $date
-                        ));
-                    }
+                    if (!empty($objWorksheet->getCellByColumnAndRow(0, $row)->getValue()) && !empty($objWorksheet->getCellByColumnAndRow(1, $row)->getValue()) && !empty($objWorksheet->getCellByColumnAndRow(2, $row)->getValue())) {
+
+
+						$this->load->model('Convert_model');
+						$Convert_model = new Convert_model();
+						$arrayAddress = $Convert_model->active($objWorksheet->getCellByColumnAndRow(2, $row)->getValue());
+
+
+						if(!empty($arrayAddress->commune) && !empty($arrayAddress->district) && !empty($arrayAddress->province)){
+                            $data_push = array(
+                                'phone' => $objWorksheet->getCellByColumnAndRow(1, $row)->getValue(),
+                                'receiver' => $objWorksheet->getCellByColumnAndRow(0, $row)->getValue(),
+                                'address' => $objWorksheet->getCellByColumnAndRow(2, $row)->getValue(),
+                                'created_date' => $date
+                            );
+						    $data_push['ward'] = $arrayAddress->commune;
+							$data_push['district'] = $arrayAddress->district;
+							$data_push['city'] = $arrayAddress->province;
+							array_push($data, $data_push);
+						}
+						else{
+                            $listArrayError[]=$row;
+						    continue;
+                        }
+					}
                 }
                 if(!empty($data)){
                     $this->load->model('manual_customers_model');
                     $ids = $this->manual_customers_model->insert_multiple_records($data);
                     if(!empty($ids)){
                         echo json_encode(array(
-                            'status' => '200'
+                            'status' => '200',
+                            'success' => count($data),
+                            'error' => $listArrayError,
                         ));
                         die();
                     }

@@ -203,23 +203,29 @@ class Api_order_update extends CI_Controller
         // $this->get_api_replace('HNIS781286NM.1619178', 24007, null);
         // die();
         $date = date('Y-m-d');
-        $this->db->select('code_supership , control_date , id , date_debits, status , shop , city_send , value , city , district , mass_fake, collect');
+        $this->db->select('code_supership , control_date , id , date_debits, status , shop , city_send , value , city , district , mass,mass_fake, collect');
 
         $this->db->from('tblorders_shop');
         // $this->db->where('code_supership !=' , NULL);
         $this->db->where('status !=', 'Đã Đối Soát Giao Hàng');
         $this->db->where('status !=', 'Đã Trả Hàng');
+		$this->db->where('status !=', 'Đã Trả Hàng Toàn Bộ');
         $this->db->where('status !=', 'Đã Trả Hàng Một Phần');
         // $this->db->where('date_debits' , NULL);
         $this->db->where('status !=', 'Huỷ');
         $this->db->where('DVVC', 'SPS');
         $this->db->where('DATE_FORMAT(date_create, "%Y-%m-%d") >= "'.date('Y-m-d', strtotime($date.'- 90 days')).'"');
+		
+		if($this->input->get('test')){
+			$this->db->limit(50, 0);
+		}
+		
         $q = $this->db->get()->result();
-
+// pre($q);
         $total = 0;
 
         foreach ($q as $key => $value) {
-            $sta = $this->get_api_replace($value->code_supership, $value->id, $value->date_debits, $value->shop, $value->status, $value->mass_fake, $value->collect);
+            $sta = $this->get_api_replace($value->code_supership, $value->id, $value->date_debits, $value->shop, $value->status, $value->mass, $value->collect);
 
             // echo $sta
             // echo $value->code_supership;
@@ -322,6 +328,7 @@ class Api_order_update extends CI_Controller
             $is_hd_branch = true;
         }
 
+
         $curl = curl_init();
 
         curl_setopt_array($curl, [
@@ -382,8 +389,9 @@ class Api_order_update extends CI_Controller
                 $data_replace['city'] = $addressArray[count($addressArray) - 1];
                 $data_replace['district'] = $addressArray[count($addressArray) - 2];
                 $data_replace['collect'] = $result->amount;
+				$data_replace['mass_fake'] = $result->weight;
 
-                if ($result->weight != $weight && $is_hd_branch) {
+                if ($result->weight > $weight && $is_hd_branch) {
                     $data_insert = [
                         'order_shop_id' => $id,
                         'shop_name' => $shop,
@@ -393,6 +401,8 @@ class Api_order_update extends CI_Controller
                         'created_date' => date('Y-m-d H:i:s'),
                     ];
                     $this->orders_change_weight_model->insert($data_insert);
+
+                    $data_replace['mass'] = $result->weight;
                 }
 
                 if ($result->amount != $amount) {
@@ -406,7 +416,7 @@ class Api_order_update extends CI_Controller
                     ];
                     $this->orders_change_weight_model->insert_money($data_insert_money);
                 }
-                $data_replace['mass_fake'] = $result->weight;
+
                 $data_replace['value'] = $result->value;
 //                $data_replace['is_hd_branch'] = $is_hd_branch;
 

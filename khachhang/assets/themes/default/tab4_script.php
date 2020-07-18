@@ -1,5 +1,6 @@
 <script>
     let baseUrl =window.location.origin;
+
     $(document).ready(function () {
         var dateForm =$("#data-date-from").val()
         var dateTo =$("#data-date-to").val()
@@ -174,8 +175,6 @@
                     "data": null,
                     "render": function (data, type, row, meta) {
                         let address = `${(row.address) ? row.address + ", " : ""} ${(row.commune) ? row.commune + ", " : ""} ${(row.district) ? row.district + ", " : ""}  ${(row.province) ? row.province : ""} `;
-
-
                         return `
                                 <div style="width: 100%" class="mb-5"><label class="label label-orange label-xs tooltips" data-original-title="Được tạo bằng API">&emsp;&emsp;${(row.province)?row.province:""}&emsp;&emsp;</label>&emsp;</div>
                                 <p>${row.name}</p>
@@ -193,7 +192,7 @@
                         return `<div style="width: 100%;table-layout: fixed;"><div class="mb-15" style="display:flex">
                                 <a style="color: white" style="padding-right: 5px;" class="btn btn-sm btn-primary mr-2  " target="_blank" href="${linkPrint}"><i style="padding-right: 5px;" class="fa fa-print"></i>IN</a>
                                 <a href="javascript:;" style="padding-right: 5px;" class=" edit-reminder-custom-order  btn btn-sm btn-primary button-blue mr-2 btn${row.id}"  data-id="${row.id}" data-note="${row.note}"><i style="padding-right: 5px;" class="fa fa-edit"></i>SỬA</a>
-                                <a href="javascript:;" style="color: white" class="btn btn-sm btn-primary delete-reminder-custom-order" target="_blank" data-id="${row.id}"><i style="padding-right: 5px;" class="fa fa-trash"></i>HỦY</a>
+                                <a href="javascript:;" style="color: white" class="btn btn-sm btn-primary delete-reminder-custom-order" data-id="${row.id}"><i style="padding-right: 5px;" class="fa fa-trash"></i>HỦY</a>
                                 </div>
                                 <p style="color:#557f38"><strong>Ghi Chú Giao Hàng:</strong></p>
                                 <p>${(row.note) ? row.note : ""}</p>
@@ -228,9 +227,124 @@
             });
 
         }).draw();
-        $('.kh-tab4 table').removeClass('dataTable')
+        // $('.kh-tab4 table').removeClass('dataTable')
     };
 
+    let loadDatatablesErrorTab4 = () => {
+        $customerId = $('#id_customer').val();
+
+        var table = $('#example-error').DataTable({
+            "ajax": '/khachhang/order/getlisttab4error/'+$customerId,
+            "columnDefs": [
+                {
+                    "width": "5%",
+                    "targets": 0,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        return row.date_create;
+                    }
+                },
+                {
+                    "width": "20%",
+                    "targets": 1,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        let backgroundStatus =getColorStatus(row.status)
+                        let dvvc = "";
+                        if (row.DVVC != "") {
+                            dvvc = `<p>ĐVVC: ${row.DVVC}</p>`
+                        }
+                        let mkh = "";
+                        if (row.soc != null && row.soc != "") {
+                            mkh = `<p>Mã Đơn KH : <span style="color:green">${row.soc}</span></p>`
+                        }
+
+
+                        return `
+                                <div style="width: 100%" class="mb-5"><label class="label label-orange label-xs tooltips" style="color:red;" >&emsp;&emsp;${row.required_code} &emsp;&emsp;</label></div>
+                                ${mkh}
+                                <p>Ngày tạo : ${moment(row.created).format('DD-MM-YYYY HH:mm:SS')}</p>`;
+                    }
+                },
+                {
+                    "width": "20%",
+                    "targets": 2,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        let phi = `<p>Phí DV: <span style="color:red">${formatCurrency(row.hd_fee)}</span></p>`;
+                        if (row.hd_fee == null) {
+                            phi = `<p>Phí DV: <span style="color:red">${formatCurrency(row.hd_fee_stam)}</span></p>`
+                        }
+                        if (row.is_hd_branch == 0) {
+                            phi = `<p>Phí DV: <span style="color:red">${formatCurrency(row.pay_transport)}</span></p>`
+                        }
+                        let mass = '';
+                        if(row.weight != "" && row.weight != null){
+                            mass = row.weight
+                        }
+
+                        return `
+                                <p>SP: ${row.product}</p>
+                                <p>Khối lượng: <span style="color:red">${mass}</span></p>
+                                <p>Thu Hộ: <span style="color:red">${formatCurrency(row.amount)}</span></p>
+                                <p>Phí DV: <span style="color:red">${formatCurrency(row.supership_value)}</span> </p>
+                                `;
+                    }
+                },
+                {
+                    "width": "20%",
+                    "targets": 3,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        let address = `${(row.address) ? row.address + ", " : ""} ${(row.commune) ? row.commune + ", " : ""} ${(row.district) ? row.district + ", " : ""}  ${(row.province) ? row.province : ""} `;
+
+
+                        return `
+                                <div style="width: 100%" class="mb-5"><label class="label label-orange label-xs tooltips" data-original-title="Được tạo bằng API">&emsp;&emsp;${(row.province)?row.province:""}&emsp;&emsp;</label>&emsp;</div>
+                                <p>${row.name}</p>
+                                <p style="color:red">${row.phone}</p>
+                                <p>${address}</p>`;
+                    }
+                },
+                {
+                    "width": "25%",
+                    "targets": 4,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        let linkXem = getLinkView(row.DVVC, row.code_supership, row.code_ghtk);
+                        let linkPrint = `/khachhang/api/create_order/print?list_id=${row.id}`
+                        return `<div style="width: 100%;table-layout: fixed;"><div class="mb-15" style="display:flex">
+                                <a href="javascript:;" style="padding-right: 5px;" class=" edit-reminder-custom-order-error  btn btn-sm btn-primary button-blue mr-2 btn${row.id}"  data-id="${row.id}" data-note="${row.note}"><i style="padding-right: 5px;" class="fa fa-edit"></i>SỬA</a>
+                                <a href="javascript:;" style="color: white" class="btn btn-sm btn-primary delete-reminder-custom-order-error" data-id="${row.id}"><i style="padding-right: 5px;" class="fa fa-trash"></i>HỦY</a>
+                                </div>
+                                <p style="color:#557f38"><strong>Ghi Chú Giao Hàng:</strong></p>
+                                <p>${(row.note) ? row.note : ""}</p>
+                                 </div>`;
+                    }
+                }
+
+            ],
+            "drawCallback": function (settings) {
+            },
+            "order": [[0, 'DESC']],
+            searching: false,
+            info: false,
+            lengthChange: false, // Will Disabled Record number per page
+            processing: true,
+
+
+        });
+        table.on('order.dt search.dt', function () {
+            table.column(0, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
+                cell.innerHTML = `<div style="text-align: center">${i + 1}</div>`;
+            });
+
+        }).draw();
+        // $('.kh-tab4 table').removeClass('dataTable')
+    };
+    loadDatatablesErrorTab4();
+
+    
     function getColorStatus(status) {
         let color = "";
         switch (status) {
@@ -312,9 +426,20 @@
             case "Đã Trả Hàng Một Phần":
                 color = "#322F65";
                 break;
+            case "Đã Trả Hàng Toàn Bộ":
+                color ="#322F65";
+                break;
+            case "Đã Chuyển Kho Trả Toàn Bộ":
+                color ="#777100";
+                break;
+            case "Đã Chuyển Kho Trả Một Phần":
+                color ="#777100";
+                break;
         }
         return color
     }
+
+
 
 
 
@@ -693,10 +818,11 @@
                         if (server.status) {
                             $("#alertSuccess").show();
                             $("#alertSuccess").html(server.message);
+
+
                         } else {
                             $("#alertError").show();
                             $("#alertError").html(server.message);
-
                             setTimeout(function () {
                                 $("#alertError").hide();
                             }, 5000);
@@ -775,9 +901,17 @@
                 return false;
             }
             var val = JSON.parse($(this).val());
-            $('#total_money').val('');
-            $('#cod').val('');
-            $('#supership_value').val('');
+            var order_id = $("#btn_create").attr("data-id");
+            var orderErrorId = $("#btn_create").attr("data-error-id");
+            if(order_id ==undefined ){
+                if(orderErrorId == undefined){
+                    $('#total_money').val('');
+                    $('#cod').val('');
+                    $('#supership_value').val('');
+                }
+
+            }
+
             if (val) {
 
                 $('.disable-view').show();
@@ -799,9 +933,7 @@
                         $('#district_order').empty();
                         $('#area_hd_order').empty();
                         $('.load-html').empty();
-                        $('#cod').val('');
-                        $('#supership_value').val('');
-                        $('#total_money').val('');
+
                         var html = '';
 
                         html += `<option  value='-1'>Chọn Quận Huyện/Thành Phố</option>`;
@@ -837,9 +969,16 @@
                 }
                 $('.disable-view').show();
                 $('#loader-repo2').show();
-                $('#total_money').val('');
-                $('#cod').val('');
-                $('#supership_value').val('');
+                var order_id = $("#btn_create").attr("data-id");
+                var orderErrorId = $("#btn_create").attr("data-error-id");
+                if(order_id ==undefined ){
+                    if(orderErrorId == undefined){
+                        $('#total_money').val('');
+                        $('#cod').val('');
+                        $('#supership_value').val('');
+                    }
+
+                }
                 district_name = district[index].name;
 
                 $.ajax({
@@ -902,9 +1041,7 @@
 
                                     data_for_calc = region.data_region;
                                     $('.load-html').empty();
-                                    $('#cod').val('');
-                                    $('#supership_value').val('');
-                                    $('#total_money').val('');
+
                                     data_district = "";
                                     data_area = "";
                                     $('.region-box input').val(region.id);
@@ -935,7 +1072,9 @@
 		$(document).on('change', '#area_hd_order', function(){
 			var index = $(this).val();
 			if(index > -1){
-				data_area = area_hd_order[index].name;
+                var superShip = CalcAll();
+
+                data_area = area_hd_order[index].name;
 			}
 		});
 
@@ -978,6 +1117,7 @@
 
 
         $(document).on('click', '.delete-reminder-custom-order', function () {
+
             var c = confirm("Bạn Muốn Xoá Thực Sự");
 
             if (!c) {
@@ -994,7 +1134,7 @@
                         if (JSON.parse(data).success == 'ok') {
                             $('.loading-page').hide();
                             $.notify("Delete Thành Công", "success");
-
+                            clickSearchTab4()
                             if (window.innerWidth > 768) {
                                 $('#table_customer_order').DataTable().ajax.reload();
                             } else {
@@ -1009,6 +1149,37 @@
                                 //Mobile
                             }
                         }
+                    },
+                    error: function (e) {
+                        $('.loading-page').hide();
+                        $.notify("Delete Thất Bại", "error");
+                    }
+                });
+
+
+            }
+        });
+        //delete order error
+        $(document).on('click', '.delete-reminder-custom-order-error', function () {
+
+            var c = confirm("Bạn Muốn Xoá Thực Sự");
+
+            if (!c) {
+                return false;
+            } else {
+                $('.loading-page').show();
+                var id = $(this).attr('data-id');
+
+
+                $.ajax({
+                    url: '/khachhang/app/delete_order_error/' + id,
+                    success: function (data) {
+
+                        $('.loading-page').hide();
+                        $.notify("Delete Thành Công", "success");
+                        $('#example-error').dataTable().fnDestroy();
+
+                        loadDatatablesErrorTab4()
                     },
                     error: function (e) {
                         $('.loading-page').hide();
@@ -1047,6 +1218,8 @@
                     $("#note_create").val(result.note);
                     $("#total_money").val(formatNumber(result.amount));
                     $("#supership_value").val(formatNumber(result.supership_value));
+                    $('input[name="soc"]').val(result.soc);
+                    $("#the_fee_bearer").val(1);
 
                     $('#province').val(JSON.stringify({'name': result.province}));
                     $('.filter-option-inner-inner').html(result.province);
@@ -1184,6 +1357,121 @@
                 }
             });
         });
+        // Edit order Error
+        $(document).on('click', '.edit-reminder-custom-order-error', function () {
+            var id = $(this).attr('data-id');
+            $.ajax({
+                url: '<?= base_url('app/get_order_error')?>',
+                data: {id: id},
+                method: "GET",
+                beforeSend: function () {
+                    $(".loading-page").show();
+                },
+                success: function (data) {
+                    $(".loading-page").hide();
+                    var result = JSON.parse(data).order;
+                    $("#product").val(result.product);
+                    $("#ap").val(result.phone);
+                    if (result.sphone != "") {
+                        $("#phone-more").show();
+                        $("#phone_more").val(result.sphone);
+                    }
+                    $("#f").val(result.name);
+                    $("#a").val(result.address);
+                    $("#mass").val(result.weight);
+                    $("#value_order").val(formatNumber(result.value));
+                    $("#cod").val(formatNumber(result.cod));
+                    $("#note_create").val(result.note);
+                    $("#the_fee_bearer").val(1);
+                    $("#total_money").val(formatNumber(result.amount));
+                    $("#supership_value").val(formatNumber(result.supership_value));
+                    $('input[name="soc"]').val(result.soc);
+                    if(result.province !=""){
+                        $('#province').val(JSON.stringify({'name': result.province}));
+                    }else{
+                        $('#province').val("null");
+
+                    }
+                    $('.filter-option-inner-inner').html(result.province);
+					$("#pickup_phone").val(result.pickup_phone);
+                    var districts = result.list_districts;
+                    district = result.list_districts;
+                    // Quận huyện
+                    $('#district_order').empty();
+                    if(districts){
+                        var html = '';
+                        html += `<option  value='null'>Chọn Quận Huyện/Thành Phố</option>`;
+                        for (var i = 0; i < districts.length; i++) {
+                            html += '<option value="' + i + '">' + districts[i].name + '</option>';
+                        }
+                        $('#district_order').append(html);
+                        $('#district_order').selectpicker({
+                            liveSearch: true
+                        });
+
+                        $('#district_order').selectpicker('refresh');
+                        // district = result.district;
+                        $('#district_order').val(JSON.stringify({'name': result.district}));
+                        $('#district_order').parent().find('.filter-option-inner-inner').html(result.district);
+
+                    }
+
+                    var areas = result.list_areas;
+					area_hd_order = result.list_areas;
+                    if(areas){
+                        $('#area_hd_order').empty();
+                        var html = '<option  value="null">Chọn Phường Xã</option>';
+                        for (var i = 0; i < areas.length; i++) {
+                            html += `<option  value='${i}'>${areas[i].name}</option>`;
+                        }
+                        $('#area_hd_order').append(html);
+                        $('#area_hd_order').selectpicker({
+                            liveSearch: true
+                        });
+                        $('#area_hd_order').selectpicker('refresh');
+                        $('#area_hd_order').parent().find('.filter-option-inner-inner').html(result.commune);
+                        $('#area_hd_order').val(result.commune);
+                    }
+
+
+                    data_area = result.commune;
+                    data_city = result.province;
+                    province = result.province;
+                    data_district = result.district;
+
+					$.ajax({
+                        url: '/khachhang/app/check_customer_policy_exits/' + $('#id_customer').val(),
+                        method: 'GET',
+                        success: function (check) {
+                            //
+                            if (check === "custommer_no") {
+                                alert("Khách Hàng Này Chưa Có Chính Sách");
+                            } else {
+                                policy_id = JSON.parse(check).id;
+
+                                if (JSON.parse(check).special_policy !== '') {
+
+                                    var html = `<label>Chhính Sách Đặc Biệt</label><div style="height: 100px;overflow: auto;" class="form-control">${JSON.parse(check).special_policy}</div>`;
+
+                                    $('#special').empty();
+                                    $('#special').append(html);
+                                }
+					GetRepoOrder();
+                    setValid();
+
+                    $("#create_order").modal();
+                    $("#btn_create").removeClass('submit_create_order');
+                    $("#btn_create").addClass('submit_edit_order');
+                     $("#btn_create").attr('data-error-id', result.id);
+
+                            }
+                        }
+                    });
+
+
+                }
+            });
+        });
 
 
         function setValid() {
@@ -1216,9 +1504,10 @@
                         minlength: 10,
                         maxlength: 10
                     },
-                    province: {
-                        valueNotEquals: "null"
-                    },
+                    // province: {
+                    //     required: true,
+                    //     // valueNotEquals: "null"
+                    // },
                     f: {
                         required: true,
                     },
@@ -1226,12 +1515,16 @@
                         required: true,
                         minlength: 5,
                     },
-                    district: {
-                        valueNotEquals: "null"
-                    },
-                    area_hd: {
-                        valueNotEquals: "null"
-                    },
+                    // district: {
+                    //     required: true,
+                    //
+                    //     // valueNotEquals: "null"
+                    // },
+                    // area_hd: {
+                    //     required: true,
+                    //
+                    //     // valueNotEquals: "null"
+                    // },
                     mass: {
                         required: true,
                     },
@@ -1245,12 +1538,33 @@
                         required: true,
                     }
                 },
-                messages: {},
+                messages: {
+
+                },
                 submitHandler: function (form) {
+                    $('button[data-id="province"]').removeClass('has-error-select')
+                    $('button[data-id="district_order"]').removeClass('has-error-select')
+                    $('button[data-id="area_hd_order"]').removeClass('has-error-select')
+                    if($('#province').val() == null){
+                        $('button[data-id="province"]').addClass('has-error-select')
+                        return ;
+                    }
+                    if($('#district_order').val() == -1){
+                        $('button[data-id="district_order"]').addClass('has-error-select')
+                        return ;
+
+                    }
+                    if($('#area_hd_order').val() == -1){
+                        $('button[data-id="area_hd_order"]').addClass('has-error-select')
+                        return ;
+
+                    }
+
                     var data = {};
                     var repo_customer = $('#repo_customer_order').val().split(",");
 
                     var order_id = $("#btn_create").attr("data-id");
+                    var orderErrorId = $("#btn_create").attr("data-error-id");
                     if (order_id > 0) {
                         data.id = order_id;
                     }
@@ -1272,6 +1586,14 @@
                         alert('Trị giá đơn hàng phải lớn hơn hoặc bằng tiền hàng. ');
                         return false;
                     }
+					
+					
+					if (parseINT($("#mass").val()) < 1) {
+                        alert("Khối lượng không được nhỏ hơn 0");
+                        $("#mass").focus();
+                        return false;
+                    }
+					
                     data.product = $('#product').val();
                     data.product_type = "1";
                     data.name = $('#f').val();
@@ -1335,7 +1657,18 @@
                     if (order_id > 0) {
                         url = '/khachhang/app/edit_order/';
                     }
+                    if(orderErrorId >0){
+                        $.ajax({
+                            url: '/khachhang/app/delete_order_error/'+orderErrorId,
+                            type: 'GET',
+                            success: function (data) {
 
+                            },
+                            error: function (e) {
+
+                            }
+                        });
+                    }
                     $.ajax({
                         url: url,
                         data,
@@ -1397,10 +1730,7 @@
             } else if (province === '') {
                 alert('Hãy chọn tỉnh trước');
                 return false;
-            } else if (data_for_calc === '') {
-                alert('Xảy ra lỗi đáng tiếc');
-                return false;
-            } else if ($('#mass').val() === '') {
+            }else if ($('#mass').val() === '') {
                 alert('Hãy Nhập Khối lượng trước');
                 return false;
             } else if ($('#volume').val() === '') {
@@ -1439,12 +1769,9 @@
 
 
                 return false;
-            } else if (data_for_calc === '') {
-                alert('Xảy ra lỗi đáng tiếc');
-                return false;
-            } else if ($('#mass').val() === '') {
-                alert('Hãy Nhập Khối lượng trước');
-                return false;
+            }  else if ($('#mass').val() === '') {
+                // alert('Hãy Nhập Khối lượng trước');
+                // return false;
             } else if ($('#volume').val() === '') {
                 alert('Hãy Nhập thể tích trước');
                 return false;
@@ -1569,6 +1896,7 @@
             var text = $('#customer_shop_code').val();
 
             $('#search_customer_create').val(text.trim());
+            $('#search_customer_create_html').html(text.trim());
             $('.search-item').hide();
             $('#customer_id').val(id);
             $('.disable-view').show();
@@ -1583,7 +1911,7 @@
                     $('#loader-repo').hide();
                     data = JSON.parse(data);
 
-                    var html = '<label for="repo_customer">Chọn Kho:</label><select class="form-control" id="repo_customer_order" name="repo_customer_order">';
+                    var html = '<div class="col-md-12 no-padding"><select class="form-control" id="repo_customer_order" name="repo_customer_order"></div>';
 
                     // $('#repo_customer_cover');
                     for (var i = 0; i < data.length; i++) {

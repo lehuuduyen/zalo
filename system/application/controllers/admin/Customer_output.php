@@ -39,7 +39,7 @@ class Customer_output extends AdminController
 
     public function get_order_faill_by_shop_code($s, $e, $code)
     {
-        $status_name = array("Không Giao Được", "Xác Nhận Hoàn", "Đang Trả Hàng", "Đang Chuyển Kho Trả", "Đã Đối Soát Trả Hàng", "Đã Chuyển Kho Trả");
+        $status_name = array("Không Giao Được", "Xác Nhận Hoàn", "Đang Trả Hàng", "Đang Chuyển Kho Trả", "Đã Đối Soát Trả Hàng", "Đã Chuyển Kho Trả","Đã Chuyển Kho Trả Toàn Bộ");
         $this->db->select('COUNT(id) as total_faill');
         $this->db->where('shop', $code);
         $this->db->where('date_create >=', $s);
@@ -72,7 +72,7 @@ class Customer_output extends AdminController
     public function get_order_by_code($s, $e, $code)
     {
         $status_name1 = array("Đã Giao Hàng Một Phần", "Đã Giao Hàng Toàn Bộ", "Đã Đối Soát Giao Hàng");
-        $status_name2 = array("Không Giao Được", "Xác Nhận Hoàn", "Đang Trả Hàng", "Đang Chuyển Kho Trả", "Đã Đối Soát Trả Hàng", "Đã Chuyển Kho Trả");
+        $status_name2 = array("Không Giao Được", "Xác Nhận Hoàn", "Đang Trả Hàng", "Đang Chuyển Kho Trả", "Đã Đối Soát Trả Hàng", "Đã Chuyển Kho Trả","Đã Chuyển Kho Trả Toàn Bộ");
         $status_name3 = array("Chờ Lấy Hàng"," Đã Nhập Kho"," Đang Chuyển Kho Giao", "Đang Vận Chuyển"," Đã Chuyển Kho Giao"," Đang Giao Hàng"," Hoãn Giao Hàng");
 
         $status_name = array_merge($status_name1, $status_name2, $status_name3);
@@ -91,7 +91,7 @@ class Customer_output extends AdminController
     public function get_order_sum($s, $e)
     {
         $status_name1 = array("Đã Giao Hàng Một Phần", "Đã Giao Hàng Toàn Bộ", "Đã Đối Soát Giao Hàng");
-        $status_name2 = array("Không Giao Được", "Xác Nhận Hoàn", "Đang Trả Hàng", "Đang Chuyển Kho Trả", "Đã Đối Soát Trả Hàng", "Đã Chuyển Kho Trả");
+        $status_name2 = array("Không Giao Được", "Xác Nhận Hoàn", "Đang Trả Hàng", "Đang Chuyển Kho Trả", "Đã Đối Soát Trả Hàng", "Đã Chuyển Kho Trả","Đã Chuyển Kho Trả Toàn Bộ");
         $status_name3 = array("Chờ Lấy Hàng"," Đã Nhập Kho"," Đang Chuyển Kho Giao", "Đang Vận Chuyển"," Đã Chuyển Kho Giao"," Đang Giao Hàng"," Hoãn Giao Hàng");
 
         $status_name = array_merge($status_name1, $status_name2, $status_name3);
@@ -108,7 +108,7 @@ class Customer_output extends AdminController
     public function status_name_by_array($status)
     {
         $status_name1 = array("Đã Giao Hàng Một Phần", "Đã Giao Hàng Toàn Bộ", "Đã Đối Soát Giao Hàng");
-        $status_name2 = array("Không Giao Được", "Xác Nhận Hoàn", "Đang Trả Hàng", "Đang Chuyển Kho Trả", "Đã Đối Soát Trả Hàng", "Đã Chuyển Kho Trả");
+        $status_name2 = array("Không Giao Được", "Xác Nhận Hoàn", "Đang Trả Hàng", "Đang Chuyển Kho Trả", "Đã Đối Soát Trả Hàng", "Đã Chuyển Kho Trả","Đã Chuyển Kho Trả Toàn Bộ");
         $status_name3 = array("Chờ Lấy Hàng"," Đã Nhập Kho"," Đang Chuyển Kho Giao", "Đang Vận Chuyển"," Đã Chuyển Kho Giao"," Đang Giao Hàng"," Hoãn Giao Hàng");
         $sta = trim($status);
         if (array_search($sta, $status_name1) !== false) {

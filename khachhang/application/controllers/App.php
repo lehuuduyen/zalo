@@ -132,9 +132,51 @@ class App extends Private_Controller
         $data['date_to'] = $date_to;
         $data['city'] = json_encode($order_model->getCity());
         $data['regions'] = json_encode($order_model->getRegion());
+        $domainTracking = $this->getDomainTracking();
+        $data['domain_tracking'] = $domainTracking;
         $this->load->view($this->template, $data);
     }
+    public function ghtk_tracking(){
+        $code = htmlspecialchars($this->input->get('code'));
+        $dvvc = htmlspecialchars($this->input->get('dvvc'));
+        $domainTracking = $this->getDomainTracking();
 
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "$domainTracking/khachhang/api/tracking?code=$code&dvvc=$dvvc",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => array(
+                "Accept: */*",
+                "Authorization: Bearer " . $_POST['token'],
+                "Cache-Control: no-cache",
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+            echo "cURL Error #:" . $err;
+            die();
+        } else {
+            echo json_encode(json_decode($response));
+            die();
+        }
+    }
+    public function getDomainTracking(){
+        $this->db->select('domain_webhook');
+        $this->db->from('tbl_default_mass_volume_ghtk');
+        $this->db->where('id', 1);
+        $domain_webhook = $this->db->get()->row()->domain_webhook;
+        return $domain_webhook;
+    }
 
     public function get_calc_debts_customer($data)
     {

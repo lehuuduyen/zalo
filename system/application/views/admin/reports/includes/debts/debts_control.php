@@ -15,6 +15,7 @@
             <?php render_datatable(array(
                 'Ngày tính nợ',
                 'Mã đơn hàng',
+                'Shop',
                 'Nội dung',
                 'PS tăng',
                 'PS Giảm',

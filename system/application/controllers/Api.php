@@ -27,7 +27,8 @@ class Api extends CI_Controller
         }
     }
 
-/**
+
+    /**
      * Đây là hàm cập nhật thông tin đơn hàng thông qua API của GHTK
      */
     public function cronjob_order_ghtk()
@@ -487,8 +488,8 @@ class Api extends CI_Controller
         $this->db->like('code_supership', $codeSuppership);
         $this->db->or_like('phone', $codeSuppership);
 
-//        $this->db->join('tbl_create_order','tbl_create_order.orders_shop_id = tblorders_shop.id');
-//        $this->db->select('tblorders_shop.*, tbl_create_order.transport');
+		$this->db->join('tblcustomers', 'tblcustomers.customer_shop_code = tblorders_shop.shop');
+        $this->db->select('tblorders_shop.*, tblcustomers.token_customer');
 
         $info = $this->db->get('tblorders_shop')->result();
 
@@ -498,7 +499,7 @@ class Api extends CI_Controller
     /**
      * Đây là hàm thực hiện chuyển đổi đơn vị vận chuyển
      */
-    public function convert_order()
+	public function convert_order()
     {
         $resultJSON = array('status' => false, 'error' => '');
 
@@ -506,6 +507,7 @@ class Api extends CI_Controller
         $idOrderShop = $this->input->post('idOrderShop');
         $code = $this->input->post('code');
         $shop = $this->input->post('shop');
+        $warehouse = $this->input->post('warehouse');
 
 
         // Thông tin đơn vị chuyển đổi
@@ -546,7 +548,7 @@ class Api extends CI_Controller
 
 
         // Thực hiện chuyển đổi
-        $result = $this->convertDvvcAPI($dvvcSource, $dvvcFinsh, $info_orders_shop, $info_create_order, $mass, $mass_fake, $transport);
+        $result = $this->convertDvvcAPI($dvvcSource, $dvvcFinsh, $info_orders_shop, $info_create_order, $mass, $mass_fake, $transport,$warehouse);
 
         switch ($result) {
             case 'Insert_in_tblorders_shop_Failed':
@@ -599,7 +601,6 @@ class Api extends CI_Controller
         echo json_encode($resultJSON);
 
     }
-
     // Function get history convert
     public function get_history()
     {
@@ -666,9 +667,9 @@ class Api extends CI_Controller
 
     // Confirm order
 
-/**
+    /**
      * Đây là hàm dùng xác nhận 1 đơn hàng
-     * @author Lediun Software - https://ema.lediun.com/ - Dịch vụ email marketing số 1 tại Việt Nam. Đăng ký ngay nhận ngay ưu đãi.
+     * @author Lediun Software - https://sendingreen.tk
      */
     public function comfirm_order()
     {
@@ -678,6 +679,7 @@ class Api extends CI_Controller
         $mass = intval($this->input->post('mass'));
         $mass_fake = intval($this->input->post('mass_fake'));
         $transport = intval($this->input->post('transpot'));
+        $warehouse = $this->input->post('warehouse');
 
         $result = array('status' => false, 'error' => '');
 
@@ -753,11 +755,13 @@ class Api extends CI_Controller
             $id_order_shop = $this->db->insert_id();
 
             if ($id_order_shop) {
+                $repo_customer = explode(',', $warehouse);
+
                 $data_sps = array(
                     'pickup_phone' => $info_customer[0]->customer_phone,
-                    'pickup_address' => $info_order->pickup_address,
-                    'pickup_province' => $info_order->pickup_province,
-                    'pickup_district' => $info_order->pickup_district,
+                    'pickup_address' => $repo_customer[0],
+                    'pickup_province' => $repo_customer[count($repo_customer) - 1],
+                    'pickup_district' => $repo_customer[count($repo_customer) - 2],
                     'name' => $info_order->name,
                     'phone' => $info_order->phone,
                     'address' => $info_order->address,
@@ -834,7 +838,7 @@ class Api extends CI_Controller
             $default_data = $query = $this->db->get('tbl_default_mass_volume_ghtk')->result()[0];
 
             // Get info warehouse send
-            $this->db->where('is_default', true);
+            $this->db->where('id', $warehouse);
             $info_warehouse_send = $this->db->get('tbl_warehouse_send')->row();
 
             $data_shop['DVVC'] = 'GHTK';
@@ -857,9 +861,9 @@ class Api extends CI_Controller
                 $data_ghtk->order->id = $codeNew;
 //                $data_ghtk->order->pick_address_id = $info_customer[0]->address_id;
                 $data_ghtk->order->pick_name = $info_customer[0]->customer_shop_code;
-                // $data_ghtk->order->pick_address = $info_order->pickup_address;
-                // $data_ghtk->order->pick_province = $info_order->pickup_province;
-                // $data_ghtk->order->pick_district = $info_order->pickup_district;
+//                $data_ghtk->order->pick_address = $info_order->pickup_address;
+//                $data_ghtk->order->pick_province = $info_order->pickup_province;
+//                $data_ghtk->order->pick_district = $info_order->pickup_district;
                 $data_ghtk->order->pick_tel = $info_warehouse_send->phone;
                 $data_ghtk->order->tel = $info_order->phone;
                 $data_ghtk->order->name = $info_order->name;
@@ -880,7 +884,6 @@ class Api extends CI_Controller
                 $data_ghtk->order->pick_address = $info_warehouse_send->nameAddress;
                 $data_ghtk->order->pick_province = $info_warehouse_send->province;
                 $data_ghtk->order->pick_district = $info_warehouse_send->district;
-                $data_ghtk->order->pick_ward = $info_warehouse_send->commune;
 
                 $responseJSON_ghtk = self::api_ghtk($data_ghtk, $default_data->token_ghtk, true);
 
@@ -1086,6 +1089,7 @@ class Api extends CI_Controller
             if ($id_order_shop) {
                 $codeNew = $data_default->code . randerCode(6);
 
+                $this->db->where('id', $warehouse);
                 $warehouser = $this->db->get('tbl_warehouse_send')->row();
 
                 $dataAPI = array(
@@ -1451,7 +1455,7 @@ class Api extends CI_Controller
 
                 if ($id_order_shop) {
 
-                    $codeNew = $default_data->code . randerCode(6);
+                    $codeNew = CODE_GHTK . randerCode(2) . code(6);
 
                     $data_ghtk = new stdClass();
                     $product = new stdClass();
@@ -1464,10 +1468,10 @@ class Api extends CI_Controller
                     $data_ghtk->order = new stdClass();
                     $data_ghtk->order->id = $codeNew;
 //                    $data_ghtk->order->pick_address_id = $order->address_id;
-                    $data_ghtk->order->pick_name = $order->customer_shop_code;
-                    // $data_ghtk->order->pick_address = $order->pickup_address;
-                    // $data_ghtk->order->pick_province = $order->pickup_province;
-                    // $data_ghtk->order->pick_district = $order->pickup_district;
+                    $data_ghtk->order->pick_name = $order->customer_shop_name;
+                    $data_ghtk->order->pick_address = $order->pickup_address;
+                    $data_ghtk->order->pick_province = $order->pickup_province;
+                    $data_ghtk->order->pick_district = $order->pickup_district;
                     $data_ghtk->order->pick_tel = $info_warehouse_send->phone;
                     $data_ghtk->order->tel = $order->phone;
                     $data_ghtk->order->name = $order->name;
@@ -1483,12 +1487,12 @@ class Api extends CI_Controller
                     $data_ghtk->order->value = $value;
 
                     // More value
-                    $data_ghtk->order->hamlet = "Khác";
+                    $data_ghtk->order->hamlet = "Hải dương";
                     // Warehouse
                     $data_ghtk->order->pick_address = $info_warehouse_send->nameAddress;
                     $data_ghtk->order->pick_province = $info_warehouse_send->province;
                     $data_ghtk->order->pick_district = $info_warehouse_send->district;
-					$data_ghtk->order->pick_ward = $info_warehouse_send->commune;
+					$data_ghtk->order->pick_ward= $info_warehouse_send->commune;
 
                     $resp = self::api_ghtk($data_ghtk, $default_data->token_ghtk, true);
                     $resp = json_decode($resp, true);
@@ -1782,7 +1786,7 @@ class Api extends CI_Controller
 
                 if ($id_order_shop) {
 
-                    $codeNew = $data_default->code . randerCode(6);
+                    $codeNew = CODE_VNC . randerCode(2) . code(4);
 
                     $dataAPI = array(
                         'Code' => $codeNew,
@@ -1911,7 +1915,7 @@ class Api extends CI_Controller
                 $this->db->insert('tblorders_shop', $data_order_shop);
                 $id_order_shop = $this->db->insert_id();
                 if ($id_order_shop) {
-                    $codeNew = CODE_NB . '.' . randerCode(2) . code(6);
+                    $codeNew = CODE_NB . '.' . code(8);
                     // update table tbl_create_order
                     $data_order = array(
                         'code' => $codeNew,
@@ -1989,10 +1993,13 @@ class Api extends CI_Controller
     }
 
 
+   /**
+     * Đây là hàm thêm địa chỉ lấy
+     */
     public function set_warehouse()
     {
         $id_default = $this->input->post('id_default');
-		$name = $this->input->post('name');
+        $name = $this->input->post('name');
         $address_default = $this->input->post('address_default');
         $phone_default = $this->input->post('phone_default');
         $province_name = $this->input->post('province_name');
@@ -2003,7 +2010,7 @@ class Api extends CI_Controller
         $result = array('status' => false, 'error' => '');
 
         $data = array(
-			'name' => $name,
+            'name' => $name,
             'nameAddress' => $address_default,
             'phone' => $phone_default,
             'province' => $province_name,
@@ -2043,7 +2050,177 @@ class Api extends CI_Controller
         }
         echo json_encode($result);
     }
-    /**
+
+    public function get_warehouse()
+    {
+        $result = array('status' => false, 'error' => '');
+        $id = $this->input->post('id');
+
+        $this->db->where('id', $id);
+        $info = $this->db->get('tbl_warehouse_send')->row();
+        if (!$info) {
+            $result['error'] = 'noWarehouse';
+            echo json_encode($result);
+            die();
+        }
+
+
+        $curl = curl_init();
+        curl_setopt_array($curl, [
+            CURLOPT_URL => 'https://api.mysupership.vn/v1/partner/areas/province',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => [
+                'Accept: */*',
+            ],
+
+        ]);
+        $provinces = curl_exec($curl);
+        curl_close($curl);
+
+        $info->province_list = json_decode($provinces, true)['results'];
+        $codeProvince = $codeDistricts = $codeCommunes = "";
+        foreach ($info->province_list as $province) {
+            if (strpos($province['name'], $info->province) !== false) {
+                $codeProvince = $province['code'];
+                break;
+            }
+        }
+        if(!empty($codeProvince)){
+
+            $this->db->select('district_id as code,district as name')->distinct();
+            $this->db->from('tbladdress_list');
+            $this->db->where('province_id', $codeProvince);
+            $districts = $this->db->get()->result();
+
+            $info->district_list = $districts;
+            foreach ($districts as $district){
+                if (strpos($district->name, $info->district) !== false) {
+                    $codeDistricts = $district->code;
+                    break;
+                }
+            }
+
+            if(!empty($codeDistricts)){
+                $curl = curl_init();
+                //
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => "https://api.mysupership.vn/v1/partner/areas/commune?district=" . $codeDistricts,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => "",
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 30,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => "GET",
+                    CURLOPT_HTTPHEADER => array(
+                        "Accept: */*",
+                    ),
+                ));
+                //
+                $response = curl_exec($curl);
+                curl_close($curl);
+
+                $communes = json_decode($response,true)['results'];
+                foreach ($communes as $commune){
+                    if (strpos($commune['name'], $info->commune) !== false) {
+                        $codeCommunes = $commune['code'];
+                        break;
+                    }
+                }
+                $info->area_list = $communes;
+            }
+
+
+        }
+        $info->codeProvince = $codeProvince;
+        $info->codeDistricts = $codeDistricts;
+        $info->codeCommunes = $codeCommunes;
+
+        $result['status'] = true;
+        $result['info'] = $info;
+        echo json_encode($result);
+    }
+    
+	/**
+     *
+     */
+    public function getWarehouseConfirm()
+    {
+        $dv = intval($this->input->get('dv'));
+        $obj = intval($this->input->get('obj'));
+        if (empty($dv)) {
+            $idCustomer = $this->input->get('idCustomer');
+            if (empty($obj)) {
+                $this->db->where('id', $idCustomer);
+                $infoCustomer = $this->db->get('tblcustomers')->row();
+                $token_customer = $infoCustomer->token_customer;
+            } else {
+                $token_customer = $idCustomer;
+            }
+
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => "https://api.mysupership.vn/v1/partner/warehouses",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "GET",
+                CURLOPT_HTTPHEADER => array(
+                    "Accept: */*",
+                    "Authorization: Bearer " . $token_customer,
+                    "Cache-Control: no-cache",
+                ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+                echo "cURL Error #:" . $err;
+                die();
+            } else {
+                $results = json_decode($response, true)['results'];
+                $data_warehouse = $data_warehouses = array();
+                if(!empty($results)){
+                    foreach ($results as $result) {
+                        if ($result['status'] == 1) {
+                            array_push($data_warehouse, $result);
+                        }
+                    }
+
+                    foreach ($data_warehouse as $warehouse) {
+                        if ($warehouse['primary'] == 1) {
+                            $data_warehouses[0] = $warehouse;
+                        } else {
+                            $data_warehouses[] = $warehouse;
+                        }
+                    }
+
+                    $re = array('list_result' => $data_warehouse);
+                    echo json_encode($re);
+                }
+               
+            }
+        } else {
+            $this->db->order_by('is_default', 'DESC');
+            $list_warehouse = $this->db->get('tbl_warehouse_send')->result();
+            foreach ($list_warehouse as $warehouse) {
+                $warehouse->address = $warehouse->nameAddress . ', ' . $warehouse->commune . ', ' . $warehouse->district . ', ' . $warehouse->province;
+            }
+            $result = array('list_result' => $list_warehouse);
+            echo json_encode($result);
+        }
+    }
+	
+	/**
      * ===============================================================================
      */
     /**
@@ -2058,7 +2235,7 @@ class Api extends CI_Controller
      * @author Lediun Software - https://sendingreen.tk/
      * @email: contact@sendingreen.tk
      */
-    private function convertDvvcAPI($dvvcSource, $dvvcFinsh, $info_order, $info_create_order, $mass, $mass_fake, $transport)
+    private function convertDvvcAPI($dvvcSource, $dvvcFinsh, $info_order, $info_create_order, $mass, $mass_fake, $transport, $warehouse)
     {
         // Lấy thông tin mặc định
         $this->db->where('customer_shop_code', $info_order->shop);
@@ -2066,8 +2243,10 @@ class Api extends CI_Controller
 
 
         // Get info warehouse send
-        $this->db->where('is_default', true);
-        $info_warehouse_send = $this->db->get('tbl_warehouse_send')->row();
+        if(in_array($dvvcFinsh, array('GHTK','VNC'))){
+            $this->db->where('id', $warehouse);
+            $info_warehouse_send = $this->db->get('tbl_warehouse_send')->row();
+        }
 
         switch ($info_create_order->status_cancel) {
             case 1:
@@ -2182,13 +2361,13 @@ class Api extends CI_Controller
 
                 switch ($dvvcFinsh) {
                     case 'SPS':
-
+                        $repo_customer = explode(',', $warehouse);
                         // Khởi tạo dữ liệu gửi lên API SPS
                         $data_sps = array(
                             'pickup_phone' => $info_customers->customer_phone,
-                            'pickup_address' => $info_create_order->pickup_address,
-                            'pickup_province' => $info_create_order->pickup_province,
-                            'pickup_district' => $info_create_order->pickup_district,
+                            'pickup_address' => $repo_customer[0],
+                            'pickup_province' => $repo_customer[count($repo_customer) - 1],
+                            'pickup_district' => $repo_customer[count($repo_customer) - 2],
                             'name' => $info_create_order->name,
                             'phone' => $info_create_order->phone,
                             'address' => $info_create_order->address,
@@ -2215,7 +2394,6 @@ class Api extends CI_Controller
                         $default_data = $query = $this->db->get('tbl_default_mass_volume_ghtk')->row();
                         $codeNew = $default_data->code . randerCode(6);
 
-
                         // Khởi tạo dữ liệu gửi lên API GHTK
                         $data_ghtk = new stdClass();
                         $product = new stdClass();
@@ -2229,9 +2407,9 @@ class Api extends CI_Controller
                         $data_ghtk->order->id = $codeNew;
 //                        $data_ghtk->order->pick_address_id = $info_customers->address_id;
                         $data_ghtk->order->pick_name = $info_customers->customer_shop_code;
-                        // $data_ghtk->order->pick_address = $data_create_order['pickup_address'];
-                        // $data_ghtk->order->pick_province = $data_create_order['pickup_province'];
-                        // $data_ghtk->order->pick_district = $data_create_order['pickup_district'];
+//                        $data_ghtk->order->pick_address = $data_create_order['pickup_address'];
+//                        $data_ghtk->order->pick_province = $data_create_order['pickup_province'];
+//                        $data_ghtk->order->pick_district = $data_create_order['pickup_district'];
                         $data_ghtk->order->pick_tel = $info_warehouse_send->phone;
                         $data_ghtk->order->tel = $data_create_order['phone'];
                         $data_ghtk->order->name = $data_create_order['name'];
@@ -2253,7 +2431,6 @@ class Api extends CI_Controller
                         $data_ghtk->order->pick_address = $info_warehouse_send->nameAddress;
                         $data_ghtk->order->pick_province = $info_warehouse_send->province;
                         $data_ghtk->order->pick_district = $info_warehouse_send->district;
-						$data_ghtk->order->pick_ward = $info_warehouse_send->commune;
 
                         return $this->_create_order_GHTK($data_ghtk, $default_data->token_ghtk, $id_create_order, $id_orders_shop, $info_create_order, $mass, $dvvcSource, $dvvcFinsh, $codeNew);
                         break;
@@ -2333,8 +2510,6 @@ class Api extends CI_Controller
 
                         $codeNew = $data_default->code . randerCode(6);
 
-                        $warehouser = $this->db->get('tbl_warehouse_send')->row();
-
                         $dataAPI = array(
                             'Code' => $codeNew,
                             'ProductName' => $info_create_order->product,
@@ -2344,12 +2519,12 @@ class Api extends CI_Controller
                             'Weight' => $mass_fake,
                             'Note' => $info_create_order->note,
                             'NumberOfProducts' => 1,
-                            'SourceCity' => $warehouser->province,
-                            'SourceDistrict' => $warehouser->district,
-                            'SourceWard' => $warehouser->commune,
-                            'SourceAddress' => $warehouser->nameAddress,
+                            'SourceCity' => $info_warehouse_send->province,
+                            'SourceDistrict' => $info_warehouse_send->district,
+                            'SourceWard' => $info_warehouse_send->commune,
+                            'SourceAddress' => $info_warehouse_send->nameAddress,
                             'SourceName' => $info_customers->customer_shop_code,
-                            'SourcePhoneNumber' => $warehouser->phone,
+                            'SourcePhoneNumber' => $info_warehouse_send->phone,
                             'DestCity' => $info_create_order->province,
                             'DestDistrict' => $info_create_order->district,
                             'DestWard' => $info_create_order->commune,
@@ -2368,7 +2543,7 @@ class Api extends CI_Controller
                     case 'NB':
 
                         $today = date('Y-m-d H:i:s');
-                        $code = CODE_NB.'.'.randerCode(2).code(6);
+                        $code = CODE_NB . '.' . randerCode(2) . code(6);
 
                         // Tạo dữ liệu cập nhật bảng create_order
                         $data_update_create_order = array(
@@ -2563,13 +2738,14 @@ class Api extends CI_Controller
                             switch ($dvvcFinsh) {
 
                                 case 'SPS':
+                                    $repo_customer = explode(',', $warehouse);
 
                                     // Khởi tạo dữ liệu gửi lên API SPS
                                     $data_sps = array(
                                         'pickup_phone' => $info_customers->customer_phone,
-                                        'pickup_address' => $info_create_order->pickup_address,
-                                        'pickup_province' => $info_create_order->pickup_province,
-                                        'pickup_district' => $info_create_order->pickup_district,
+                                        'pickup_address' => $repo_customer[0],
+                                        'pickup_province' => $repo_customer[count($repo_customer) - 1],
+                                        'pickup_district' => $repo_customer[count($repo_customer) - 2],
                                         'name' => $info_create_order->name,
                                         'phone' => $info_create_order->phone,
                                         'address' => $info_create_order->address,
@@ -2609,9 +2785,9 @@ class Api extends CI_Controller
                                     $data_ghtk->order->id = $codeNew;
 //                                    $data_ghtk->order->pick_address_id = $info_customers->address_id;
                                     $data_ghtk->order->pick_name = $info_customers->customer_shop_code;
-                                    // $data_ghtk->order->pick_address = $data_create_order['pickup_address'];
-                                    // $data_ghtk->order->pick_province = $data_create_order['pickup_province'];
-                                    // $data_ghtk->order->pick_district = $data_create_order['pickup_district'];
+//                                    $data_ghtk->order->pick_address = $data_create_order['pickup_address'];
+//                                    $data_ghtk->order->pick_province = $data_create_order['pickup_province'];
+//                                    $data_ghtk->order->pick_district = $data_create_order['pickup_district'];
                                     $data_ghtk->order->pick_tel = $info_warehouse_send->phone;
                                     $data_ghtk->order->tel = $data_create_order['phone'];
                                     $data_ghtk->order->name = $data_create_order['name'];
@@ -2632,7 +2808,6 @@ class Api extends CI_Controller
                                     $data_ghtk->order->pick_address = $info_warehouse_send->nameAddress;
                                     $data_ghtk->order->pick_province = $info_warehouse_send->province;
                                     $data_ghtk->order->pick_district = $info_warehouse_send->district;
-									$data_ghtk->order->pick_ward = $info_warehouse_send->commune;
 
                                     return $this->_create_order_GHTK($data_ghtk, $default_data->token_ghtk, $id_create_order, $id_orders_shop, $info_create_order, $mass, $dvvcSource, $dvvcFinsh, $codeNew);
                                     break;
@@ -2710,8 +2885,6 @@ class Api extends CI_Controller
 
                                     $codeNew = $data_default->code . randerCode(6);
 
-                                    $warehouser = $this->db->get('tbl_warehouse_send')->row();
-
                                     $dataAPI = array(
                                         'Code' => $codeNew,
                                         'ProductName' => $info_create_order->product,
@@ -2721,12 +2894,12 @@ class Api extends CI_Controller
                                         'Weight' => $mass_fake,
                                         'Note' => $info_create_order->note,
                                         'NumberOfProducts' => 1,
-                                        'SourceCity' => $warehouser->province,
-                                        'SourceDistrict' => $warehouser->district,
-                                        'SourceWard' => $warehouser->commune,
-                                        'SourceAddress' => $warehouser->nameAddress,
+                                        'SourceCity' => $info_warehouse_send->province,
+                                        'SourceDistrict' => $info_warehouse_send->district,
+                                        'SourceWard' => $info_warehouse_send->commune,
+                                        'SourceAddress' => $info_warehouse_send->nameAddress,
                                         'SourceName' => $info_customers->customer_shop_code,
-                                        'SourcePhoneNumber' => $warehouser->phone,
+                                        'SourcePhoneNumber' => $info_warehouse_send->phone,
                                         'DestCity' => $info_create_order->province,
                                         'DestDistrict' => $info_create_order->district,
                                         'DestWard' => $info_create_order->commune,
@@ -2745,7 +2918,7 @@ class Api extends CI_Controller
                                 case 'NB':
 
                                     $today = date('Y-m-d H:i:s');
-                                    $code = CODE_NB.'.'.randerCode(2).code(6);
+                                    $code = CODE_NB . '.' . randerCode(2) . code(6);
 
                                     // Tạo dữ liệu cập nhật bảng create_order
                                     $data_update_create_order = array(
@@ -2949,13 +3122,13 @@ class Api extends CI_Controller
 
                             switch ($dvvcFinsh) {
                                 case 'SPS':
-
+                                    $repo_customer = explode(',', $warehouse);
                                     // Khởi tạo dữ liệu gửi lên API SPS
                                     $data_sps = array(
                                         'pickup_phone' => $info_customers->customer_phone,
-                                        'pickup_address' => $info_create_order->pickup_address,
-                                        'pickup_province' => $info_create_order->pickup_province,
-                                        'pickup_district' => $info_create_order->pickup_district,
+                                        'pickup_address' => $repo_customer[0],
+                                        'pickup_province' => $repo_customer[count($repo_customer) - 1],
+                                        'pickup_district' => $repo_customer[count($repo_customer) - 2],
                                         'name' => $info_create_order->name,
                                         'phone' => $info_create_order->phone,
                                         'address' => $info_create_order->address,
@@ -2982,7 +3155,6 @@ class Api extends CI_Controller
                                     $default_data = $query = $this->db->get('tbl_default_mass_volume_ghtk')->row();
                                     $codeNew = $default_data->code . randerCode(6);
 
-
                                     // Khởi tạo dữ liệu gửi lên API GHTK
                                     $data_ghtk = new stdClass();
                                     $product = new stdClass();
@@ -2996,9 +3168,9 @@ class Api extends CI_Controller
                                     $data_ghtk->order->id = $codeNew;
 //                                    $data_ghtk->order->pick_address_id = $info_customers->address_id;
                                     $data_ghtk->order->pick_name = $info_customers->customer_shop_code;
-                                    // $data_ghtk->order->pick_address = $data_create_order['pickup_address'];
-                                    // $data_ghtk->order->pick_province = $data_create_order['pickup_province'];
-                                    // $data_ghtk->order->pick_district = $data_create_order['pickup_district'];
+//                                    $data_ghtk->order->pick_address = $data_create_order['pickup_address'];
+//                                    $data_ghtk->order->pick_province = $data_create_order['pickup_province'];
+//                                    $data_ghtk->order->pick_district = $data_create_order['pickup_district'];
                                     $data_ghtk->order->pick_tel = $info_warehouse_send->phone;
                                     $data_ghtk->order->tel = $data_create_order['phone'];
                                     $data_ghtk->order->name = $data_create_order['name'];
@@ -3018,7 +3190,6 @@ class Api extends CI_Controller
                                     $data_ghtk->order->pick_address = $info_warehouse_send->nameAddress;
                                     $data_ghtk->order->pick_province = $info_warehouse_send->province;
                                     $data_ghtk->order->pick_district = $info_warehouse_send->district;
-									$data_ghtk->order->pick_ward = $info_warehouse_send->commune;
 
                                     return $this->_create_order_GHTK($data_ghtk, $default_data->token_ghtk, $id_create_order, $id_orders_shop, $info_create_order, $mass, $dvvcSource, $dvvcFinsh, $codeNew);
                                     break;
@@ -3099,8 +3270,6 @@ class Api extends CI_Controller
 
                                     $codeNew = $data_default->code . randerCode(6);
 
-                                    $warehouser = $this->db->get('tbl_warehouse_send')->row();
-
                                     $dataAPI = array(
                                         'Code' => $codeNew,
                                         'ProductName' => $info_create_order->product,
@@ -3110,12 +3279,12 @@ class Api extends CI_Controller
                                         'Weight' => $mass_fake,
                                         'Note' => $info_create_order->note,
                                         'NumberOfProducts' => 1,
-                                        'SourceCity' => $warehouser->province,
-                                        'SourceDistrict' => $warehouser->district,
-                                        'SourceWard' => $warehouser->commune,
-                                        'SourceAddress' => $warehouser->nameAddress,
+                                        'SourceCity' => $info_warehouse_send->province,
+                                        'SourceDistrict' => $info_warehouse_send->district,
+                                        'SourceWard' => $info_warehouse_send->commune,
+                                        'SourceAddress' => $info_warehouse_send->nameAddress,
                                         'SourceName' => $info_customers->customer_shop_code,
-                                        'SourcePhoneNumber' => $warehouser->phone,
+                                        'SourcePhoneNumber' => $info_warehouse_send->phone,
                                         'DestCity' => $info_create_order->province,
                                         'DestDistrict' => $info_create_order->district,
                                         'DestWard' => $info_create_order->commune,
@@ -3134,7 +3303,7 @@ class Api extends CI_Controller
                                 case 'NB':
 
                                     $today = date('Y-m-d H:i:s');
-                                    $code = CODE_NB.'.'.randerCode(2).code(6);
+                                    $code = CODE_NB . '.' . randerCode(2) . code(6);
 
                                     // Tạo dữ liệu cập nhật bảng create_order
                                     $data_update_create_order = array(
@@ -3349,13 +3518,13 @@ class Api extends CI_Controller
                             switch ($dvvcFinsh) {
 
                                 case 'SPS':
-
+                                    $repo_customer = explode(',', $warehouse);
                                     // Khởi tạo dữ liệu gửi lên API SPS
                                     $data_sps = array(
                                         'pickup_phone' => $info_customers->customer_phone,
-                                        'pickup_address' => $info_create_order->pickup_address,
-                                        'pickup_province' => $info_create_order->pickup_province,
-                                        'pickup_district' => $info_create_order->pickup_district,
+                                        'pickup_address' => $repo_customer[0],
+                                        'pickup_province' => $repo_customer[count($repo_customer) - 1],
+                                        'pickup_district' => $repo_customer[count($repo_customer) - 2],
                                         'name' => $info_create_order->name,
                                         'phone' => $info_create_order->phone,
                                         'address' => $info_create_order->address,
@@ -3396,9 +3565,9 @@ class Api extends CI_Controller
                                     $data_ghtk->order->id = $codeNew;
 //                                    $data_ghtk->order->pick_address_id = $info_customers->address_id;
                                     $data_ghtk->order->pick_name = $info_customers->customer_shop_code;
-                                    // $data_ghtk->order->pick_address = $data_create_order['pickup_address'];
-                                    // $data_ghtk->order->pick_province = $data_create_order['pickup_province'];
-                                    // $data_ghtk->order->pick_district = $data_create_order['pickup_district'];
+//                                    $data_ghtk->order->pick_address = $data_create_order['pickup_address'];
+//                                    $data_ghtk->order->pick_province = $data_create_order['pickup_province'];
+//                                    $data_ghtk->order->pick_district = $data_create_order['pickup_district'];
                                     $data_ghtk->order->pick_tel = $info_warehouse_send->phone;
                                     $data_ghtk->order->tel = $data_create_order['phone'];
                                     $data_ghtk->order->name = $data_create_order['name'];
@@ -3418,7 +3587,6 @@ class Api extends CI_Controller
                                     $data_ghtk->order->pick_address = $info_warehouse_send->nameAddress;
                                     $data_ghtk->order->pick_province = $info_warehouse_send->province;
                                     $data_ghtk->order->pick_district = $info_warehouse_send->district;
-									$data_ghtk->order->pick_ward = $info_warehouse_send->commune;
 
                                     return $this->_create_order_GHTK($data_ghtk, $default_data->token_ghtk, $id_create_order, $id_orders_shop, $info_create_order, $mass, $dvvcSource, $dvvcFinsh, $codeNew);
                                     break;
@@ -3497,8 +3665,6 @@ class Api extends CI_Controller
 
                                     $codeNew = $data_default->code . randerCode(6);
 
-                                    $warehouser = $this->db->get('tbl_warehouse_send')->row();
-
                                     $dataAPI = array(
                                         'Code' => $codeNew,
                                         'ProductName' => $info_create_order->product,
@@ -3508,12 +3674,12 @@ class Api extends CI_Controller
                                         'Weight' => $mass_fake,
                                         'Note' => $info_create_order->note,
                                         'NumberOfProducts' => 1,
-                                        'SourceCity' => $warehouser->province,
-                                        'SourceDistrict' => $warehouser->district,
-                                        'SourceWard' => $warehouser->commune,
-                                        'SourceAddress' => $warehouser->nameAddress,
+                                        'SourceCity' => $info_warehouse_send->province,
+                                        'SourceDistrict' => $info_warehouse_send->district,
+                                        'SourceWard' => $info_warehouse_send->commune,
+                                        'SourceAddress' => $info_warehouse_send->nameAddress,
                                         'SourceName' => $info_customers->customer_shop_code,
-                                        'SourcePhoneNumber' => $warehouser->phone,
+                                        'SourcePhoneNumber' => $info_warehouse_send->phone,
                                         'DestCity' => $info_create_order->province,
                                         'DestDistrict' => $info_create_order->district,
                                         'DestWard' => $info_create_order->commune,
@@ -3532,7 +3698,7 @@ class Api extends CI_Controller
                                 case 'NB':
 
                                     $today = date('Y-m-d H:i:s');
-                                    $code = CODE_NB.'.'.randerCode(2).code(6);
+                                    $code = CODE_NB . '.' . randerCode(2) . code(6);
 
                                     // Tạo dữ liệu cập nhật bảng create_order
                                     $data_update_create_order = array(
@@ -3745,13 +3911,13 @@ class Api extends CI_Controller
                             switch ($dvvcFinsh) {
 
                                 case 'SPS':
-
+                                    $repo_customer = explode(',', $warehouse);
                                     // Khởi tạo dữ liệu gửi lên API SPS
                                     $data_sps = array(
                                         'pickup_phone' => $info_customers->customer_phone,
-                                        'pickup_address' => $info_create_order->pickup_address,
-                                        'pickup_province' => $info_create_order->pickup_province,
-                                        'pickup_district' => $info_create_order->pickup_district,
+                                        'pickup_address' => $repo_customer[0],
+                                        'pickup_province' => $repo_customer[count($repo_customer) - 1],
+                                        'pickup_district' => $repo_customer[count($repo_customer) - 2],
                                         'name' => $info_create_order->name,
                                         'phone' => $info_create_order->phone,
                                         'address' => $info_create_order->address,
@@ -3792,9 +3958,9 @@ class Api extends CI_Controller
                                     $data_ghtk->order->id = $codeNew;
 //                                    $data_ghtk->order->pick_address_id = $info_customers->address_id;
                                     $data_ghtk->order->pick_name = $info_customers->customer_shop_code;
-                                    // $data_ghtk->order->pick_address = $data_create_order['pickup_address'];
-                                    // $data_ghtk->order->pick_province = $data_create_order['pickup_province'];
-                                    // $data_ghtk->order->pick_district = $data_create_order['pickup_district'];
+//                                    $data_ghtk->order->pick_address = $data_create_order['pickup_address'];
+//                                    $data_ghtk->order->pick_province = $data_create_order['pickup_province'];
+//                                    $data_ghtk->order->pick_district = $data_create_order['pickup_district'];
                                     $data_ghtk->order->pick_tel = $info_warehouse_send->phone;
                                     $data_ghtk->order->tel = $data_create_order['phone'];
                                     $data_ghtk->order->name = $data_create_order['name'];
@@ -3814,7 +3980,6 @@ class Api extends CI_Controller
                                     $data_ghtk->order->pick_address = $info_warehouse_send->nameAddress;
                                     $data_ghtk->order->pick_province = $info_warehouse_send->province;
                                     $data_ghtk->order->pick_district = $info_warehouse_send->district;
-									$data_ghtk->order->pick_ward = $info_warehouse_send->commune;
 
                                     return $this->_create_order_GHTK($data_ghtk, $default_data->token_ghtk, $id_create_order, $id_orders_shop, $info_create_order, $mass, $dvvcSource, $dvvcFinsh, $codeNew);
                                     break;
@@ -3893,8 +4058,6 @@ class Api extends CI_Controller
 
                                     $codeNew = $data_default->code . randerCode(6);
 
-                                    $warehouser = $this->db->get('tbl_warehouse_send')->row();
-
                                     $dataAPI = array(
                                         'Code' => $codeNew,
                                         'ProductName' => $info_create_order->product,
@@ -3904,12 +4067,12 @@ class Api extends CI_Controller
                                         'Weight' => $mass_fake,
                                         'Note' => $info_create_order->note,
                                         'NumberOfProducts' => 1,
-                                        'SourceCity' => $warehouser->province,
-                                        'SourceDistrict' => $warehouser->district,
-                                        'SourceWard' => $warehouser->commune,
-                                        'SourceAddress' => $warehouser->nameAddress,
+                                        'SourceCity' => $info_warehouse_send->province,
+                                        'SourceDistrict' => $info_warehouse_send->district,
+                                        'SourceWard' => $info_warehouse_send->commune,
+                                        'SourceAddress' => $info_warehouse_send->nameAddress,
                                         'SourceName' => $info_customers->customer_shop_code,
-                                        'SourcePhoneNumber' => $warehouser->phone,
+                                        'SourcePhoneNumber' => $info_warehouse_send->phone,
                                         'DestCity' => $info_create_order->province,
                                         'DestDistrict' => $info_create_order->district,
                                         'DestWard' => $info_create_order->commune,
@@ -3928,7 +4091,7 @@ class Api extends CI_Controller
                                 case 'NB':
 
                                     $today = date('Y-m-d H:i:s');
-                                    $code = CODE_NB.'.'.randerCode(2).code(6);
+                                    $code = CODE_NB . '.' . randerCode(2) . code(6);
 
                                     // Tạo dữ liệu cập nhật bảng create_order
                                     $data_update_create_order = array(

@@ -32,6 +32,19 @@ class Header_controller extends AdminController
         }
         die();
     }
+    public function edit_handling()
+    {
+
+
+        $this->db->where('id', $_POST['id']);
+        $update = $this->db->update('tblwebhook_gh', ['handling'=>1]);
+
+
+        if ($update) {
+            var_dump($update) ;
+        }
+        die();
+    }
 
     public function edit_note()
     {
@@ -46,26 +59,6 @@ class Header_controller extends AdminController
             echo $_POST['status_delay'];
         }
         die();
-    }
-
-    public function getNumberList()
-    {
-        $this->edit_time_status();
-        $data_delay =
-            $this->db
-                ->select('id,status_delay')
-                ->order_by('status_delay', 'ASC')
-                ->order_by("delivery_delay_time", "DESC")
-                // ->not_like('city' , 'Tỉnh Hải Dương')
-                ->where('status', 'Hoãn Giao Hàng')
-                ->from('tblorders_shop')->get()->result();
-
-        foreach ($data_delay as $key => $value) {
-            if ($value->status_delay == '1' || $value->status_delay == 1) {
-                unset($data_delay[$key]);
-            }
-        }
-        echo sizeof($data_delay);
     }
 
     public function get_note()
@@ -123,8 +116,10 @@ class Header_controller extends AdminController
 
             if($row[11] == 'GHTK'){
                 $row[4] = "<a target='_blank' href='https://khachhang.giaohangtietkiem.vn/khachhang?code=".$row[12]."'>" . $row[4] . "</a>";
-            }else{
+            }elseif($row[11] == 'SPS'){
                 $row[4] = "<a target='_blank' href='https://mysupership.com/search?category=orders&query=" . $row[4] . "'>" . $row[4] . "</a>";
+            }elseif ($row[11] == 'VNC') {
+                $row[4] = "<a target='_blank' href='https://cs.vncpost.com/order/list'>" . $row[4] . "</a>";
             }
             $row[11] = $row[13];
             unset($row[13]);
@@ -165,7 +160,7 @@ class Header_controller extends AdminController
 
         if (sizeof($data_over) > 0) {
             foreach ($data_over as $key => $value) {
-                if ($this->differenceInHours($start_check, $value->delay_time) >= 24) {
+                if ($this->differenceInHours($start_check, $value->delay_time) >= 12) {
                     $id_status_null['id'] = $value->id;
                     $id_status_null['delay_time'] = null;
                     $id_status_null['over_time'] = null;
@@ -181,6 +176,26 @@ class Header_controller extends AdminController
         return $status;
     }
 
+    public function getNumberList()
+    {
+        $data_delay =
+            $this->db
+                ->select('id, delivery_delay_time, date_create , status, code_supership , shop , district , city , status_delay , note_delay, DVVC, code_ghtk')
+                ->order_by('status_delay', 'ASC')
+                ->order_by("delivery_delay_time", "DESC")
+                // ->not_like('city' , 'Tỉnh Hải Dương')
+                ->where('status', 'Hoãn Giao Hàng')
+                ->where('is_hd_branch', '1')
+                ->from('tblorders_shop')->get()->result();
+        $count = 0;
+        foreach ($data_delay as $key => $value) {
+            if($value->status_delay!=1 && $value->status_delay!="1"){
+                $count+=1;
+            }
+        }
+        echo $count;
+    }
+
     public function get_delay()
     {
         $data_delay =
@@ -190,6 +205,7 @@ class Header_controller extends AdminController
                 ->order_by("delivery_delay_time", "DESC")
                 // ->not_like('city' , 'Tỉnh Hải Dương')
                 ->where('status', 'Hoãn Giao Hàng')
+                ->where('is_hd_branch', '1')
                 ->from('tblorders_shop')->get()->result();
 
         foreach ($data_delay as $key => $value) {
@@ -205,7 +221,7 @@ class Header_controller extends AdminController
             'status',
             'code_supership',
             'shop',
-            'phone',
+            'DVVC',
             'district',
             'city',
             'status_delay',
@@ -226,7 +242,7 @@ class Header_controller extends AdminController
     {
         $data_delay =
             $this->db
-                ->select('tbl_orders_change_money.order_shop_id, tbl_orders_change_money.id, tbl_orders_change_money.shop_name , 
+                ->select('tblorders_shop.id as order_shop_id,tblorders_shop.note_delay,tbl_orders_change_money.order_shop_id, tbl_orders_change_money.id, tbl_orders_change_money.shop_name , 
             tbl_orders_change_money.code, tbl_orders_change_money.old_money , 
             tbl_orders_change_money.new_money , tbl_orders_change_money.created_date , tbl_orders_change_money.status,
             tblorders_shop.status as status_order, date_create, tblorders_shop.DVVC, tblorders_shop.code_ghtk')
@@ -236,7 +252,10 @@ class Header_controller extends AdminController
                 ->where('(new_money - old_money) < 0')
                 ->where('is_hd_branch', 1)
                 ->where('tbl_orders_change_money.status != 1')
-                ->where('tblorders_shop.status != "Đã Trả Hàng Một Phần"')
+                ->where('tblorders_shop.status',"Đã Đối Soát Giao Hàng")
+                ->or_where('tblorders_shop.status',"Đã Giao Hàng Một Phần")
+                ->or_where('tblorders_shop.status',"Đã Đối Soát Giao Hàng Một Phần")
+                ->group_by('tbl_orders_change_money.code')
                 ->from('tbl_orders_change_money')->get()->result();
 
         $aColumns = array(
@@ -245,11 +264,13 @@ class Header_controller extends AdminController
             'shop_name',
             'code',
             'status_order',
-            '1',
+            'id',
             'old_money',
             'new_money',
             'DVVC',
-            'code_ghtk'
+            'code_ghtk',
+            'note_delay',
+            'order_shop_id'
         );
         $colum_not_view = ['status'];
 
@@ -289,7 +310,7 @@ class Header_controller extends AdminController
                 if ($aColumns[$i] == 'old_money' || $aColumns[$i] == 'new_money') {
                     $_data = number_format_data($aRow[$aColumns[$i]]);
                 }
-                if ($aColumns[$i] == '1') {
+                if ($aColumns[$i] == 'id') {
                     $_data = '';
                     if ($aRow['status'] == 2) {
                         $_data = 'Đơn Hàng Giao Hàng Một Phần';
@@ -298,24 +319,32 @@ class Header_controller extends AdminController
                 $row[] = $_data;
             }
 
-            $input_check = '<div>';
-            if ($aRow['status'] != 2) {
-                $input_check .= '<a title="Đơn Hàng Giao Hàng Một Phần" data-id="' . $aRow['id'] . '" id-colum="status" value="2" style="font-size: 20px;margin-right: 20px;" class="check-change-status-status-half" href="javascript:;"><i class="fa fa-undo" aria-hidden="true"></i></a>';
-                $input_check .= '<label title="Đơn Giao Hàng Toàn Bộ" class="label-border" data-id="' . $aRow['id'] . '" style="color:red;margin:0 0px;">
+            $input_check = '<div style="display: flex">';
+            $input_check .= '<label title="Đơn Giao Hàng Toàn Bộ" class="label-border" data-id="' . $aRow['id'] . '" style="color:red;margin:0 0px;">
                                 <input checked="" class="check-change-status-status-half" data-id="' . $aRow['id'] . '" id-colum="status" value="1" type="checkbox">
                             </label>';
+            if ($row[10]) {
+                $input_check .= '<a title="' . $row[10] . '"href="javascript:;" class="popup-edit-note" data-id="' . $aRow['order_shop_id'] . '" style="color:green;width: 25px;display: flex;justify-content: center;font-size: 25px;"> <i class="fa fa-pencil"></i> </a>';
+            } else {
+                $input_check .= '<a title="Ghi Chú" href="javascript:;" class="popup-edit-note" data-id="' . $aRow['order_shop_id'] . '" style="color: red;width: 25px;display: flex;justify-content: center;font-size: 25px;"> <i class="fa fa-pencil"></i> </a>';
             }
-            $input_check .= '</div>';
+                $input_check .= '</div>';
 
             $row[] = $input_check;
 
+
             if($row[8] == 'GHTK'){
                 $row[3] = '<a href="https://khachhang.giaohangtietkiem.vn/khachhang?code='.$row[9].'" target="_blank">'.$row[3].'</a>';
-            }else
-                $row[3]='<a href="https://mysupership.com/search?category=orders&query='.$row[3].'" target="_blank">'.$row[3].'</a>';
-            $row[8] = $row[10];
+            }elseif ($row[8] == 'SPS')
+                $row[3] = '<a href="https://mysupership.com/search?category=orders&query=' . $row[3] . '" target="_blank">' . $row[3] . '</a>';
+            elseif ($row[8] == 'VNC')
+                $row[3] = '<a href="https://cs.vncpost.com/order/list" target="_blank">' . $row[3] . '</a>';
+
+            $row[8] = $row[12];
             unset($row[9]);
             unset($row[10]);
+            unset($row[11]);
+            unset($row[12]);
             $data_aaDATA[] = $row;
         }
 
@@ -385,18 +414,33 @@ class Header_controller extends AdminController
     {
         $data_delay =
             $this->db
-                ->select('tbl_orders_change_money.order_shop_id, tbl_orders_change_money.id, tbl_orders_change_money.shop_name , 
+                ->select('tblorders_shop.id as order_shop_id,tblorders_shop.note_delay, tbl_orders_change_money.id, tbl_orders_change_money.shop_name , 
             tbl_orders_change_money.code, tbl_orders_change_money.old_money , 
             tbl_orders_change_money.new_money , tbl_orders_change_money.created_date , tbl_orders_change_money.status,
-            tblorders_shop.status as status_order')
+            tblorders_shop.status as status_order, date_create, tblorders_shop.DVVC, tblorders_shop.code_ghtk')
                 ->order_by('created_date', 'DESC')
                 ->join('tblorders_shop', 'tblorders_shop.code_supership = tbl_orders_change_money.code')
                 ->where('DATE_FORMAT(tbl_orders_change_money.created_date, "%Y-%m-%d") >= "2019-03-10"')
                 ->where('(new_money - old_money) < 0')
                 ->where('is_hd_branch', 1)
-                ->where('tbl_orders_change_money.status = 0')
-                ->from('tbl_orders_change_money')->get()->result();
-        echo sizeof($data_delay);
+                ->where('tbl_orders_change_money.status != 1')
+                ->where('tblorders_shop.status',"Đã Đối Soát Giao Hàng")
+                ->or_where('tblorders_shop.status',"Đã Giao Hàng Một Phần")
+                ->or_where('tblorders_shop.status',"Đã Đối Soát Giao Hàng Một Phần")
+                ->group_by('tbl_orders_change_money.code')
+
+                ->from('tbl_orders_change_money');
+        $num_results = $this->db->count_all_results();
+
+
+        echo $num_results;
+    }
+    public function getNumberProvince()
+    {
+        $this->db->where('status', 0);
+        $this->db->from('tbladdress_list');
+        $listProvince = $this->db->get()->result();
+        echo json_encode($listProvince);
     }
 
 }

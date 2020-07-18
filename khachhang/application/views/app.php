@@ -1,3 +1,4 @@
+
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <div id="tab1" class="cover_tab">
@@ -220,7 +221,7 @@
 </div><!-- /.modal -->
 
 
-<div class="modal fade" id="create_order" tabindex="-1" role="dialog" style="position: fixed;padding-left:0">
+<div class="modal fade" id="create_order" tabindex="-1" role="dialog" style="position: fixed;padding-left:0;zoom: 125%;">
     <div class="modal-dialog" role="document">
         <?php echo form_open('/', array('id' => 'create_order_ob', 'autocomplete' => 'off')); ?>
         <div class="modal-content">
@@ -229,18 +230,17 @@
                 </button>
                 <h4 class="modal-title"><?php echo "Tạo Đơn Hàng"; ?></h4>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="height: 700px !important;">
                 <div class="row">
 
                     <div class="row-custom">
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <div class="form-group" style="position:relative">
-                                <label for="customer_phone_zalo">Chọn Khách Hàng</label>
+                                <label style="color:red;" id="search_customer_create_html" for="product">Sản Phẩm</label>
 
                                 <input autocomplete="off" onkeyup="enterTab4(event)" placeholder="Chọn Khách Hàng" class="form-control"
-                                       id="search_customer_create" type="text" name="search_customer_create"
+                                       id="search_customer_create" type="hidden" name="search_customer_create"
                                        value="<?php echo $customer_shop_code; ?>">
-                                <i class="fa fa-search search-icon" aria-hidden="true"></i>
 
 
                                 <input type="hidden" id="customer_id" name="customer_id_create" value="">
@@ -250,10 +250,10 @@
                             </div>
                         </div>
 
-
-                        <div class="col-md-5">
+                        <div class="col-md-2"><label style="font-weight: bold;font-size: 15px" for="repo_customer">Chọn Kho:</label></div>
+                        <div class="col-md-6">
                             <!-- Chọn Khách Hang -->
-                            <div id="repo_customer_cover_create_order" class="form-group">
+                            <div id="repo_customer_cover_create_order" style="display: flex" class="form-group">
 
                             </div>
                         </div>
@@ -267,7 +267,7 @@
                     </div>
 
                     <div class="row-custom">
-                        <div class="col-md-3 col-xs-12">
+                        <div class="col-md-2 col-xs-12">
                             <div class="form-group">
                                 <label for="product">Sản Phẩm</label>
                                 <input type="text" onkeyup="enterTab4(event)" class="form-control" placeholder="Sản Phẩm" id="product"
@@ -275,7 +275,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3 col-xs-12">
+                        <div class="col-md-2 col-xs-12">
                             <div class="form-group">
                                 <label for="phone">Điện Thoại</label>
                                 <input type="text" onkeyup="enterTab4(event)" class="form-control" placeholder="Điện Thoại" id="ap" name="ap"/>
@@ -290,7 +290,7 @@
                             <!-- Phone More-->
                         </div>
 
-                        <div class="col-md-3 col-xs-12">
+                        <div class="col-md-2 col-xs-12">
                             <div class="form-group ">
                                 <label for="f">Họ Và Tên </label>
                                 <input type="text" onkeyup="enterTab4(event)" class="form-control" placeholder="Họ Và Tên" id="f" name="f"/>
@@ -298,7 +298,7 @@
                             <!-- Họ Và Tên-->
                         </div>
 
-                        <div class="col-md-3 col-xs-12">
+                        <div class="col-md-6 col-xs-12">
                             <div class="form-group ">
                                 <label for="a">Địa Chỉ </label>
                                 <input type="text" onkeyup="enterTab4(event)" class="form-control" placeholder="Địa Chỉ" id="a" name="a"
@@ -432,7 +432,7 @@
 
                         <div class="cover-checked col-md-3">
                             <label for="barter" class="container-checkbox">Đổi/Lấy Hàng Về
-                                <input type="checkbox" id="barter" name="barter">
+                                <input type="checkbox" onclick="calc();" id="barter" name="barter">
                                 <span class="checkmark"></span>
                             </label>
                         </div>
@@ -454,27 +454,39 @@
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="supership_value">Tiền Dịch Vụ Supership [₫]</label>
-                                <input onkeyup="formatNumBerKeyUp(this);enterTab4(event)" type="text" class="form-control" style="width: 90%;"
-                                       placeholder="Tiền Dịch Vụ Supership" id="supership_value" name="supership_value"
+                                <label style="  <?= (!$isAppMobile) ? '  margin-top: 55px;':''?>" for="supership_value">Phí Dịch Vụ [₫]</label>
+
+
+                            </div>
+                        </div>
+                        <div class="col-md-2  <?= (!$isAppMobile) ? 'no-padding':''?>" style="<?= (!$isAppMobile) ? 'width: 15.5%;':''?>">
+                            <div class="form-group">
+                                <input onkeyup="formatNumBerKeyUp(this);enterTab4(event)" type="text" class="form-control " style="<?= (!$isAppMobile) ? 'margin-top: 48px;':''?>color: red;   width: 80%;font-weight:bold"
+                                       placeholder="Tiền Dịch Vụ " id="supership_value" name="supership_value"
                                        disabled/>
                                 <span style="color:transparent;">test</span>
 
                             </div>
                         </div>
-                        <div class="col-md-4" style="<?= (!$isAppMobile) ? 'padding-left: 0px':''?>">
-                            <div class="form-group">
-                                <label for="for-custom">Thống kê tiền dịch vụ super ship :</label>
+                        <div class="col-md-4 <?= (!$isAppMobile) ? 'no-padding':''?>" style="<?= (!$isAppMobile) ? 'padding-left: 0px':''?>">
+                            <div class="form-group" style="margin-top: 17px">
                                 <p id="tvc" style="margin-top: 10px">Tiền Vận Chuyển : <span style="color:red;font-weight:bold"></span></p>
                                 <p id="tvk" style="margin-top: 10px">Tiền Vượt Khối Lượng : <span style="color:red;font-weight:bold"></span></p>
                                 <p id="tvtt" style="margin-top: 10px">Tiền vượt Thể Tích: <span style="color:red;font-weight:bold"></span></p>
                                 <p id="tbh" style="margin-top: 10px">Tiển Bảo Hiểm : <span style="color:red;font-weight:bold"></span></p>
                             </div>
                         </div>
+
                     </div>
 
+                    <div class="row-custom">
+                        <div class="col-md-12" style="text-align: right">
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo _l('Đóng'); ?></button>
+                            <a href="javascript:;" id="btn_create" class="btn btn-primary submit_create_order"><?php echo _l('Xác Nhận'); ?></a>
+                        </div>
 
-                    <div class="bottom-mobile">
+                    </div>
+                    <div class="bottom-mobile" style="margin-top: -10px">
 
 
                         <div class="col-md-12 col-xs-12" style="margin-bottom:10px;">
@@ -495,8 +507,8 @@
                                 <div class="form-group">
                                     <label for="service">Dịch Vụ:</label>
                                     <select class="form-control" id="service" name="service">
-                                        <option value="1">Tốc Hành</option>
-                                        <option value="2">Tiết Kiệm</option>
+                                        <option value="1">Tiết Kiệm</option>
+                                        <!--option value="2" >Tốc Hành</option-->
                                     </select>
                                 </div>
 
@@ -542,16 +554,50 @@
 
 
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo _l('Đóng'); ?></button>
-                <a href="javascript:;" id="btn_create" class="btn btn-primary submit_create_order"><?php echo _l('Xác Nhận'); ?></a>
-            </div>
+
         </div><!-- /.modal-content -->
         <?php echo form_close(); ?>
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true"
+     id="modal-order-error" style="z-index: 99999;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="height: 600px;overflow: scroll;">
+            <div class="modal-header" style="padding: 7px !important;display: flex;    background: black !important;">
+                <span>
+                    <h5 class="modal-title">Đơn hàng lỗi</h5>
+                </span>
+                <span style="margin-left: auto;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </span>
 
+            </div>
+            <div class="modal-body">
+                <table id="table-order-error" class="table table-bordered table-striped"
+                       style="border-collapse: collapse;width:100%;font-family: " Times New Roman
+                ", Times, serif !important;font-size: 12px !important;">
+                <thead >
+                <tr>
+                    <th style="width: 5% !important;">STT</th>
+                    <th style="width: 10% !important;">ĐƠN HÀNG</th>
+                    <th style="width: 10% !important;">GÓI HÀNG</th>
+                    <th style="width: 40% !important;">NGƯỜI NHẬN</th>
+                    <th style="width: 30% !important;">NỘI DUNG</th>
+                </tr>
+                </thead>
+
+                </table>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="create_order-excel" tabindex="-1" role="dialog" style="padding-left:0">
     <div class="modal-dialog" role="document">
         <?php echo form_open('/', array('id' => 'create_order_ob_excel', 'autocomplete' => 'off', 'enctype' => 'multipart/form-data')); ?>
@@ -605,7 +651,13 @@
                             </div>
                         </div>
                     </div>
-
+                    <div class="row-custom">
+                        <div class="col-md-12" style="margin-top: 4%;">
+                            <div class="popup-error hidden" role="alert" style="border-color: #eaabb1;border-radius: 0px;height: 46px;">
+                                <button type="button" class="btn btn-danger" onclick="openModalError()">Danh sách đơn hàng lỗi</button>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row-custom">
                         <div class="col-md-12" style="margin-top: 4%;">
                             <div class="alert alert-danger" role="alert" style="background-color: #eaabb1;border-color: #eaabb1;display: none;border-radius: 0px;height: 46px;">
@@ -703,4 +755,15 @@
         </div>
     </div>
 </div>
+<script>
+    function calc() {
+        if (document.getElementById('barter').checked)
+        {
+            document.getElementById('note_create').value = document.getElementById('note_create').value + "\nCó Hàng Đổi Trả. Ship Lấy Hàng Về Giúp Shop"
+        } else {
+            textOld =  document.getElementById('note_create').value
+            document.getElementById('note_create').value = textOld.replace("\nCó Hàng Đổi Trả. Ship Lấy Hàng Về Giúp Shop", "");
 
+        }
+    }
+</script>

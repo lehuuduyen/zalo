@@ -15,6 +15,7 @@
             <?php render_datatable(array(
                 'Ngày',
                 'Mã',
+                'Shop',
                 'Nội dung',
                 'PS tăng',
                 'PS Giảm',

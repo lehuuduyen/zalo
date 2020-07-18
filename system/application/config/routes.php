@@ -184,6 +184,11 @@ $route['add_status'] = 'api/add_status';
 $route['order_ghtk'] = 'api/cronjob_order_ghtk';
 $route['admin/change_order'] = 'admin/change_order_ghtk';
 $route['updateSPSFee'] = 'Cronjobs/updateSPS';
+
+$route['order_supership'] = 'Cronjobs/updateNewSPS';
+
+$route['order_bestinc'] = 'Cronjobs/updateVNC';
+
 $route['updateRegion_id'] = 'Cronjobs/updateRegion_id';
 
 //system
@@ -204,3 +209,8 @@ $route['api/return/payment_table'] = 'admin/Returns/getPaymentTable';
 $route['api/return/create_order_return'] = 'admin/Returns/createOrderReturn';
 
 $route['order_vtp'] = 'dsdh/order_vtp';
+
+//autoUpdate
+$route['api/auto_update_address'] = 'Auto_update/active';
+$route['api/covert_text'] = 'Convert_string/active';
+$route['api/test'] = 'Convert_string/test';

@@ -122,7 +122,8 @@ foreach ($rResult as $aRow) {
                                    'tblsuppliers'=>'NCC',
                                    'tblracks'=>'LX',
                                    'tblporters'=>'BV',
-                                   'tblother_object'=>'VM'
+                                   'tblother_object'=>'VM',
+                                   'tbldebit_object'=>'DDS'
                                 );
             $_data=$array_object[$aRow['id_object']].': ';
             if($aRow['id_object']=='tblstaff')
@@ -151,6 +152,10 @@ foreach ($rResult as $aRow) {
             {
                 $row_data = get_table_where($aRow['id_object'], array('id' => $aRow['staff_id']), '', 'row');
                 $_data.= !empty($row_data->name) ? $row_data->name : '';
+            }
+            if($aRow['id_object']=='tbldebit_object')
+            {
+                $_data.= 'Đã Đối Soát';
             }
             if($aRow['id_object']=='')
             {

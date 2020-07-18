@@ -30,6 +30,19 @@ class Order_model extends CI_Model
         $query = $this->db->query($sql)->result();
         return $query;
     }
+    public function getOrderTab4Error($customer_id)
+    {
+        $sql = "
+        SELECT shop.* ,tblorders_shop.code_orders as code_order,tblorders_shop.city as city,declared_region.name_region FROM `tbl_create_order_error` as shop
+        LEFT JOIN tbldeclared_region as declared_region ON declared_region.id= shop.region_id
+        LEFT JOIN tblorders_shop  ON tblorders_shop.id= shop.orders_shop_id
+        WHERE shop.value >= 0 ";
+
+        ($customer_id !="")?$sql.="AND shop.`customer_id` = '$customer_id'":"";
+
+        $query = $this->db->query($sql)->result();
+        return $query;
+    }
     public function get($id = '')
     {
         $this->db->select('tbladjusted.*,wareid.name as namewareide')->distinct();
@@ -70,35 +83,17 @@ class Order_model extends CI_Model
 
     public function getStatus()
     {
-        $array = [
-            "Chờ Duyệt",
-            "Chờ Lấy Hàng",
-            "Đang Lấy Hàng",
-            "Đã Lấy Hàng",
-            "Hoãn Lấy Hàng",
-            "Không Lấy Được",
-            "Đang Nhập Kho",
-            "Đã Nhập Kho",
-            "Đang Chuyển Kho Giao",
-            "Đã Chuyển Kho Giao",
-            "Đang Giao Hàng",
-            "Đã Giao Hàng Toàn Bộ",
-            "Đã Giao Hàng Một Phần",
-            "Hoãn Giao Hàng",
-            "Không Giao Được",
-            "Đã Đối Soát Giao Hàng",
-            "Đã Đối Soát Trả Hàng",
-            "Đang Chuyển Kho Trả",
-            "Đã Chuyển Kho Trả",
-            "Đang Trả Hàng",
-            "Đã Trả Hàng",
-            "Hoãn Trả Hàng",
-            "Huỷ",
-            "Đang Vận Chuyển",
-            "Xác Nhận Hoàn",
-            "Đã Trả Hàng Một Phần"
-        ];
-        return $array;
+        $result = [];
+        $this->db->select('color,name');
+        $this->db->from('tbldeclare');
+        $region = $this->db->get()->result_array();
+
+        foreach ($region as $value){
+            if($value['name']!="Hủy" && $value['name'] !="Huỷ"){
+                $result[$value['name']]=$value['color'];
+            }
+        }
+        return $result;
     }
 
     public function getRegion()
@@ -156,6 +151,41 @@ class Order_model extends CI_Model
         ($data->id !="")?$sql.="AND shop.id IN ($data->id)":"";
         ($data->code_request !="")?$sql.="AND shop.code_orders LIKE '%$data->code_request%'":"";
         ($data->status !="")?$sql.="AND shop.`status` LIKE '%$data->status%'":"";
+        ($data->date_form !="")?$sql.="AND shop.date_create BETWEEN '$data->date_form 00:00:00' AND '$data->date_to 23:59:59'":"";
+        ($data->is_hd_branch !="")?$sql.="AND shop.is_hd_branch ='$data->is_hd_branch'":"";
+        ($data->dvvc !="")?$sql.="AND shop.dvvc ='$data->dvvc'":"";
+        ($data->city !="")?$sql.="AND shop.city LIKE '%$data->city%'":"";
+        ($data->district !="")?$sql.="AND shop.district LIKE '%$data->district%'":"";
+        $sql.="AND shop.`status` <> 'Hủy'";
+        $sql.="AND shop.`status` <> 'Huỷ'";
+        $sql.=" ORDER BY shop.date_create DESC";
+        $query = $this->db->query($sql)->result();
+
+        return $query;
+    }
+    public function getOrderMultiStatus($data)
+    {
+        $sql = "
+        SELECT shop.*,create_order.note_private,create_order.id as create_order_id,declared_region.name_region  FROM `tblorders_shop` as shop
+        LEFT JOIN tbl_create_order as create_order ON create_order.orders_shop_id= shop.id
+        LEFT JOIN tbldeclared_region as declared_region ON declared_region.id= shop.region_id
+        WHERE shop.`shop` LIKE '%$data->customer%'";
+//WHERE id IN (33, 34, 45)
+        ($data->code_order !="")?$sql.="AND shop.code_supership LIKE '%$data->code_order%'":"";
+        ($data->code_order !="")?$sql.="OR shop.required_code LIKE '%$data->code_order%'":"";
+        ($data->code_order !="")?$sql.="OR shop.code_ghtk LIKE '%$data->code_order%'":"";
+        ($data->code_order !="")?$sql.="OR shop.phone LIKE '%$data->code_order%'":"";
+        ($data->id !="")?$sql.="AND shop.id IN ($data->id)":"";
+        ($data->code_request !="")?$sql.="AND shop.code_orders LIKE '%$data->code_request%'":"";
+        $strStatus = "";
+        foreach($data->status as $key => $status){
+            $strStatus.="'$status'";
+            if($key+1 < count($data->status)){
+                $strStatus.=",";
+            }
+        }
+        ($status !="")?$sql.="AND shop.status IN ($strStatus)":"";
+
         ($data->date_form !="")?$sql.="AND shop.date_create BETWEEN '$data->date_form 00:00:00' AND '$data->date_to 23:59:59'":"";
         ($data->is_hd_branch !="")?$sql.="AND shop.is_hd_branch ='$data->is_hd_branch'":"";
         ($data->dvvc !="")?$sql.="AND shop.dvvc ='$data->dvvc'":"";

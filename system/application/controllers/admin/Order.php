@@ -29,7 +29,7 @@ class Order extends AdminController
         $data['date_from'] = $date_from;
         $data['date_to'] = $date_to;
 
-        $data['list_status'] = $order_model->getStatus();
+//        $data['list_status'] = $order_model->getStatus();
         $data['city'] = $order_model->getCity();
         $data['regions'] = $order_model->getRegion();
         $data['dvvc'] = $order_model->getDvvc();
@@ -56,6 +56,7 @@ class Order extends AdminController
         if ($data->region != "") {
             $data = $order_model->getShopByRegion($data);
         }
+
         $order = $order_model->getOrder($data);
         $result = new stdClass();
         $result->data = $order;
@@ -262,7 +263,8 @@ class Order extends AdminController
             $object->getActiveSheet()->setCellValueByColumnAndRow(34, $excel_row, $nameShop);
             $object->getActiveSheet()->setCellValueByColumnAndRow(35, $excel_row, $row->last_time_updated);
             $object->getActiveSheet()->setCellValueByColumnAndRow(36, $excel_row, $row->DVVC);
-            $object->getActiveSheet()->setCellValueByColumnAndRow(37, $excel_row, $row->code_ghtk);
+            $object->getActiveSheet()->setCellValueExplicit("AL" . $excel_row, $row->code_ghtk, PHPExcel_Cell_DataType::TYPE_STRING);
+
             $object->getActiveSheet()->setCellValueByColumnAndRow(38, $excel_row, $name_region);
 
             $excel_row++;
